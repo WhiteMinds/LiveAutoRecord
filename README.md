@@ -1,0 +1,2 @@
+# LiveAutoRecord
+基于Electron的多平台直播自动录制软件
