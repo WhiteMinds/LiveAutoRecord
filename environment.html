@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>ALR 直播自动录制</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="bower_components/admin-lte/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="bower_components/admin-lte/dist/css/skins/_all-skins.min.css">
+
+    <style>
+        *, h1, h2, h3, h4, h5, h6 {
+            font-family: "Helvetica Neue",Helvetica,"Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-blue layout-top-nav">
+<div class="wrapper">
+    <header class="main-header">
+        <nav class="navbar navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand">AutoLiveRecord</a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="container">
+            <section class="content-header">
+                <h1>
+                    缺少环境
+                    <small>StreamLink</small>
+                </h1>
+            </section>
+
+            <section class="content">
+                <div class="callout callout-danger">
+                    <h4>缺少了必须的运行环境: StreamLink</h4>
+
+                    <p>下方将列出可选的几个下载地址, <br>请在下载安装后重新启动本软件.</p>
+                </div>
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">StreamLink 下载</h3>
+                    </div>
+                    <div class="box-body">
+                        <p><a href="#" onclick="openUrl('https://github.com/streamlink/streamlink/releases')">源: Github</a></p>
+                        <p><a href="#" onclick="openUrl('https://pan.baidu.com/s/1H5ngjfrqrV-leU1uJL5Fwg#list/path=%2F%E8%BD%AC%E5%82%A8%2FStreamLink')">转储: 百度网盘</a></p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <footer class="main-footer">
+        <div class="container">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> <script>document.write(require("./package.json").version)</script>
+            </div>
+            <strong>Copyright &copy; 2018.</strong>
+        </div>
+    </footer>
+</div>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script>
+    const { shell } = require('electron')
+
+    // fix electron jquery bug
+    if (typeof module === 'object')
+        window.jQuery = window.$ = module.exports
+
+    function openUrl (url) {
+        shell.openExternal(url)
+    }
+</script>
+<script src="bower_components/admin-lte/dist/js/adminlte.min.js"></script>
+</body>
+</html>

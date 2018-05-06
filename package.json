@@ -1,0 +1,25 @@
+{
+  "name": "live-auto-record",
+  "version": "1.0.0",
+  "description": "基于Electron的多平台直播自动录制软件",
+  "main": "app.js",
+  "scripts": {
+    "dev": "node_modules/.bin/electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WhiteMinds/LiveAutoRecord.git"
+  },
+  "author": "WhiteMind",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WhiteMinds/LiveAutoRecord/issues"
+  },
+  "homepage": "https://github.com/WhiteMinds/LiveAutoRecord#readme",
+  "dependencies": {
+    "angular": "^1.6.10"
+  },
+  "devDependencies": {
+    "electron": "^1.8.6"
+  }
+}
