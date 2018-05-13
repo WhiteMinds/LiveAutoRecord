@@ -1,9 +1,9 @@
 {
   "name": "live-auto-record",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": "WhiteMind <whitemind@qq.com>",
   "description": "多平台直播自动录制工具",
-  "license": null,
+  "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -53,11 +53,12 @@
     }
   },
   "dependencies": {
-    "vue": "^2.3.3",
-    "axios": "^0.16.1",
+    "axios": "^0.16.2",
+    "vue": "^2.5.16",
+    "vue-body-class": "^2.0.0-beta.2",
     "vue-electron": "^1.0.6",
-    "vue-router": "^2.5.3",
-    "vuex": "^2.3.1"
+    "vue-router": "^2.8.1",
+    "vuex": "^2.5.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
