@@ -1,0 +1,19 @@
+{
+    "name": "live-auto-record",
+    "description": "基于Electron的多平台直播自动录制软件",
+    "authors": [
+        "WhiteMind"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/WhiteMinds/LiveAutoRecord",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "admin-lte": "^2.4.3"
+    }
+}

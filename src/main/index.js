@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, Tray, Menu } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -16,20 +16,44 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
+  // 创建窗口
   mainWindow = new BrowserWindow({
+    width: 1000,
     height: 563,
     useContentSize: true,
-    width: 1000
+    webPreferences: {
+      backgroundThrottling: false
+    }
   })
+  // 移除菜单栏
+  mainWindow.setMenu(null)
+
+  // 设置托盘菜单
+  createTray(mainWindow)
 
   mainWindow.loadURL(winURL)
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+}
+
+function createTray (mainWindow) {
+  let tray = new Tray(`${__static}/tray.png`)
+  let menu = Menu.buildFromTemplate([
+    {
+      label: '显示/隐藏 窗口',
+      click: () => mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+    },
+    {
+      label: '退出',
+      click: () => app.quit()
+    }
+  ])
+  tray.setContextMenu(menu)
+  tray.setToolTip('ALR 直播自动录制')
+  tray.on('click', () => mainWindow.show())
+  mainWindow.appTray = tray
 }
 
 app.on('ready', createWindow)
