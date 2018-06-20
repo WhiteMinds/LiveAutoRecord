@@ -1,9 +1,8 @@
 <template>
   <div>
-    <!--<h2 class="title">录播列表</h2>-->
     <div class="actions">
-      <Button type="primary" icon="android-add">新增</Button>
-      <Button type="primary" icon="android-settings">设置</Button>
+      <router-link :to="{ name: 'lar-add' }"><Button type="primary" icon="android-add">新增</Button></router-link>
+      <router-link :to="{ name: 'lar-setting' }"><Button type="primary" icon="android-settings">设置</Button></router-link>
     </div>
     <Table ref="table" :columns="columns" :data="tableData" stripe border :height="tableHeight"></Table>
   </div>
@@ -60,7 +59,6 @@
         return data
       },
       tableHeight () {
-        // return document.documentElement.clientHeight - 128
         return document.documentElement.clientHeight - 80
       }
     }
@@ -78,7 +76,7 @@
     margin-bottom: 16px;
     font-size: 0;
 
-    button:not(:first-child) {
+    a:not(:first-child) {
       margin-left: 8px;
     }
   }
