@@ -1,6 +1,6 @@
 <template>
   <Sider :width="App.SiderWidth" class="sider">
-    <Menu theme="dark" width="auto" @on-select="onMenuSelect">
+    <Menu theme="dark" width="auto" activeName="lar" @on-select="onMenuSelect">
       <div class="logo-ph">Logo</div>
       <MenuItem name="lar">
         <Icon type="videocamera"></Icon>

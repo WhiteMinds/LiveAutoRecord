@@ -2,6 +2,8 @@ import Vue from 'vue'
 import * as Router from 'vue-router'
 
 import LAR from '@/pages/LAR'
+import LARAdd from '@/pages/LAR/add'
+import LARSetting from '@/pages/LAR/setting'
 import RunTime from '@/pages/RunTime'
 import VideoKit from '@/pages/VideoKit'
 import About from '@/pages/About'
@@ -15,6 +17,16 @@ export default new Router({
       path: '/',
       name: 'lar',
       component: LAR
+    },
+    {
+      path: '/lar-setting',
+      name: 'lar-setting',
+      component: LARSetting
+    },
+    {
+      path: '/lar-add',
+      name: 'lar-add',
+      component: LARAdd
     },
     {
       path: '/runtime',
