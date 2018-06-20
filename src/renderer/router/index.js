@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import * as Router from 'vue-router'
 
-import LAR from '../pages/LAR'
-import RunTime from '../pages/RunTime'
-import VideoKit from '../pages/VideoKit'
-import Test from '../pages/Test'
+import LAR from '@/pages/LAR'
+import RunTime from '@/pages/RunTime'
+import VideoKit from '@/pages/VideoKit'
+import About from '@/pages/About'
+import Test from '@/pages/Test'
 
 Vue.use(Router)
 
@@ -25,6 +26,11 @@ export default new Router({
       path: '/video-kit',
       name: 'video-kit',
       component: VideoKit
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/test',
