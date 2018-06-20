@@ -51,7 +51,7 @@ function createTray (mainWindow) {
     }
   ])
   tray.setContextMenu(menu)
-  tray.setToolTip('ALR 直播自动录制')
+  tray.setToolTip('LAR 直播自动录制')
   tray.on('click', () => mainWindow.show())
   mainWindow.appTray = tray
 }
