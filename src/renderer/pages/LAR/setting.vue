@@ -14,6 +14,9 @@
       <FormItem label="录像保存路径" prop="savePath">
         <i-input v-model="form.savePath"></i-input>
       </FormItem>
+      <FormItem label="录像文件名" prop="saveName">
+        <i-input v-model="form.saveName"></i-input>
+      </FormItem>
       <FormItem class="buttons">
         <Button type="success" @click="confirm">确认</Button>
         <Button type="ghost" @click="$router.back()">取消</Button>
@@ -30,12 +33,14 @@
           notice: true,
           interval: 10,
           section: -1,
-          savePath: 'C:\\'
+          savePath: 'C:\\$platform\\$room\\',
+          saveName: '$t{MM-dd hh:mm:ss}.flv'
         },
         validateRule: {
           interval: [ { required: true, type: 'number', message: '开播检查间隔不能为空', trigger: 'blur' } ],
           section: [ { required: true, type: 'number', message: '自动分段不能为空', trigger: 'blur' } ],
-          savePath: [ { required: true, message: '录像保存路径不能为空', trigger: 'blur' } ]
+          savePath: [ { required: true, message: '录像保存路径不能为空', trigger: 'blur' } ],
+          saveName: [ { required: true, message: '录像文件名不能为空', trigger: 'blur' } ]
         }
       }
     },

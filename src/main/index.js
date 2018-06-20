@@ -1,6 +1,7 @@
 'use strict'
 
 import { app, BrowserWindow, Tray, Menu } from 'electron'
+// import storage from 'electron-json-storage'
 
 /**
  * Set `__static` path to static files in production
@@ -23,7 +24,8 @@ function createWindow () {
     useContentSize: true,
     webPreferences: {
       backgroundThrottling: false
-    }
+    },
+    show: false
   })
   // 移除菜单栏
   mainWindow.setMenu(null)
@@ -35,6 +37,11 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
+  })
+
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show()
+    mainWindow.focus()
   })
 }
 
