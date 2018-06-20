@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import * as Router from 'vue-router'
 
-import LAR from '../components/LAR'
-import RunTime from '../components/RunTime'
-import VideoKit from '../components/VideoKit'
-import Test from '../components/Test'
+import LAR from '../pages/LAR'
+import RunTime from '../pages/RunTime'
+import VideoKit from '../pages/VideoKit'
+import Test from '../pages/Test'
 
 Vue.use(Router)
 
