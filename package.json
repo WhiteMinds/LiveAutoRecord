@@ -54,6 +54,7 @@
   },
   "dependencies": {
     "axios": "^0.16.2",
+    "electron-ipc-responder": "1.0.4",
     "electron-json-storage": "4.1.0",
     "iview": "2.14.3",
     "vue": "^2.5.16",
@@ -99,7 +100,7 @@
     "node-sass": "4.9.0",
     "sass-loader": "7.0.3",
     "style-loader": "^0.18.2",
-    "url-loader": "^0.5.9",
+    "url-loader": "1.0.1",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^13.0.5",
     "vue-style-loader": "^3.0.1",
