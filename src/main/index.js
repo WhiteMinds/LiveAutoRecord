@@ -1,7 +1,8 @@
 'use strict'
 
 import { app, BrowserWindow, Tray, Menu } from 'electron'
-// import storage from 'electron-json-storage'
+import lar from './lar'
+import ipc from './ipc'
 
 /**
  * Set `__static` path to static files in production
@@ -16,9 +17,22 @@ const winURL = process.env.NODE_ENV === 'development'
   ? 'http://localhost:9080'
   : `file://${__dirname}/index.html`
 
+async function init () {
+  try {
+    // LAR
+    await lar.init()
+    // 创建窗口
+    mainWindow = createWindow()
+    // IPC
+    ipc.init(mainWindow.webContents)
+  } catch (err) {
+    console.error(err)
+    app.quit()
+  }
+}
+
 function createWindow () {
-  // 创建窗口
-  mainWindow = new BrowserWindow({
+  let win = new BrowserWindow({
     width: 1000,
     height: 563,
     useContentSize: true,
@@ -28,29 +42,31 @@ function createWindow () {
     show: false
   })
   // 移除菜单栏
-  mainWindow.setMenu(null)
+  win.setMenu(null)
 
   // 设置托盘菜单
-  createTray(mainWindow)
+  createTray(win)
 
-  mainWindow.loadURL(winURL)
+  win.loadURL(winURL)
 
-  mainWindow.on('closed', () => {
-    mainWindow = null
+  win.on('closed', () => {
+    win = null
   })
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show()
-    mainWindow.focus()
+  win.on('ready-to-show', () => {
+    win.show()
+    win.focus()
   })
+
+  return win
 }
 
-function createTray (mainWindow) {
+function createTray (win) {
   let tray = new Tray(`${__static}/tray.png`)
   let menu = Menu.buildFromTemplate([
     {
       label: '显示/隐藏 窗口',
-      click: () => mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
+      click: () => win.isVisible() ? win.hide() : win.show()
     },
     {
       label: '退出',
@@ -59,11 +75,11 @@ function createTray (mainWindow) {
   ])
   tray.setContextMenu(menu)
   tray.setToolTip('LAR 直播自动录制')
-  tray.on('click', () => mainWindow.show())
-  mainWindow.appTray = tray
+  tray.on('click', () => win.show())
+  win.appTray = tray
 }
 
-app.on('ready', createWindow)
+app.on('ready', init)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -73,7 +89,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow()
+    init()
   }
 })
 

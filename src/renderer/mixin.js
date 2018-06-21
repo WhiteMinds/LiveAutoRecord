@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import * as CONST from '@/const'
+import * as CONST from '@/../const'
 
 Vue.mixin({
   methods: {

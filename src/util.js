@@ -12,3 +12,7 @@ export function isStreamLinkInstalled () { // TODO 可以考虑改为根据系�
   }
   return false
 }
+
+export function isEmptyObject (obj) {
+  return typeof obj === 'object' && Object.keys(obj).length === 0
+}
