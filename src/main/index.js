@@ -34,7 +34,7 @@ async function init () {
 function createWindow () {
   let win = new BrowserWindow({
     width: 1000,
-    height: 563,
+    height: 600,
     useContentSize: true,
     webPreferences: {
       backgroundThrottling: false

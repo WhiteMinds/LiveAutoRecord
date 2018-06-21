@@ -10,8 +10,8 @@ class RendererIPCResponder extends IPCResponder {
     super(ipcRenderer.send.bind(ipcRenderer), ipcRenderer.on.bind(ipcRenderer))
   }
 
-  async [MsgType.LAR_Config] () {
-    return this.ask(MsgType.LAR_Config)
+  async [MsgType.LAR_Config] (val) {
+    return this.ask(MsgType.LAR_Config, val)
   }
 }
 
@@ -24,7 +24,7 @@ export default {
     this.client = new RendererIPCResponder()
     this.remoteData.larConfig = await this.client[MsgType.LAR_Config]()
   },
-  setLARConfig () {
-    // this.client.tell
+  setLARConfig (val) {
+    this.client[MsgType.LAR_Config](val)
   }
 }

@@ -40,6 +40,7 @@ async function storageSet (key, val) {
 }
 
 export default {
+  getDataPath: storage.getDataPath,
   async getLARConfig () {
     return storageGet(CONST.LARConfigFileName)
   },

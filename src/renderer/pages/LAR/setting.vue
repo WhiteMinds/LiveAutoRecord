@@ -26,6 +26,8 @@
 </template>
 
 <script>
+  import ipc from '@/ipc'
+
   export default {
     data () {
       return {
@@ -33,8 +35,8 @@
           notice: true,
           interval: 10,
           section: -1,
-          savePath: 'C:\\$platform\\$room\\',
-          saveName: '$t{MM-dd hh:mm:ss}.flv'
+          savePath: '',
+          saveName: ''
         },
         validateRule: {
           interval: [ { required: true, type: 'number', message: '开播检查间隔不能为空', trigger: 'blur' } ],
@@ -49,9 +51,12 @@
         let vaild = await this.$refs.form.validate()
         if (!vaild) return
 
-        // ... codes ...
-        console.log('confirm')
+        ipc.setLARConfig(this.form)
+        this.$router.back()
       }
+    },
+    mounted () {
+      this.form = Object.assign({}, ipc.remoteData.larConfig)
     }
   }
 </script>
