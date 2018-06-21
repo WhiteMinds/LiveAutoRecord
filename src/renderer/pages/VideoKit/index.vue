@@ -1,10 +1,9 @@
 <template>
-
+  <div>Video Kit</div>
 </template>
 
 <script>
   export default {
-    name: 'video-kit'
   }
 </script>
 
