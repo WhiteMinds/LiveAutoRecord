@@ -1,11 +1,12 @@
 import storage from './storage'
+import path from 'path'
 
 const defaultConfig = {
   notice: true,
   interval: 10,
   section: -1,
-  savePath: '',
-  saveName: ''
+  savePath: path.join(storage.getDataPath(), '$platform/$room/'),
+  saveName: '$t{MM-dd hh:mm:ss}'
 }
 
 export default {
