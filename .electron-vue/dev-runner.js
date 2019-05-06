@@ -73,7 +73,7 @@ function startRenderer () {
       }
     )
 
-    server.listen(9080)
+    server.listen(process.env.DEV_PORT || 9080)
   })
 }
 
