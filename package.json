@@ -53,6 +53,7 @@
     }
   },
   "dependencies": {
+    "humps": "^2.0.1",
     "iview": "^3.4.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
