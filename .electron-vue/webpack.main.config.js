@@ -52,6 +52,9 @@ let mainConfig = {
     new webpack.NoEmitOnErrorsPlugin()
   ],
   resolve: {
+    alias: {
+      'const': path.join(__dirname, '../src/const')
+    },
     extensions: ['.js', '.json', '.node']
   },
   target: 'electron-main'
