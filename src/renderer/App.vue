@@ -6,7 +6,7 @@
 
 <script>
   export default {
-    name: 'live-auto-record'
+    name: 'App'
   }
 </script>
 

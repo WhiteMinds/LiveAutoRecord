@@ -19,7 +19,7 @@
     "postinstall": "npm run lint:fix"
   },
   "build": {
-    "productName": "live-auto-record",
+    "productName": "LAR 直播自动录制",
     "appId": "moe.teeio.lar",
     "directories": {
       "output": "build"
