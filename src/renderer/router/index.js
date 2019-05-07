@@ -32,5 +32,8 @@ createAndAddRoute(Route.Record, require('@/pages/record'))
 createAndAddRoute(Route.RecordEdit, require('@/pages/record/edit'))
 createAndAddRoute(Route.RecordAdd, require('@/pages/record/edit'))
 createAndAddRoute(Route.RecordSetting, require('@/pages/record/setting'))
+createAndAddRoute(Route.VideoDownload, require('@/pages/video-download'))
+createAndAddRoute(Route.VideoProcess, require('@/pages/video-process'))
+createAndAddRoute(Route.About, require('@/pages/about'))
 
 export default new Router({ routes })

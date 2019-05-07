@@ -1,12 +1,12 @@
 <template>
   <div>
-    Record
+    Video Download
   </div>
 </template>
 
 <script>
   export default {
-    name: 'record'
+    name: 'video-download'
   }
 </script>
 

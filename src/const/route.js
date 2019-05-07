@@ -2,10 +2,12 @@ import humps from 'humps'
 
 export const Route = {
   Record: '',
-  RecordHome: '',
   RecordEdit: '',
   RecordAdd: '',
-  RecordSetting: ''
+  RecordSetting: '',
+  VideoDownload: '',
+  VideoProcess: '',
+  About: ''
 }
 
 for (let key in Route) {

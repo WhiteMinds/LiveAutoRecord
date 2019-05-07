@@ -1,10 +1,12 @@
 <template>
-    
+  <div>
+    Edit
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'edit'
+    name: 'record-edit'
   }
 </script>
 
