@@ -4,8 +4,10 @@ import 'iview/dist/styles/iview.css'
 
 import App from './App'
 import router from './router'
+import config from '@/modules/config'
 
 Vue.use(iView)
+config.init()
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.config.productionTip = false
