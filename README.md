@@ -7,6 +7,7 @@
 ``` bash
 # install dependencies
 yarn (or 'npm install')
+yarn rebuild:sqlite3 (or 'npm run rebuild:sqlite3')
 
 # serve with hot reload at localhost:9080
 yarn dev (or 'npm run dev')

@@ -12,7 +12,8 @@
     "renderer": {
       "presets": [
         ["env", {
-          "modules": false
+          "modules": false,
+          "targets": { "node": 7 }
         }],
         "stage-0"
       ]
@@ -20,7 +21,8 @@
     "web": {
       "presets": [
         ["env", {
-          "modules": false
+          "modules": false,
+          "targets": { "node": 7 }
         }],
         "stage-0"
       ]

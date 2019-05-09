@@ -16,7 +16,8 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix"
+    "postinstall": "npm run lint:fix",
+    "rebuild:sqlite3": "electron-rebuild -f -w sqlite3"
   },
   "build": {
     "productName": "LAR 直播自动录制",
@@ -57,6 +58,9 @@
     "humps": "^2.0.1",
     "iview": "^3.4.1",
     "lodash": "^4.17.11",
+    "sequelize": "^5.8.5",
+    "sqlite3": "^4.0.6",
+    "umzug": "^2.2.0",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1"
@@ -82,6 +86,7 @@
     "electron-builder": "^20.19.2",
     "electron-debug": "^1.5.0",
     "electron-devtools-installer": "^2.2.4",
+    "electron-rebuild": "^1.8.4",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-friendly-formatter": "^4.0.1",
