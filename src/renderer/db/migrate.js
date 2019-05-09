@@ -25,7 +25,7 @@ export function run (sequelize) {
 
   const logUmzugEvent = eventName => {
     return (name, migration) => {
-      console.log(`${name} ${eventName}`)
+      log.info(`${name} ${eventName}`)
     }
   }
   umzug.on('migrating', logUmzugEvent('migrating'))

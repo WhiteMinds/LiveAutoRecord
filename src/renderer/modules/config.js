@@ -8,6 +8,9 @@ export default new Vue({
   data () {
     return {
       record: {
+        notice: true,
+        checkInterval: 0,
+        segment: 0,
         // 支持的自定义数据有platform, channel, n种时间
         savePath: `${UserDataPath}\\{platform}\\{channel}`,
         saveName: '{year}-{month}-{date} {hour}-{min}-{sec}'
