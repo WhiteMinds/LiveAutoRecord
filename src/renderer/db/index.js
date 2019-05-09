@@ -1,5 +1,6 @@
 import path from 'path'
-import Sequelize from 'sequelize'
+import { Sequelize } from 'sequelize'
+import log from '@/modules/log'
 import * as migrate from './migrate'
 import { UserDataPath } from 'const'
 
@@ -9,7 +10,7 @@ db.init = async () => {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: path.join(UserDataPath, 'lar.data'),
-    logging: (...args) => console.log(...args)
+    logging: (body, options) => log.debug(body)
   })
 
   // 导入数据模型

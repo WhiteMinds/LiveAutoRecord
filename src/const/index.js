@@ -7,3 +7,4 @@ export * from './route'
 
 export const UserDataPath = app.getPath('userData')
 export const ConfigFilePath = path.join(UserDataPath, 'lar_config.json')
+export const LogFolderPath = 'logs'

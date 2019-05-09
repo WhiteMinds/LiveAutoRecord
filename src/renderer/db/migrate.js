@@ -1,5 +1,6 @@
 import path from 'path'
 import Umzug from 'umzug'
+import log from '@/modules/log'
 import { UserDataPath } from 'const'
 
 export function run (sequelize) {
@@ -19,7 +20,7 @@ export function run (sequelize) {
       path: path.join(path.dirname(__filename), 'migrations'),
       pattern: /\.js$/
     },
-    logging: (...args) => console.log(...args)
+    logging: (...args) => log.debug(...args)
   })
 
   const logUmzugEvent = eventName => {
