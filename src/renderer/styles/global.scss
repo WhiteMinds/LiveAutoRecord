@@ -1,0 +1,19 @@
+.scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(#17233d, .5);
+
+    &:hover {
+      background-color: rgba(#17233d, .65);
+    }
+  }
+}
+
+@keyframes icon-loading {
+  from { transform: rotate(0deg) }
+  50%  { transform: rotate(180deg) }
+  to   { transform: rotate(360deg) }
+}

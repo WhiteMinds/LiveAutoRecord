@@ -1,34 +1,58 @@
 <template>
   <Layout id="app">
-    <Sider :width="siderWidth" class="layout-sider">
-      <Menu theme="dark" width="auto" :activeName="Route.Record" @on-select="onMenuSelect">
-        <img src="@/assets/logo.png" class="layout-sider-logo" />
-        <MenuItem :name="Route.Record">
-          <Icon type="md-videocam"></Icon>
-          自动录播
-        </MenuItem>
-        <MenuItem :name="Route.VideoDownload">
-          <Icon type="md-cloud-download"></Icon>
-          视频下载
-        </MenuItem>
-        <MenuItem :name="Route.VideoProcess">
-          <Icon type="md-film"></Icon>
-          录播处理
-        </MenuItem>
-        <MenuItem :name="Route.About">
-          <Icon type="md-school"></Icon>
-          关于作者
-        </MenuItem>
-      </Menu>
-    </Sider>
+    <template v-if="starting">
+      <!-- 这里不直接使用Alert组件是因为它有无法取消的transition -->
+      <div v-if="startSlow" class="ivu-alert ivu-alert-info ivu-alert-with-icon starting">
+        <span class="ivu-alert-icon">
+          <Icon type="ios-loading" class="starting-icon" slot="icon"></Icon>
+        </span>
+        <span class="ivu-alert-message">启动中...</span>
+      </div>
+    </template>
 
-    <Layout class="layout-content" :style="{marginLeft: siderWidth + 'px'}">
-      <router-view></router-view>
-    </Layout>
+    <template v-else-if="startFailed">
+      <Alert class="start-failed" type="error" show-icon>
+        启动失败
+        <span slot="desc">
+          {{startFailed.message}}
+        </span>
+      </Alert>
+    </template>
+
+    <template v-else>
+      <Sider :width="siderWidth" class="layout-sider">
+        <Menu theme="dark" width="auto" :activeName="Route.Record" @on-select="onMenuSelect">
+          <img src="@/assets/logo.png" class="layout-sider-logo" />
+          <MenuItem :name="Route.Record">
+            <Icon type="md-videocam"></Icon>
+            自动录播
+          </MenuItem>
+          <MenuItem :name="Route.VideoDownload">
+            <Icon type="md-cloud-download"></Icon>
+            视频下载
+          </MenuItem>
+          <MenuItem :name="Route.VideoProcess">
+            <Icon type="md-film"></Icon>
+            录播处理
+          </MenuItem>
+          <MenuItem :name="Route.About">
+            <Icon type="md-school"></Icon>
+            关于作者
+          </MenuItem>
+        </Menu>
+      </Sider>
+
+      <Layout class="layout-content" :style="{marginLeft: siderWidth + 'px'}">
+        <router-view></router-view>
+      </Layout>
+    </template>
   </Layout>
 </template>
 
 <script>
+  import config from '@/modules/config'
+  import db from '@/db'
+  import log from '@/modules/log'
   import { Route } from 'const'
 
   export default {
@@ -36,10 +60,39 @@
     data () {
       return {
         Route,
+        starting: true,
+        startSlow: false,
+        startFailed: false,
         siderWidth: 200
       }
     },
+    async mounted () {
+      // 超过一定时间未加载完成, 才显示启动画面, 否则会造成启动界面闪烁
+      setTimeout(() => {
+        if (this.starting) {
+          this.startSlow = true
+        }
+      }, 500)
+
+      try {
+        await this.init()
+      } catch (err) {
+        this.starting = false
+        this.startFailed = err
+      }
+    },
     methods: {
+      async init () {
+        log.info('Initializing config module...')
+        config.init()
+
+        log.info('Initializing database module...')
+        await db.init()
+
+        // todo 在这里启动recorder, store(load)等其他模块
+
+        this.starting = false
+      },
       onMenuSelect (name) {
         this.$router.push({ name })
       }
@@ -48,12 +101,22 @@
 </script>
 
 <style lang="scss">
+  @import "~@/styles/global";
+
   html, body {
     height: 100%;
   }
 
   #app {
     height: 100%;
+  }
+
+  .starting, .start-failed {
+    margin: 16px;
+  }
+
+  .starting-icon {
+    animation: icon-loading 1s linear infinite;
   }
 
   .layout-sider {
