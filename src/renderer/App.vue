@@ -77,6 +77,7 @@
       try {
         await this.init()
       } catch (err) {
+        log.error(err)
         this.starting = false
         this.startFailed = err
       }
@@ -89,7 +90,10 @@
         log.info('Initializing database module...')
         await db.init()
 
-        // todo 在这里启动recorder, store(load)等其他模块
+        log.info('Loading channels...')
+        this.$store.channels = await db.Channel.findAll()
+
+        // todo 在这里启动recorder等其他模块
 
         this.starting = false
       },

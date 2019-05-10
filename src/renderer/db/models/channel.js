@@ -1,3 +1,5 @@
+import platforms from '@/platforms'
+
 export default (sequelize, DataTypes) => {
 
   // 定义数据模型
@@ -37,6 +39,10 @@ export default (sequelize, DataTypes) => {
 
     // Attributes handle
     // ===========================================================================
+
+    get platformObj () {
+      return platforms[this.platform]
+    }
 
     setStatus (idx, status) {
       let bit = 1 << (idx - 1)
