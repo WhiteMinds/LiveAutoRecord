@@ -35,5 +35,9 @@ createAndAddRoute(Route.RecordSetting, require('@/pages/record/setting'))
 createAndAddRoute(Route.VideoDownload, require('@/pages/video-download'))
 createAndAddRoute(Route.VideoProcess, require('@/pages/video-process'))
 createAndAddRoute(Route.About, require('@/pages/about'))
+routes.push({
+  path: '*',
+  redirect: { name: Route.Record }
+})
 
 export default new Router({ routes })
