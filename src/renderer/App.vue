@@ -91,7 +91,8 @@
         await db.init()
 
         log.info('Loading channels...')
-        this.$store.channels = await db.Channel.findAll()
+        this.$store.channels.splice(0)
+        Array.prototype.push.apply(this.$store.channels, await db.Channel.findAll())
 
         // todo 在这里启动recorder等其他模块
 
