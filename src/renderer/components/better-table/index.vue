@@ -80,8 +80,7 @@
                   },
                   'on-save-edit': params => {
                     this.editingCellId = ''
-                    let args = [params, params.row[params.column.key]]
-                    params.row[params.column.key] = this.editingText
+                    let args = [params, this.editingText, params.row[params.column.key]]
                     this.$emit('on-save-edit', ...args)
                     if (typeof column.onSaveEdit === 'function') column.onSaveEdit(...args)
                   }
@@ -99,8 +98,8 @@
             key: 'actions',
             render: (h, params) => {
               let btnTemplates = this.actions
-              // 实现action.show的过滤
                 .filter(action => {
+                  // 实现action.show的过滤
                   if (!action.hasOwnProperty('show')) return true
                   if (typeof action.show === 'function') return action.show(params)
                   return action.show
@@ -112,15 +111,18 @@
                     loading = typeof action.loading === 'function' ? action.loading(params) : action.loading
                   }
 
-                  // 实现props, style, on
+                  // 实现props, style等的附加
+                  let btnClass = []
+                  if (action.text === '') btnClass.push('ivu-btn-only-icon')
                   let btnOptions = {
                     props: { type: 'primary', size: 'small', loading },
                     style: { marginRight: '8px' },
+                    class: btnClass,
                     on: {
                       click: () => action.click(params)
                     }
                   }
-                  _.merge(btnOptions, _.pick(action, ['props', 'style', 'on']))
+                  _.merge(btnOptions, _.pick(action, ['props', 'style', 'class', 'on']))
 
                   return h('Button', btnOptions, action.text)
                 })
@@ -234,13 +236,6 @@
 
     /deep/ .ivu-table-body {
       @extend .scrollbar;
-    }
-
-    /deep/ .ivu-table-cell {
-      // todo 这里有待优化
-      .ivu-btn>.ivu-icon+span, .ivu-btn>span+.ivu-icon {
-        margin-left: 0;
-      }
     }
   }
 </style>

@@ -23,6 +23,11 @@ export const preferred = {
   circuit: 'ws-h5'
 }
 
+export function getUrl (channel) {
+  let base = 'https://www.douyu.com/'
+  return new URL(base + channel)
+}
+
 export async function getStream (channel, quality, circuit) {
   // todo 返回stream地址
 }
