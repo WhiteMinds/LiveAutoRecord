@@ -7,7 +7,10 @@ export default (sequelize, DataTypes) => {
   // =============================================================================
 
   const ModelClass = sequelize.define('Channel', {
-    platform: DataTypes.INTEGER,
+    platform: {
+      type: DataTypes.INTEGER,
+      defaultValue: Platform.DouYu
+    },
     address: DataTypes.STRING,
     alias: DataTypes.STRING,
     quality: DataTypes.STRING,

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   up (query, DataTypes) {
     return query.createTable('Channels', {
       id: {

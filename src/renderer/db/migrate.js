@@ -18,7 +18,8 @@ export function run (sequelize) {
         }
       ],
       path: path.join(path.dirname(__filename), 'migrations'),
-      pattern: /\.js$/
+      pattern: /\.js$/,
+      customResolver: migrationFile => require(`./migrations/${path.basename(migrationFile, '.js')}`).default
     },
     logging: (...args) => log.debug(...args)
   })
