@@ -11,12 +11,30 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       defaultValue: Platform.DouYu
     },
-    address: DataTypes.STRING,
-    alias: DataTypes.STRING,
-    quality: DataTypes.STRING,
-    circuit: DataTypes.STRING,
-    barrage: DataTypes.BOOLEAN,
-    auto_process: DataTypes.BOOLEAN,
+    address: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
+    alias: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
+    quality: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
+    circuit: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
+    barrage: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
+    auto_process: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    },
 
     // 虚拟字段 (注意, 直接在Channel中定义的属性或getter无法被ORM内置的toJSON转换, 所以需要在表格中展示的内容都在此处定义)
     status: DataTypes.VIRTUAL,
