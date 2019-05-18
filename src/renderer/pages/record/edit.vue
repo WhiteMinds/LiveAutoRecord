@@ -106,19 +106,22 @@
           return
         }
 
-        if (this.isNew) {
-          await this.model.save()
-          this.$store.channels.push(this.model)
-          this.$Message.success('保存成功')
-        } else {
-          Object.assign(this.model, this.form)
-          await this.model.save()
-          // todo 这里可以考虑改成自动终止当前录制重新开始
-          this.$Message.success('设置成功, 改动将于下一次录制时生效')
+        try {
+          if (this.isNew) {
+            await this.model.save()
+            this.$store.channels.push(this.model)
+            this.$Message.success('保存成功')
+          } else {
+            Object.assign(this.model, this.form)
+            await this.model.save()
+            // todo 这里可以考虑改成自动终止当前录制并重新开始
+            this.$Message.success('设置成功, 改动将于下一次录制时生效')
+          }
+          // 此处不将saving改回false, 因为back的执行时间不确定, 这样可以防止闪烁
+          this.$router.back()
+        } catch (err) {
+          noticeError(err, '保存录播配置失败')
         }
-
-        this.saving = false
-        this.$router.back()
       }
     }
   }

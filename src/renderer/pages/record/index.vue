@@ -118,11 +118,11 @@
           onOk: async () => {
             channel.setStatus(ChannelStatus.Removing, true)
             try {
-              // todo 在这里检测是否已在录播, 如果在则取消录播
+              // todo 在这里检测是否已在录制, 如果在则取消录制
               await channel.destroy()
               _.remove(this.$store.channels, channel)
             } catch (err) {
-              noticeError(err, '移除频道失败')
+              noticeError(err, '移除录播失败')
             }
             channel.setStatus(ChannelStatus.Removing, false)
           }
