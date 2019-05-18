@@ -29,7 +29,7 @@ function createAndAddRoute (...args) {
 // =============================================================================
 
 createAndAddRoute(Route.Record, require('@/pages/record'))
-createAndAddRoute(Route.RecordEdit, require('@/pages/record/edit'))
+createAndAddRoute(Route.RecordEdit, require('@/pages/record/edit'), { path: `/${Route.RecordEdit}/:id` })
 createAndAddRoute(Route.RecordAdd, require('@/pages/record/edit'))
 createAndAddRoute(Route.RecordSetting, require('@/pages/record/setting'))
 createAndAddRoute(Route.VideoDownload, require('@/pages/video-download'))

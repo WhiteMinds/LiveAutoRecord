@@ -28,7 +28,7 @@
           {
             title: '平台',
             key: 'platformCN',
-            width: 80,
+            width: 120,
             sortable: true,
             render: (h, params) => this.genLinkTag(h, params, Platform[params.row.platform], params.row.getModel().url.origin)
           },
@@ -69,7 +69,8 @@
           },
           {
             text: '设置',
-            props: { icon: 'md-options' }
+            props: { icon: 'md-options' },
+            click: ({ row }) => this.$router.push({ name: Route.RecordEdit, params: row })
           },
           {
             text: '',
