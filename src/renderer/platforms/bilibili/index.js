@@ -17,15 +17,15 @@ export const preferred = {
   circuit: 'primary'
 }
 
-export function getUrl (channel) {
+export function getUrl (address) {
   let base = 'https://live.bilibili.com/'
-  return new URL(base + channel)
+  return new URL(base + address)
 }
 
-export async function getStream (channel, quality, circuit) {
+export async function getStream (address, quality, circuit) {
   // todo 返回指定的流地址
 }
 
-export function getDanmakuClient (channel) {
+export function getDanmakuClient (address) {
   // todo 返回一个具有start/stop接口, 实现了event的弹幕client
 }

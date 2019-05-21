@@ -54,14 +54,19 @@
     }
   },
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
     "fs-extra": "^7.0.1",
     "humps": "^2.0.1",
     "iview": "^3.4.1",
     "lodash": "^4.17.11",
     "log4js": "^4.1.1",
+    "query-string": "^6.5.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "sequelize": "^5.8.5",
     "sqlite3": "^4.0.6",
     "umzug": "^2.2.0",
+    "uuid": "^3.3.2",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1"

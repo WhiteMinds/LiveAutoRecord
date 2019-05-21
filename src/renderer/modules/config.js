@@ -11,8 +11,8 @@ export default new Vue({
         notice: true,
         checkInterval: 0,
         segment: 0,
-        // 支持的自定义数据有platform, channel, n种时间
-        savePath: `${UserDataPath}\\{platform}\\{channel}`,
+        // 支持的自定义数据有platform, address, n种时间
+        savePath: `${UserDataPath}\\{platform}\\{address}`,
         saveName: '{year}-{month}-{date} {hour}-{min}-{sec}'
       }
     }

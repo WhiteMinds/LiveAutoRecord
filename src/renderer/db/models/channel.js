@@ -75,10 +75,6 @@ export default (sequelize, DataTypes) => {
       return this.findOne({ where: data })
     }
 
-    static findByChannel (channel) {
-      return this.findBy({ channel })
-    }
-
     // Attributes handle
     // ===========================================================================
 
@@ -111,7 +107,9 @@ export default (sequelize, DataTypes) => {
     // Actions
     // ===========================================================================
 
-    // ... codes ...
+    getStream () {
+      return this.platformObj.getStream(this.address, this.quality, this.circuit)
+    }
   }
 
   return Channel
