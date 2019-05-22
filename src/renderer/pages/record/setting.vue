@@ -13,8 +13,8 @@
         <FormItem label="自动分段 (分钟)" prop="segment">
           <InputNumber v-model="form.segment"></InputNumber>
         </FormItem>
-        <FormItem label="录像保存路径" prop="savePath">
-          <i-input v-model="form.savePath"></i-input>
+        <FormItem label="录像保存路径" prop="saveFolder">
+          <i-input v-model="form.saveFolder"></i-input>
         </FormItem>
         <FormItem label="录像文件名" prop="saveName">
           <i-input v-model="form.saveName"></i-input>
@@ -40,7 +40,7 @@
         rules: {
           checkInterval: [ { required: true, type: 'number', message: '开播检查间隔不能为空', trigger: 'blur' } ],
           segment: [ { required: true, type: 'number', message: '自动分段不能为空', trigger: 'blur' } ],
-          savePath: [ { required: true, message: '录像保存路径不能为空', trigger: 'blur' } ],
+          saveFolder: [ { required: true, message: '录像保存路径不能为空', trigger: 'blur' } ],
           saveName: [ { required: true, message: '录像文件名不能为空', trigger: 'blur' } ]
         },
         saving: false
