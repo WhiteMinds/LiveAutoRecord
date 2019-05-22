@@ -53,6 +53,7 @@
   import config from '@/modules/config'
   import db from '@/db'
   import log from '@/modules/log'
+  import recorder from '@/modules/recorder'
   import { Route } from 'const'
 
   export default {
@@ -93,7 +94,7 @@
         log.info('Loading channels...')
         this.$store.channels = await db.Channel.findAll()
 
-        // todo 在这里启动recorder等其他模块
+        recorder.init()
 
         this.starting = false
       },

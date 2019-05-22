@@ -15,6 +15,7 @@
 
 <script>
   import _ from 'lodash'
+  import recorder from '@/modules/recorder'
   import { noticeError } from '@/helper'
   import { Route, Platform, ChannelStatus } from 'const'
 
@@ -60,12 +61,15 @@
         actions: [
           {
             text: '刷新',
-            props: { icon: 'md-sync' }
+            props: { icon: 'md-sync' },
+            show: ({ row }) => !row.getStatus(ChannelStatus.Recording),
+            click: this.refreshChannel
           },
           {
             text: '终止',
             props: { type: 'error', icon: 'md-power' },
-            show: false
+            show: ({ row }) => row.getStatus(ChannelStatus.Recording),
+            click: this.stopRecord
           },
           {
             text: '设置',
@@ -110,6 +114,12 @@
           }
         }, text)
       },
+      refreshChannel ({ row }) {
+        recorder.checkChannel(row.getModel()).catch(noticeError)
+      },
+      stopRecord ({ row }) {
+        row.getModel().stopRecord()
+      },
       removeChannel ({ row }) {
         let channel = row.getModel()
         this.$Modal.confirm({
@@ -118,7 +128,7 @@
           onOk: async () => {
             channel.setStatus(ChannelStatus.Removing, true)
             try {
-              // todo 在这里检测是否已在录制, 如果在则取消录制
+              if (channel.getStatus(ChannelStatus.Recording)) channel.stopRecord()
               await channel.destroy()
               _.remove(this.$store.channels, channel)
             } catch (err) {
