@@ -1,3 +1,7 @@
+import path from 'path'
+import fs from 'fs-extra'
+import format from 'string-template'
+import config from '@/modules/config'
 import platforms from '@/platforms'
 import { Platform, ChannelStatus, ChannelStatusPriority } from 'const'
 
@@ -109,6 +113,39 @@ export default (sequelize, DataTypes) => {
 
     getStream () {
       return this.platformObj.getStream(this.address, this.quality, this.circuit)
+    }
+
+    genRecordPath () {
+      let now = new Date()
+      let data = {
+        platform: this.platformCN,
+        address: this.address,
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        date: now.getDate(),
+        hour: now.getHours(),
+        min: now.getMinutes(),
+        sec: now.getSeconds()
+      }
+
+      let saveFolder = format(config.record.saveFolder, data)
+      let saveName = format(config.record.saveName, data) + '.flv'
+      fs.ensureDirSync(saveFolder)
+
+      return path.join(saveFolder, saveName)
+    }
+
+    stopRecord () {
+      if (this._stopRecord) {
+        this._stopRecord()
+        delete this._stopRecord
+      }
+      this.setStatus(ChannelStatus.Recording, false)
+
+      if (this.getStatus(ChannelStatus.NotCheck)) return
+      // 持续一段时间不检测, 防止终止完后立即又开始录制了
+      this.setStatus(ChannelStatus.NotCheck, true)
+      setTimeout(() => this.setStatus(ChannelStatus.NotCheck, false), 5e3)
     }
   }
 
