@@ -1,5 +1,6 @@
 'use strict'
 
+import path from 'path'
 import { app, BrowserWindow, Tray, Menu } from 'electron'
 
 /**
@@ -20,6 +21,7 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
+    icon: path.join(__static, 'icon.ico'),
     width: 1000,
     height: 600,
     useContentSize: true,

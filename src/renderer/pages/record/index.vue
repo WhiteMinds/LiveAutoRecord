@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import path from 'path'
   import _ from 'lodash'
   import recorder from '@/modules/recorder'
   import { noticeError } from '@/helper'
@@ -55,7 +56,7 @@
           },
           {
             key: 'actions',
-            minWidth: 220
+            minWidth: 240
           }
         ],
         actions: [
@@ -70,6 +71,11 @@
             props: { type: 'error', icon: 'md-power' },
             show: ({ row }) => row.getStatus(ChannelStatus.Recording),
             click: this.stopRecord
+          },
+          {
+            text: '',
+            props: { icon: 'md-filing' },
+            click: this.openSaveFolder
           },
           {
             text: '设置',
@@ -119,6 +125,10 @@
       },
       stopRecord ({ row }) {
         row.getModel().stopRecord()
+      },
+      openSaveFolder ({ row }) {
+        let fullPath = row.getModel().genRecordPath()
+        this.$electron.shell.openItem(path.dirname(fullPath))
       },
       removeChannel ({ row }) {
         let channel = row.getModel()

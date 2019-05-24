@@ -1,9 +1,11 @@
 import fs from 'fs-extra'
 import request from 'request'
+import ffmpeg from 'fluent-ffmpeg'
 import Vue from 'vue'
+import log from '@/modules/log'
 import config from '@/modules/config'
 import { noticeError } from '@/helper'
-import { ChannelStatus } from 'const'
+import { ChannelStatus, EmptyFn } from 'const'
 
 export default new Vue({
   functional: true,
@@ -38,14 +40,14 @@ export default new Vue({
       // 开始录播
       channel.setStatus(ChannelStatus.Recording, true)
       // todo 通知录播开始
-      channel._stopRecord = this.downloadStream(result.stream, channel.genRecordPath(), (err) => {
+      channel._stopRecord = this.downloadStreamUseFfmpeg(result.stream, channel.genRecordPath(), (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
         if (err) return noticeError(err, '录播过程中发生错误')
 
         // todo 录播正常结束, 在这里写视频自动处理, 或者直接将录播改成用ffmpeg录制就不用处理
       })
     },
-    downloadStream (url, savePath, callback = () => {}) {
+    downloadStream (url, savePath, callback = EmptyFn) {
       const stream = fs.createWriteStream(savePath)
 
       const req = request(url)
@@ -67,6 +69,20 @@ export default new Vue({
         })
 
       return req.abort.bind(req)
+    },
+    downloadStreamUseFfmpeg (url, savePath, callback = EmptyFn) {
+      const command = ffmpeg(url)
+        .outputOptions(
+          '-user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+          '-c', 'copy'
+        )
+        .output(savePath)
+        .on('error', callback)
+        .on('end', () => callback())
+        .on('stderr', stderrLine => log.trace('ffmpeg:', stderrLine))
+      command.run()
+
+      return () => command.ffmpegProc && command.ffmpegProc.stdin.write('q')
     }
   }
 })
