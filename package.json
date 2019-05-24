@@ -1,6 +1,6 @@
 {
   "name": "live-auto-record",
-  "version": "3.0.0",
+  "version": "3.0.0-beta",
   "author": "WhiteMinds <WhiteMind@qq.com>",
   "description": "多平台直播自动录制 & 处理工具",
   "license": "MIT",
@@ -25,6 +25,7 @@
     "directories": {
       "output": "build"
     },
+    "asar": false,
     "files": [
       "dist/electron/**/*"
     ],
