@@ -50,6 +50,8 @@
 </template>
 
 <script>
+  import ffmpeg from 'fluent-ffmpeg'
+  import ffmpegStatic from 'ffmpeg-static'
   import config from '@/modules/config'
   import db from '@/db'
   import log from '@/modules/log'
@@ -90,6 +92,9 @@
 
         log.info('Initializing database module...')
         await db.init()
+
+        log.info('Initializing ffmpeg configuration...')
+        ffmpeg.setFfmpegPath(ffmpegStatic.path)
 
         log.info('Loading channels...')
         this.$store.channels = await db.Channel.findAll()
