@@ -35,7 +35,7 @@ export const circuits = {
 }
 
 export const preferred = {
-  quality: 'TD',
+  quality: '超清',
   circuit: 'ws-h5'
 }
 
@@ -73,8 +73,9 @@ export async function getStream (address, quality, circuit, opts = {}) {
   }
 
   let json = response.body
-  // 未开播
-  if (json.error === -5) return
+  // 不存在的房间, 已被封禁, 未开播
+  if ([-3, -4, -5].includes(json.error)) return
+  // 其他
   if (json.error !== 0) throw new Error('Unexpected error code, ' + json.error)
 
   // 检测是否支持指定的画质
