@@ -1,7 +1,9 @@
 'use strict'
 
+import fs from 'fs'
 import path from 'path'
 import { app, BrowserWindow, Tray, Menu } from 'electron'
+const { version, build } = require('../../package.json')
 
 /**
  * Set `__static` path to static files in production
@@ -16,7 +18,21 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:${process.env.DEV_PORT || 9080}`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
+function init () {
+  try {
+    // 不设置id的话, 会导致通知无法使用
+    app.setAppUserModelId(build.appId)
+    // 创建主窗口
+    createMainWindow()
+  } catch (err) {
+    // 记录错误后再抛出
+    console.error(err)
+    fs.writeFileSync('launch.log', err.stack)
+    throw err
+  }
+}
+
+function createMainWindow () {
   /**
    * Initial window options
    */
@@ -41,6 +57,7 @@ function createWindow () {
   })
 
   mainWindow.on('ready-to-show', () => {
+    mainWindow.setTitle(`LAR 直播自动录制 [v${version}]`)
     mainWindow.show()
     mainWindow.focus()
   })
@@ -67,7 +84,7 @@ function createTray (win) {
   win.appTray = tray
 }
 
-app.on('ready', createWindow)
+app.on('ready', init)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -77,7 +94,7 @@ app.on('window-all-closed', () => {
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow()
+    init()
   }
 })
 

@@ -1,3 +1,4 @@
+import path from 'path'
 import _ from 'lodash'
 import iView from 'iview'
 import log from '@/modules/log'
@@ -13,5 +14,12 @@ export function noticeError (err, tip = '发生了错误', duration = 10) {
     content: tip,
     duration,
     closable: true
+  })
+}
+
+export function createNotice (title, body) {
+  return new Notification(title, {
+    icon: path.join(__static, 'icon.ico'),
+    body
   })
 }

@@ -4,7 +4,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import Vue from 'vue'
 import log from '@/modules/log'
 import config from '@/modules/config'
-import { noticeError } from '@/helper'
+import { noticeError, createNotice } from '@/helper'
 import { ChannelStatus, EmptyFn } from 'const'
 
 export default new Vue({
@@ -37,14 +37,15 @@ export default new Vue({
       }
       if (!result) return
 
+      // 发出通知
+      if (config.record.notice) createNotice('录播开始', channel.profile)
+
       // 开始录播
       channel.setStatus(ChannelStatus.Recording, true)
-      // todo 通知录播开始
       channel._stopRecord = this.downloadStreamUseFfmpeg(result.stream, channel.genRecordPath(), (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
         if (err) return noticeError(err, '录播过程中发生错误')
-
-        // todo 录播正常结束, 在这里写视频自动处理, 或者直接将录播改成用ffmpeg录制就不用处理
+        // 录播正常结束, 可以在这里做额外处理, 目前暂无
       })
     },
     downloadStream (url, savePath, callback = EmptyFn) {

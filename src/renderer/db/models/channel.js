@@ -91,7 +91,9 @@ export default (sequelize, DataTypes) => {
     }
 
     get profile () {
-      return `${this.platformCN}-${this.address}`
+      let v = `${this.platformCN}-${this.address}`
+      if (this.alias.trim()) v += ` (${this.alias})`
+      return v
     }
 
     setStatus (idx, status) {
