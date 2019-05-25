@@ -11,6 +11,9 @@
         <FormItem label="直播间" prop="address">
           <i-input v-model="form.address" placeholder="直播间ID (复制直播间地址到此处将自动解析)" :disabled="!isNew"></i-input>
         </FormItem>
+        <FormItem label="别称">
+          <i-input v-model="form.alias" placeholder="别称"></i-input>
+        </FormItem>
         <FormItem label="画质">
           <i-select v-model="form.quality">
             <Option v-for="(val, key) in platformObj.qualities" :value="key" :key="key">{{ val }}</Option>
@@ -83,7 +86,7 @@
           this.model = this.$store.channels.find(channel => channel.id === Number(this.$route.params.id))
           if (!this.model) throw new Error('Cant find target channel')
           // 不直接使用model.toJSON, 因为后面会直接将form给assign到model上, 使用pick防止status等属性的覆盖
-          this.form = _.pick(this.model, ['platform', 'address', 'quality', 'circuit', 'barrage', 'auto_process'])
+          this.form = _.pick(this.model, ['platform', 'address', 'alias', 'quality', 'circuit', 'barrage', 'auto_process'])
         }
       },
 
