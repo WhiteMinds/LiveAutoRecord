@@ -1,7 +1,7 @@
 import uuid4 from 'uuid/v4'
 import MD5 from 'crypto-js/md5'
-import rp from 'request-promise'
 import * as queryString from 'query-string'
+import requester from '@/modules/requester'
 
 // Variables
 // =============================================================================
@@ -51,7 +51,7 @@ export async function getStream (address, quality, circuit, opts = {}) {
   let signed = sign(address, did, time)
   signed = queryString.parse(signed)
 
-  let response = await rp.post(`https://www.douyu.com/lapi/live/getH5Play/${address}`, {
+  let response = await requester.post(`https://www.douyu.com/lapi/live/getH5Play/${address}`, {
     resolveWithFullResponse: true,
     simple: false,
     json: true,
@@ -106,12 +106,12 @@ export function getDanmakuClient (address) {
 
 /* eslint-disable no-new-func */
 async function getSignFn (address, rejectCache) {
-  if (!rejectCache && signCaches.hasOwnProperty('address')) {
+  if (!rejectCache && signCaches.hasOwnProperty(address)) {
     // 有缓存, 直接使用
     return signCaches[address]
   }
 
-  let json = await rp.get('https://www.douyu.com/swf_api/homeH5Enc?rids=' + address, { json: true })
+  let json = await requester.get('https://www.douyu.com/swf_api/homeH5Enc?rids=' + address, { json: true })
   if (json.error !== 0) throw new Error('Unexpected error code, ' + json.error)
   let code = json.data && json.data['room' + address]
   if (!code) throw new Error('Unexpected result with homeH5Enc, ' + JSON.stringify(json))
