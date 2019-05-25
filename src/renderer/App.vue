@@ -35,6 +35,10 @@
             <Icon type="md-film"></Icon>
             录播处理
           </MenuItem>
+          <MenuItem :name="Route.Setting">
+            <Icon type="md-settings"></Icon>
+            软件设置
+          </MenuItem>
           <MenuItem :name="Route.About">
             <Icon type="md-school"></Icon>
             关于作者
@@ -50,6 +54,7 @@
 </template>
 
 <script>
+  import { remote } from 'electron'
   import ffmpeg from 'fluent-ffmpeg'
   import ffmpegStatic from 'ffmpeg-static'
   import config from '@/modules/config'
@@ -89,6 +94,14 @@
       async init () {
         log.info('Initializing config module...')
         config.init()
+
+        log.info('Initializing window event handler...')
+        const win = remote.getCurrentWindow()
+        win.on('minimize', () => {
+          if (config.app.minimizeToTaskBar) {
+            win.hide()
+          }
+        })
 
         log.info('Initializing database module...')
         await db.init()

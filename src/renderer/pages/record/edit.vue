@@ -1,7 +1,7 @@
 <template>
   <div class="lar-page">
     <Card :dis-hover="true">
-      <h3 slot="title">{{ isNew ? '添加' : '设置' }}录播</h3>
+      <h3 slot="title">{{ isNew ? '添加新录播' : '编辑指定录播' }}</h3>
       <Form ref="form" :model="form" :rules="isNew ? rules : null" :label-width="100">
         <FormItem label="平台">
           <i-select v-model="form.platform" @on-change="onPlatformChange" :disabled="!isNew">

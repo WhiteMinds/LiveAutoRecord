@@ -7,6 +7,9 @@ export default new Vue({
   functional: true,
   data () {
     return {
+      app: {
+        minimizeToTaskBar: false
+      },
       record: {
         notice: true,
         checkInterval: 10,

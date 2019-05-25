@@ -34,6 +34,7 @@ createAndAddRoute(Route.RecordAdd, require('@/pages/record/edit'))
 createAndAddRoute(Route.RecordSetting, require('@/pages/record/setting'))
 createAndAddRoute(Route.VideoDownload, require('@/pages/video-download'))
 createAndAddRoute(Route.VideoProcess, require('@/pages/video-process'))
+createAndAddRoute(Route.Setting, require('@/pages/setting'))
 createAndAddRoute(Route.About, require('@/pages/about'))
 routes.push({
   path: '*',

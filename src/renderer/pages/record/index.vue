@@ -5,7 +5,7 @@
         <Button type="primary" icon="md-add">新增</Button>
       </router-link>
       <router-link :to="{ name: Route.RecordSetting }">
-        <Button type="primary" icon="md-settings">设置</Button>
+        <Button type="primary" icon="md-settings">录播设置</Button>
       </router-link>
     </div>
 

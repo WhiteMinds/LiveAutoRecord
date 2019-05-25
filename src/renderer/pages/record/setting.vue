@@ -60,7 +60,7 @@
           config.save()
           this.$router.back()
         } catch (err) {
-          noticeError(err, '保存设置失败')
+          noticeError(err, '保存录播设置失败')
         }
       }
     }

@@ -7,6 +7,7 @@ export const Route = {
   RecordSetting: '',
   VideoDownload: '',
   VideoProcess: '',
+  Setting: '',
   About: ''
 }
 
