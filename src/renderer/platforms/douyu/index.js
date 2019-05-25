@@ -116,11 +116,7 @@ async function getSignFn (address, rejectCache) {
   let code = json.data && json.data['room' + address]
   if (!code) throw new Error('Unexpected result with homeH5Enc, ' + JSON.stringify(json))
 
-  // 简化sign的code而不是直接使用
-  code = code.replace(/function ub98484234.*?return eval\((.*?)\).*?;}/, (funStr, varName) => funStr.replace(/return eval.*?;/, `return ${varName};`))
-  let genUb98484234 = new Function(code + 'return ub98484234')
-  let ub98484234 = genUb98484234()
-  let genSign = new Function('CryptoJS', 'return ' + ub98484234())
+  let genSign = new Function('CryptoJS', code + 'return ub98484234')
   let sign = genSign({ MD5 })
   signCaches[address] = sign
 
