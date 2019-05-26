@@ -30,7 +30,7 @@
           {
             title: '平台',
             key: 'platformCN',
-            width: 120,
+            width: 80,
             sortable: true,
             render: (h, params) => this.genLinkTag(h, params, Platform[params.row.platform], params.row.getModel().url.origin)
           },
@@ -55,8 +55,20 @@
             sortable: true
           },
           {
+            title: '使用画质',
+            key: 'quality_real',
+            width: 120,
+            sortable: true
+          },
+          {
+            title: '使用线路',
+            key: 'circuit_real',
+            width: 120,
+            sortable: true
+          },
+          {
             key: 'actions',
-            minWidth: 240
+            minWidth: 250
           }
         ],
         actions: [
@@ -97,6 +109,10 @@
           let data = channel.toJSON()
           data.getModel = () => channel
           data.getStatus = channel.getStatus
+          if (channel.streamInfo) {
+            data.quality_real = channel.qualities[channel.streamInfo.quality]
+            data.circuit_real = channel.circuits[channel.streamInfo.circuit]
+          }
           return data
         })
       }

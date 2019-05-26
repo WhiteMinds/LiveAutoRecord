@@ -58,7 +58,8 @@ export default (sequelize, DataTypes) => {
       get () {
         return Platform[this.platform]
       }
-    }
+    },
+    streamInfo: DataTypes.VIRTUAL
   })
 
   // 定义实际的Class
@@ -84,6 +85,14 @@ export default (sequelize, DataTypes) => {
 
     get platformObj () {
       return platforms[this.platform]
+    }
+
+    get qualities () {
+      return this.platformObj.qualities
+    }
+
+    get circuits () {
+      return this.platformObj.circuits
     }
 
     get url () {
