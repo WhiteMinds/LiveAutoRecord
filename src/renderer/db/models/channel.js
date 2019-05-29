@@ -3,6 +3,7 @@ import fs from 'fs-extra'
 import format from 'string-template'
 import config from '@/modules/config'
 import platforms from '@/platforms'
+import { zerofill } from '@/helper'
 import { Platform, ChannelStatus, ChannelStatusPriority } from 'const'
 
 export default (sequelize, DataTypes) => {
@@ -132,11 +133,11 @@ export default (sequelize, DataTypes) => {
         platform: this.platformCN,
         address: this.address,
         year: now.getFullYear(),
-        month: now.getMonth() + 1,
-        date: now.getDate(),
-        hour: now.getHours(),
-        min: now.getMinutes(),
-        sec: now.getSeconds()
+        month: zerofill(now.getMonth() + 1),
+        date: zerofill(now.getDate()),
+        hour: zerofill(now.getHours()),
+        min: zerofill(now.getMinutes()),
+        sec: zerofill(now.getSeconds())
       }
 
       let saveFolder = format(config.record.saveFolder, data)

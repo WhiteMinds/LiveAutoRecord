@@ -23,3 +23,7 @@ export function createNotice (title, body) {
     body
   })
 }
+
+export function zerofill (n, len = 2) {
+  return _.padStart(n, len, '0')
+}
