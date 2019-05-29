@@ -141,7 +141,7 @@ export default (sequelize, DataTypes) => {
       }
 
       let saveFolder = format(config.record.saveFolder, data)
-      let saveName = format(config.record.saveName, data) + '.flv'
+      let saveName = `${format(config.record.saveName, data)}.${config.record.saveFormat}`
       fs.ensureDirSync(saveFolder)
 
       return path.join(saveFolder, saveName)

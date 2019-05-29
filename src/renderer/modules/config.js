@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import fs from 'fs-extra'
 import Vue from 'vue'
-import { UserDataPath, ConfigFilePath } from 'const'
+import { UserDataPath, ConfigFilePath, RecordFormat } from 'const'
 
 export default new Vue({
   functional: true,
@@ -16,7 +16,8 @@ export default new Vue({
         segment: 0,
         // 支持的自定义数据有platform, address, n种时间
         saveFolder: `${UserDataPath}\\{platform}\\{address}`,
-        saveName: '{year}-{month}-{date} {hour}-{min}-{sec}'
+        saveName: '{year}-{month}-{date} {hour}-{min}-{sec}',
+        saveFormat: RecordFormat.FLV
       }
     }
   },

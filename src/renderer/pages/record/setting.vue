@@ -19,6 +19,11 @@
         <FormItem label="录像文件名" prop="saveName">
           <i-input v-model="form.saveName"></i-input>
         </FormItem>
+        <FormItem label="录像保存格式">
+          <i-select v-model="form.saveFormat">
+            <Option v-for="(val, key) in RecordFormat" :value="val" :key="key">{{ key }}</Option>
+          </i-select>
+        </FormItem>
         <FormItem class="buttons">
           <Button type="success" :loading="saving" @click="confirm">确认</Button>
           <Button :disabled="saving" @click="$router.back()">取消</Button>
@@ -31,11 +36,14 @@
 <script>
   import config from '@/modules/config'
   import { noticeError } from '@/helper'
+  import { RecordFormat } from 'const'
 
   export default {
     name: 'record-setting',
     data () {
       return {
+        RecordFormat,
+
         form: Object.assign({}, config.record),
         rules: {
           checkInterval: [ { required: true, type: 'number', message: '开播检查间隔不能为空', trigger: 'blur' } ],
@@ -68,5 +76,7 @@
 </script>
 
 <style scoped>
-
+  .ivu-select {
+    width: 100px;
+  }
 </style>

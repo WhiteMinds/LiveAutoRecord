@@ -12,3 +12,10 @@ export const ConfigFilePath = path.join(UserDataPath, 'lar_config.json')
 export const LogFolderPath = 'logs'
 
 export const EmptyFn = () => {}
+
+export const RecordFormat = {
+  FLV: 'flv',
+  MP4: 'mp4',
+  MOV: 'mov',
+  MKV: 'mkv'
+}
