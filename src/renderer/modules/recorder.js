@@ -45,7 +45,7 @@ export default new Vue({
       channel.streamInfo = result
       channel._stopRecord = this.downloadStreamUseFfmpeg(result.stream, channel.genRecordPath(), (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
-        delete channel.streamInfo
+        channel.streamInfo = null
         if (err) return noticeError(err, '录播过程中发生错误')
         // 录播正常结束, 可以在这里做额外处理, 目前暂无
       })

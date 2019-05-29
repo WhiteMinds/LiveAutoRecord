@@ -107,7 +107,7 @@
         await db.init()
 
         log.info('Initializing ffmpeg configuration...')
-        ffmpeg.setFfmpegPath(ffmpegStatic.path)
+        ffmpeg.setFfmpegPath(ffmpegStatic.path.replace('app.asar', 'app.asar.unpacked'))
 
         log.info('Loading channels...')
         this.$store.channels = await db.Channel.findAll()
