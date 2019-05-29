@@ -61,6 +61,7 @@
   import db from '@/db'
   import log from '@/modules/log'
   import recorder from '@/modules/recorder'
+  import { sleep, noticeError } from '@/helper'
   import { Route } from 'const'
 
   export default {
@@ -102,6 +103,7 @@
             win.hide()
           }
         })
+        window.onbeforeunload = this.onAppQuit
 
         log.info('Initializing database module...')
         await db.init()
@@ -118,6 +120,29 @@
       },
       onMenuSelect (name) {
         this.$router.push({ name })
+      },
+      onAppQuit () {
+        // 无录制中的视频直接退出
+        if (this.$store.recordingChannels.length === 0) return
+
+        this.$Modal.confirm({
+          title: '警告',
+          content: `<p>有频道正在录制中</p><p>是否确认退出并停止录制?</p>`,
+          loading: true,
+          onOk: async () => {
+            try {
+              this.$store.recordingChannels.forEach(channel => channel.stopRecord())
+              await sleep(1e3)
+              window.onbeforeunload = null
+              window.close()
+            } catch (err) {
+              noticeError(err)
+              this.$Modal.remove()
+            }
+          }
+        })
+
+        return false
       }
     }
   }
