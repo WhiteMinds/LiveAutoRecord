@@ -1,7 +1,9 @@
 import uuid4 from 'uuid/v4'
 import MD5 from 'crypto-js/md5'
+import cheerio from 'cheerio'
 import * as queryString from 'query-string'
 import requester from '@/modules/requester'
+import { Platform } from 'const'
 
 // Variables
 // =============================================================================
@@ -42,6 +44,39 @@ export const preferred = {
 export function getUrl (address) {
   let base = 'https://www.douyu.com/'
   return new URL(base + address)
+}
+
+export function canParse (address) {
+  return /https?:\/\/(?:.*?\.)?douyu.com\//.test(address)
+}
+
+export async function parseAddress (address) {
+  if (canParse(address)) {
+    address = address.trim()
+    let html = await requester.get(address)
+    let $ = cheerio.load(html)
+
+    let result = {
+      platform: Platform.DouYu,
+      alias: $('.Title-anchorName').text()
+    }
+
+    if (!result.alias) {
+      let keywordText = $('meta[name=keywords]').attr('content')
+      if (keywordText) {
+        let keywords = keywordText.split(',')
+        result.alias = keywords[0]
+      }
+    }
+
+    let scriptNode = $('script').map((i, tag) => tag.children[0]).filter((i, tag) => tag.data.includes('$ROOM'))[0]
+    if (!scriptNode) return
+    let matched = scriptNode.data.match(/\$ROOM\.room_id.?=(.*?);/)
+    if (!matched) return
+    result.address = matched[1].trim()
+
+    return result
+  }
 }
 
 export async function getStream (address, quality, circuit, opts = {}) {

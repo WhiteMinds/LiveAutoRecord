@@ -9,7 +9,8 @@
           </i-select>
         </FormItem>
         <FormItem label="直播间" prop="address">
-          <i-input v-model="form.address" placeholder="直播间ID (复制直播间地址到此处将自动解析)" :disabled="!isNew"></i-input>
+          <i-input v-model="form.address" placeholder="直播间ID (复制直播间地址到此处将自动解析)" :disabled="!isNew || parsing"
+                   @on-blur="onAddressChange" @on-enter="onAddressChange"></i-input>
         </FormItem>
         <FormItem label="别称">
           <i-input v-model="form.alias" placeholder="别称"></i-input>
@@ -58,6 +59,7 @@
         rules: {
           address: [ { required: true, message: '直播间不能为空', trigger: 'blur' } ]
         },
+        parsing: false,
         saving: false
       }
     },
@@ -96,6 +98,28 @@
       async onPlatformChange () {
         this.model.quality = this.platformObj.preferred.quality
         this.model.circuit = this.platformObj.preferred.circuit
+      },
+      async onAddressChange () {
+        if (!this.form.address) return
+        this.parsing = true
+
+        let platform = Object.values(platforms).find(platform => platform.canParse && platform.canParse(this.form.address))
+        if (platform) {
+          let close = this.$Message.loading('正在解析地址')
+          try {
+            let result = await platform.parseAddress(this.form.address)
+            if (result) {
+              Object.assign(this.form, result)
+            } else {
+              this.$Message.warning('解析失败, 不支持的地址')
+            }
+          } catch (err) {
+            noticeError(err, '解析失败')
+          }
+          close()
+        }
+
+        this.parsing = false
       },
 
       // Actions
