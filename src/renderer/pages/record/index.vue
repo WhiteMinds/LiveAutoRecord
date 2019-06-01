@@ -137,7 +137,7 @@
         }, text)
       },
       refreshChannel ({ row }) {
-        recorder.checkChannel(row.getModel()).catch(noticeError)
+        recorder.checkChannel(row.getModel(), true).catch(noticeError)
       },
       stopRecord ({ row }) {
         row.getModel().stopRecord()

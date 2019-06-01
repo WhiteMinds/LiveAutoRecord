@@ -44,8 +44,9 @@
   import _ from 'lodash'
   import db from '@/db'
   import platforms from '@/platforms'
+  import recorder from '@/modules/recorder'
   import { noticeError } from '@/helper'
-  import { Route, Platform, PlatformList } from 'const'
+  import { Route, Platform, PlatformList, ChannelStatus } from 'const'
 
   export default {
     name: 'record-edit',
@@ -57,7 +58,7 @@
         model: null,
         form: {},
         rules: {
-          address: [ { required: true, message: '直播间不能为空', trigger: 'blur' } ]
+          address: [ { required: true, message: '无效的地址', trigger: 'blur', validator: this.addressValidator } ]
         },
         parsing: false,
         saving: false
@@ -91,6 +92,11 @@
           this.form = _.pick(this.model, ['platform', 'address', 'alias', 'quality', 'circuit', 'barrage', 'auto_process'])
         }
       },
+      addressValidator (...args) {
+        let [, , callback] = args
+        if (!this.platformObj.addressValidator) return callback()
+        return this.platformObj.addressValidator(...args)
+      },
 
       // Event listeners
       // =============================================================================
@@ -101,6 +107,7 @@
       },
       async onAddressChange () {
         if (!this.form.address) return
+        if (this.parsing) return
         this.parsing = true
 
         let platform = Object.values(platforms).find(platform => platform.canParse && platform.canParse(this.form.address))
@@ -110,6 +117,7 @@
             let result = await platform.parseAddress(this.form.address)
             if (result) {
               Object.assign(this.form, result)
+              this.$refs.form.validate()
             } else {
               this.$Message.warning('解析失败, 不支持的地址')
             }
@@ -127,13 +135,26 @@
 
       async confirm () {
         this.saving = true
-        let valid = await this.$refs.form.validate()
-        if (!valid) {
-          this.saving = false
-          return
-        }
 
         try {
+          if (this.parsing) {
+            // 等待解析完成后才继续
+            await new Promise((resolve, reject) => {
+              let unwatch = this.$watch('parsing', () => {
+                if (this.parsing) return
+                unwatch()
+                resolve()
+              })
+              setTimeout(() => reject(new Error('地址解析超时')), 10e3)
+            })
+          }
+
+          let valid = await this.$refs.form.validate()
+          if (!valid) {
+            this.saving = false
+            return
+          }
+
           if (this.isNew) {
             await this.model.save()
             this.$store.channels.push(this.model)
@@ -141,13 +162,25 @@
           } else {
             Object.assign(this.model, this.form)
             await this.model.save()
-            // todo 这里可以考虑改成自动终止当前录制并重新开始
             this.$Message.success('设置成功, 改动将于下一次录制时生效')
+
+            if (this.model.getStatus(ChannelStatus.Recording)) {
+              this.$Modal.confirm({
+                title: '提示',
+                content: `<p>频道 ${this.model.profile} 的设置已更改</p><p>是否重新开始录制来应用新的设置?</p>`,
+                onOk: () => {
+                  this.model.stopRecord()
+                  recorder.checkChannel(this.model, true).catch(noticeError)
+                }
+              })
+            }
           }
+
           // 此处不将saving改回false, 因为back的执行时间不确定, 这样可以防止闪烁
           this.$router.back()
         } catch (err) {
           noticeError(err, '保存录播配置失败')
+          this.saving = false
         }
       }
     }

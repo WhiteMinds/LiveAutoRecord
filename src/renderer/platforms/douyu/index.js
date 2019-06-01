@@ -46,6 +46,11 @@ export function getUrl (address) {
   return new URL(base + address)
 }
 
+export function addressValidator (rule, address, callback) {
+  if (!/^\d+$/.test(address)) return callback(new Error('In not a valid address'))
+  callback()
+}
+
 export function canParse (address) {
   return /https?:\/\/(?:.*?\.)?douyu.com\//.test(address)
 }

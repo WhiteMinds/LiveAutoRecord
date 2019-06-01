@@ -23,9 +23,10 @@ export default new Vue({
         }
       }
     },
-    async checkChannel (channel) {
-      // 目前来看, 有任何状态时, 都不应该进入检查状态, 所以status不为0时直接return
-      if (channel.status) return
+    async checkChannel (channel, force) {
+      // 目前来看, 有任何状态时, 都不应该进入检查状态, 所以status不为0时直接return, 除非force
+      if (channel.status && !force) return
+      if (channel.getStatus(ChannelStatus.Checking)) return
 
       // 检查是否开播
       channel.setStatus(ChannelStatus.Checking, true)
@@ -39,14 +40,24 @@ export default new Vue({
 
       // 发出通知
       if (config.record.notice) createNotice('录播开始', channel.profile)
-
       // 开始录播
+      this.startRecord(channel, result)
+    },
+    startRecord (channel, streamInfo) {
+      if (channel.getStatus(ChannelStatus.Recording)) return
       channel.setStatus(ChannelStatus.Recording, true)
-      channel.streamInfo = result
-      channel._stopRecord = this.downloadStreamUseFfmpeg(result.stream, channel.genRecordPath(), (err) => {
+      channel.streamInfo = streamInfo
+      channel._stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, channel.genRecordPath(), (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
         channel.streamInfo = null
-        if (err) return noticeError(err, '录播过程中发生错误')
+        if (err) {
+          if (err.message.trim().endsWith('Server returned 404 Not Found')) {
+            log.warn('ffmpeg error 404', streamInfo)
+            return
+          }
+
+          return noticeError(err, '录播过程中发生错误')
+        }
         // 录播正常结束, 可以在这里做额外处理, 目前暂无
       })
     },
