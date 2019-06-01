@@ -54,6 +54,17 @@
         saving: false
       }
     },
+    watch: {
+      'form.saveFormat' () {
+        if (this.form.saveFormat !== RecordFormat.FLV) {
+          this.$Message.warning({
+            content: '使用非FLV的格式录制将不支持一些特殊情况 (如语音直播)',
+            duration: 5,
+            closable: true
+          })
+        }
+      }
+    },
     methods: {
       async confirm () {
         this.saving = true

@@ -156,9 +156,11 @@
           }
 
           if (this.isNew) {
+            let existed = await db.Channel.findBy({ platform: this.form.platform, address: this.form.address })
             await this.model.save()
             this.$store.channels.push(this.model)
             this.$Message.success('保存成功')
+            if (existed) this.$Message.warning(`频道 ${this.model.profile} 存在复数个`)
           } else {
             Object.assign(this.model, this.form)
             await this.model.save()
