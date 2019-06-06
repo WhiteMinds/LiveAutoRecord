@@ -61,6 +61,8 @@ export default (sequelize, DataTypes) => {
       }
     },
     streamInfo: DataTypes.VIRTUAL
+  }, {
+    underscored: true
   })
 
   // 定义实际的Class
