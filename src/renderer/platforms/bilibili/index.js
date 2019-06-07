@@ -22,6 +22,10 @@ export function getUrl (address) {
   return new URL(base + address)
 }
 
+export async function getInfo (address) {
+  // todo 返回一个规定的对象
+}
+
 export async function getStream (address, quality, circuit) {
   // todo 返回指定的流地址
 }

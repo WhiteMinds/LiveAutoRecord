@@ -84,6 +84,33 @@ export async function parseAddress (address) {
   }
 }
 
+export async function getInfo (address) {
+  let response = await requester.get(`http://open.douyucdn.cn/api/RoomApi/room/${address}`, {
+    resolveWithFullResponse: true,
+    simple: false,
+    json: true
+  })
+
+  if (response.statusCode !== 200) {
+    if (response.statusCode === 404 && response.body === 'Not Found') {
+      throw new Error('错误的地址 ' + address)
+    }
+
+    throw new Error(`Unexpected status code, ${response.statusCode}, ${response.body}`)
+  }
+
+  let json = response.body
+  if (json.error === 101) throw new Error('错误的地址 ' + address)
+  if (json.error !== 0) throw new Error('Unexpected error code, ' + json.error)
+
+  return {
+    living: json.data.room_status === '1',
+    owner: json.data.owner_name,
+    title: json.data.room_name,
+    startTime: new Date(json.data.start_time)
+  }
+}
+
 export async function getStream (address, quality, circuit, opts = {}) {
   let sign = await getSignFn(address, opts.rejectCache)
   let did = uuid4().replace(/-/g, '')

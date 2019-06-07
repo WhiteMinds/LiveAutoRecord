@@ -125,6 +125,10 @@ export default (sequelize, DataTypes) => {
     // Actions
     // ===========================================================================
 
+    getInfo () {
+      return this.platformObj.getInfo(this.address)
+    }
+
     getStream () {
       return this.platformObj.getStream(this.address, this.quality, this.circuit)
     }

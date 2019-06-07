@@ -3,6 +3,9 @@ export const Platform = {
   BiliBili: 2
 }
 
+// todo delete in beta
+delete Platform.BiliBili
+
 export const PlatformList = Object.values(Platform)
 
 Object.assign(Platform, {

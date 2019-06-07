@@ -28,20 +28,22 @@ export default new Vue({
       if (channel.status && !force) return
       if (channel.getStatus(ChannelStatus.Checking)) return
 
-      // 检查是否开播
+      // 检查开播状态, 如果在直播中则获取流信息
       channel.setStatus(ChannelStatus.Checking, true)
-      let result
+      let channelInfo, streamInfo
       try {
-        result = await channel.getStream()
+        channelInfo = await channel.getInfo()
+        if (!channelInfo.living) return
+        streamInfo = await channel.getStream()
+        if (!streamInfo) return
       } finally {
         channel.setStatus(ChannelStatus.Checking, false)
       }
-      if (!result) return
 
       // 发出通知
-      if (config.record.notice) createNotice('录播开始', channel.profile)
+      if (config.record.notice) createNotice(channel.profile, channelInfo.title)
       // 开始录播
-      this.startRecord(channel, result)
+      this.startRecord(channel, streamInfo)
     },
     startRecord (channel, streamInfo) {
       if (channel.getStatus(ChannelStatus.Recording)) return
