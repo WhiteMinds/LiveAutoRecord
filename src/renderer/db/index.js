@@ -16,6 +16,7 @@ db.init = async () => {
   // 导入数据模型
   // =============================================================================
   db.Channel = require('./models/channel').default(sequelize, Sequelize.DataTypes)
+  db.RecordLog = require('./models/record_log').default(sequelize, Sequelize.DataTypes)
 
   // 执行迁移
   await migrate.run(sequelize)

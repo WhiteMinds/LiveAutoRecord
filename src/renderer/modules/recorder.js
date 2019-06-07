@@ -2,6 +2,7 @@ import fs from 'fs-extra'
 import request from 'request'
 import ffmpeg from 'fluent-ffmpeg'
 import Vue from 'vue'
+import db from '@/db'
 import log from '@/modules/log'
 import config from '@/modules/config'
 import { noticeError, createNotice } from '@/helper'
@@ -43,15 +44,16 @@ export default new Vue({
       // 发出通知
       if (config.record.notice) createNotice(channel.profile, channelInfo.title)
       // 开始录播
-      this.startRecord(channel, streamInfo)
+      await this.startRecord(channel, streamInfo, channelInfo)
     },
-    startRecord (channel, streamInfo) {
+    async startRecord (channel, streamInfo, channelInfo) {
       if (channel.getStatus(ChannelStatus.Recording)) return
       channel.setStatus(ChannelStatus.Recording, true)
-      channel.streamInfo = streamInfo
-      channel._stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, channel.genRecordPath(), (err) => {
+
+      const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, channel.genRecordPath(), (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
-        channel.streamInfo = null
+        channel.record.recordLog.update({ stopped_at: new Date() }).catch(noticeError)
+        channel.record = null
         if (err) {
           if (err.message.trim().endsWith('Server returned 404 Not Found')) {
             log.warn('ffmpeg error 404', streamInfo)
@@ -62,6 +64,23 @@ export default new Vue({
         }
         // 录播正常结束, 可以在这里做额外处理, 目前暂无
       })
+
+      const recordLog = await db.RecordLog.create({
+        platform: channel.platform,
+        address: channel.address,
+        alias: channel.alias,
+        owner: channelInfo.owner,
+        title: channelInfo.title,
+        quality: channel.qualities[streamInfo.quality],
+        circuit: channel.circuits[streamInfo.circuit]
+      })
+
+      channel.record = {
+        streamInfo,
+        channelInfo,
+        recordLog,
+        stopRecord
+      }
     },
     downloadStream (url, savePath, callback = EmptyFn) {
       const stream = fs.createWriteStream(savePath)

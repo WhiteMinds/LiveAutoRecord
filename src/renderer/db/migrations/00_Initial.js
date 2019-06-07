@@ -1,6 +1,6 @@
 export default {
   up (query, DataTypes) {
-    return query.createTable('Channels', {
+    return query.createTable('channels', {
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -25,6 +25,6 @@ export default {
     })
   },
   down (query, DataTypes) {
-    return query.dropTable('Channels')
+    return query.dropTable('channels')
   }
 }

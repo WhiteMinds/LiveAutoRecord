@@ -60,7 +60,13 @@ export default (sequelize, DataTypes) => {
         return Platform[this.platform]
       }
     },
-    streamInfo: DataTypes.VIRTUAL
+    // 不能直接使用record对象, 因为record中有model对象, 会导致vue的keys检测无限递归
+    streamInfo: {
+      type: DataTypes.VIRTUAL,
+      get () {
+        return this.record && this.record.streamInfo
+      }
+    }
   }, {
     underscored: true
   })
@@ -154,9 +160,9 @@ export default (sequelize, DataTypes) => {
     }
 
     stopRecord () {
-      if (this._stopRecord) {
-        this._stopRecord()
-        delete this._stopRecord
+      if (this.record) {
+        this.record.stopRecord()
+        delete this.record.stopRecord
       }
       this.setStatus(ChannelStatus.Recording, false)
 
