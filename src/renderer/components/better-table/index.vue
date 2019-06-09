@@ -2,7 +2,7 @@
   <div class="better-table">
     <TableTransfer />
     <div v-if="pageable" class="better-table-page" :style="{ 'margin-top': pagerExtMargin + 16 + 'px' }">
-      <Page :total="data.length" :page-size="pageSize" :current="page" show-elevator @on-change="changePage"></Page>
+      <Page :total="dataAmount" :page-size="pageSize" :current="page" show-elevator @on-change="changePage"></Page>
     </div>
   </div>
 </template>
@@ -11,6 +11,7 @@
   import _ from 'lodash'
   import { Table } from 'iview'
   import Edit from './edit'
+  import { noticeError } from '@/helper'
 
   export default {
     name: 'BetterTable',
@@ -39,7 +40,9 @@
       responsive: {
         type: Boolean,
         default: true
-      }
+      },
+      // 异步读取数据
+      asyncLoad: Function
     }),
     data () {
       return {
@@ -49,7 +52,10 @@
         page: 1,
         pageSize: 10,
         pagerExtMargin: 0,
-        sortData: null
+        sortData: null,
+        asyncLoading: false,
+        asyncDataAmount: 0,
+        preparePage: null
       }
     },
     computed: {
@@ -57,6 +63,7 @@
         let columns = this.columns.map(column => {
           // 浅拷贝一次, 因为可能要修改render
           column = _.clone(column)
+          if (column.sortable === true) column.sortable = 'custom'
 
           if (column.editable && !column.render) {
             column.render = (h, params) => {
@@ -113,7 +120,7 @@
 
                   // 实现props, style等的附加
                   let btnClass = []
-                  if (action.text === '') btnClass.push('ivu-btn-only-icon')
+                  if (!action.text) btnClass.push('ivu-btn-only-icon')
                   let btnOptions = {
                     props: { type: 'primary', size: 'small', loading },
                     style: { marginRight: '8px' },
@@ -122,7 +129,7 @@
                       click: () => action.click(params)
                     }
                   }
-                  _.merge(btnOptions, _.pick(action, ['props', 'style', 'class', 'on']))
+                  _.merge(btnOptions, _.pick(action, ['attrs', 'props', 'style', 'class', 'on']))
 
                   return h('Button', btnOptions, action.text)
                 })
@@ -145,6 +152,9 @@
       tableData () {
         let data = this.data.slice(0)
 
+        // 异步加载的数据分页和排序都是在异步中完成的, 所以直接返回
+        if (this.asyncLoad) return data
+
         // 实现sort
         if (this.sortData) {
           let { key, order } = this.sortData
@@ -166,18 +176,32 @@
       processedTableProps () {
         let processed = {
           columns: this.tableColumns,
-          data: this.tableData
+          data: this.tableData,
+          loading: this.loading || this.asyncLoading
         }
         if (this.responsive) processed.height = this.tableHeight
 
         return Object.assign({}, this.$props, processed)
+      },
+      dataAmount () {
+        return this.asyncLoad ? this.asyncDataAmount : this.data.length
+      },
+      maxPage () {
+        let maxPage = Math.ceil(this.dataAmount / this.pageSize)
+        if (maxPage < 1) maxPage = 1
+        return maxPage
       }
     },
     watch: {
       data () {
-        let maxPage = Math.ceil(this.data.length / this.pageSize)
-        if (maxPage < 1) maxPage = 1
-        if (this.page > maxPage) this.page = maxPage
+        if (this.page > this.maxPage) this.page = this.maxPage
+      },
+      asyncLoading () {
+        if (!this.asyncLoading && this.preparePage) {
+          let page = this.preparePage
+          this.preparePage = null
+          this.changePage(page)
+        }
       }
     },
     mounted () {
@@ -187,6 +211,8 @@
 
       // 滚动条样式改了, 所以这里也要改
       this.$refs.table.scrollBarWidth = 8
+
+      if (this.asyncLoad) this.changePage(this.page)
     },
     beforeDestroy () {
       window.removeEventListener('resize', this.onWindowResize)
@@ -203,6 +229,7 @@
       onSortChange (data) {
         if (data.order === 'normal') data = null
         this.sortData = data
+        if (this.asyncLoad) this.changePage(this.page)
       },
 
       // Actions
@@ -217,9 +244,26 @@
         this.pageSize = Math.floor((height - headHeight) / rowHeight)
         this.tableHeight = headHeight + this.pageSize * rowHeight
         this.pagerExtMargin = (this.$el.clientHeight - this.tableHeight - pagerHeight) / 2
+        if (this.asyncLoad) this.changePage(this.page)
       },
-      changePage (page) {
-        this.page = page
+      async changePage (page) {
+        this.page = page <= this.maxPage ? page : this.maxPage
+
+        if (this.asyncLoad) {
+          if (this.asyncLoading) {
+            this.preparePage = this.page
+            return
+          }
+          this.asyncLoading = true
+
+          try {
+            this.asyncDataAmount = await this.asyncLoad(this.page, this.pageSize, this.sortData)
+          } catch (err) {
+            noticeError(err, `加载第${page}页的数据时失败`)
+          }
+
+          this.asyncLoading = false
+        }
       }
     }
   }

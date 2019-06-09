@@ -39,7 +39,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    stopped_at: DataTypes.DATE
+    stoppedAt: DataTypes.DATE,
+
+    // 虚拟字段
+    status: DataTypes.VIRTUAL
   }, {
     underscored: true
   })
@@ -48,6 +51,11 @@ export default (sequelize, DataTypes) => {
   // =============================================================================
 
   class RecordLog extends ModelClass {
+
+    constructor (...args) {
+      super(...args)
+      this.status = 0
+    }
 
     // Static method
     // ===========================================================================
@@ -58,6 +66,31 @@ export default (sequelize, DataTypes) => {
 
     static findByChannel ({ platform, address } = {}) {
       return RecordLog.findBy({ platform, address })
+    }
+
+    // Attributes handle
+    // ===========================================================================
+
+    get platformObj () {
+      return platforms[this.platform]
+    }
+
+    get url () {
+      return this.platformObj.getUrl(this.address)
+    }
+
+    setStatus (idx, status) {
+      let bit = 1 << (idx - 1)
+      if (status) {
+        this.status = this.status | bit
+      } else {
+        this.status = this.status & ~bit
+      }
+    }
+
+    getStatus (idx) {
+      let bit = 1 << (idx - 1)
+      return (this.status & bit) > 0
     }
   }
 

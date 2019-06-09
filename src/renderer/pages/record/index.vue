@@ -4,18 +4,24 @@
       <router-link :to="{ name: Route.RecordAdd }">
         <Button type="primary" icon="md-add">新增</Button>
       </router-link>
+      <Button type="primary" icon="md-options" @click="showColumnsSetting = true">
+        表头配置
+      </Button>
       <router-link :to="{ name: Route.RecordSetting }">
         <Button type="primary" icon="md-settings">录播设置</Button>
       </router-link>
     </div>
 
-    <BetterTable ref="betterTable" :columns="columns" :actions="actions" :data="tableData" />
+    <BetterTable ref="betterTable" :columns="tableColumns" :actions="actions" :data="tableData" />
+
+    <modal-columns-setting :uniqueId="$route.name" v-model="showColumnsSetting" :columns="columns" />
   </div>
 </template>
 
 <script>
   import path from 'path'
   import _ from 'lodash'
+  import config from '@/modules/config'
   import recorder from '@/modules/recorder'
   import { noticeError } from '@/helper'
   import { Route, Platform, ChannelStatus } from 'const'
@@ -26,6 +32,8 @@
       return {
         Route,
 
+        showColumnsSetting: false,
+
         columns: [
           {
             title: '平台',
@@ -35,13 +43,6 @@
             render: (h, params) => this.genLinkTag(h, params, Platform[params.row.platform], params.row.getModel().url.origin)
           },
           {
-            title: '别称',
-            key: 'alias',
-            minWidth: 150,
-            sortable: true,
-            editable: true
-          },
-          {
             title: '地址',
             key: 'address',
             minWidth: 100,
@@ -49,53 +50,66 @@
             render: (h, params) => this.genLinkTag(h, params, params.row.address, params.row.getModel().url.href)
           },
           {
+            title: '别称',
+            key: 'alias',
+            minWidth: 150,
+            sortable: true,
+            editable: true
+          },
+          {
             title: '状态',
             key: 'statusCN',
-            width: 120,
+            width: 100,
             sortable: true
           },
           {
             title: '使用画质',
-            key: 'quality_real',
+            key: 'usingQuality',
             width: 120,
             sortable: true
           },
           {
             title: '使用线路',
-            key: 'circuit_real',
+            key: 'usingCircuit',
             width: 120,
             sortable: true
           },
           {
+            title: '操作',
             key: 'actions',
-            minWidth: 250
+            minWidth: 200
           }
         ],
         actions: [
           {
-            text: '刷新',
+            attrs: { title: '立即检查' },
             props: { icon: 'md-sync' },
             show: ({ row }) => !row.getStatus(ChannelStatus.Recording),
             click: this.refreshChannel
           },
           {
-            text: '终止',
+            attrs: { title: '终止录制' },
             props: { type: 'error', icon: 'md-power' },
             show: ({ row }) => row.getStatus(ChannelStatus.Recording),
             click: this.stopRecord
           },
           {
-            text: '',
-            props: { icon: 'md-filing' },
+            attrs: { title: '打开录制文件夹' },
+            props: { icon: 'ios-folder-open' },
             click: this.openSaveFolder
           },
           {
-            text: '设置',
-            props: { icon: 'md-options' },
-            click: ({ row }) => this.$router.push({ name: Route.RecordEdit, params: row })
+            attrs: { title: '查看录制历史' },
+            props: { icon: 'md-time' },
+            click: ({ row }) => this.$router.push({ name: Route.RecordHistory, params: _.pick(row, ['platform', 'address']) })
           },
           {
-            text: '',
+            attrs: { title: '设置' },
+            props: { icon: 'md-settings' },
+            click: ({ row }) => this.$router.push({ name: Route.RecordEdit, params: _.pick(row, 'id') })
+          },
+          {
+            attrs: { title: '移除' },
             props: { type: 'error', icon: 'md-trash' },
             loading: ({ row }) => row.getStatus(ChannelStatus.Removing),
             click: this.removeChannel
@@ -104,14 +118,17 @@
       }
     },
     computed: {
+      tableColumns () {
+        return this.columns.filter(column => !config.hiddenColumns[this.$route.name].includes(column.key))
+      },
       tableData () {
         return this.$store.channels.map(channel => {
           let data = channel.toJSON()
           data.getModel = () => channel
           data.getStatus = channel.getStatus
           if (channel.streamInfo) {
-            data.quality_real = channel.qualities[channel.streamInfo.quality]
-            data.circuit_real = channel.circuits[channel.streamInfo.circuit]
+            data.usingQuality = channel.qualities[channel.streamInfo.quality]
+            data.usingCircuit = channel.circuits[channel.streamInfo.circuit]
           }
           return data
         })

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import fs from 'fs-extra'
 import Vue from 'vue'
-import { UserDataPath, ConfigFilePath, RecordFormat } from 'const'
+import { Route, UserDataPath, ConfigFilePath, RecordFormat } from 'const'
 
 export default new Vue({
   functional: true,
@@ -18,6 +18,10 @@ export default new Vue({
         saveFolder: `${UserDataPath}\\{platform}\\{address}`,
         saveName: '{year}-{month}-{date} {hour}-{min}-{sec}',
         saveFormat: RecordFormat.FLV
+      },
+      hiddenColumns: {
+        [Route.Record]: [],
+        [Route.RecordHistory]: ['owner']
       }
     }
   },

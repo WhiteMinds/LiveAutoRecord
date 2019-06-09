@@ -22,3 +22,8 @@ export const ChannelStatusPriority = [
   ChannelStatus.Recording,
   ChannelStatus.NotCheck
 ]
+
+export const RecordLogStatus = {
+  ReadyToPlay: 1,
+  Removing: 2
+}

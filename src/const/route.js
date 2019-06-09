@@ -5,6 +5,7 @@ export const Route = {
   RecordEdit: '',
   RecordAdd: '',
   RecordSetting: '',
+  RecordHistory: '',
   VideoDownload: '',
   VideoProcess: '',
   Setting: '',

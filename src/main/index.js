@@ -38,8 +38,8 @@ function createMainWindow () {
    */
   mainWindow = new BrowserWindow({
     icon: path.join(__static, 'icon.ico'),
-    width: 1200,
-    height: 600,
+    width: 1280,
+    height: 800,
     useContentSize: true,
     webPreferences: {
       webSecurity: false,

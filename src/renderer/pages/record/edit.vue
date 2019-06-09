@@ -29,7 +29,7 @@
           <i-switch v-model="form.barrage" size="large"></i-switch>
         </FormItem>
         <FormItem label="录播后自动处理">
-          <i-switch v-model="form.auto_process" size="large"></i-switch>
+          <i-switch v-model="form.autoProcess" size="large"></i-switch>
         </FormItem>
         <FormItem class="buttons">
           <Button type="success" :loading="saving" @click="confirm">确认</Button>
@@ -89,7 +89,7 @@
           this.model = this.$store.channels.find(channel => channel.id === Number(this.$route.params.id))
           if (!this.model) throw new Error('Cant find target channel')
           // 不直接使用model.toJSON, 因为后面会直接将form给assign到model上, 使用pick防止status等属性的覆盖
-          this.form = _.pick(this.model, ['platform', 'address', 'alias', 'quality', 'circuit', 'barrage', 'auto_process'])
+          this.form = _.pick(this.model, ['platform', 'address', 'alias', 'quality', 'circuit', 'barrage', 'autoProcess'])
         }
       },
       addressValidator (...args) {

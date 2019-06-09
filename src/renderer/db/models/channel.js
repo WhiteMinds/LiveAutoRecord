@@ -36,7 +36,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     },
-    auto_process: {
+    autoProcess: {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     },

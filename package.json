@@ -1,6 +1,6 @@
 {
   "name": "live-auto-record",
-  "version": "3.0.0-beta.3",
+  "version": "3.0.0-beta.4",
   "author": "WhiteMinds <WhiteMind@qq.com>",
   "description": "多平台直播自动录制 & 处理工具",
   "license": "MIT",
@@ -63,6 +63,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "crypto-js": "^3.1.9-1",
+    "dplayer": "^1.25.0",
     "ffmpeg-static": "^2.4.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^7.0.1",
@@ -70,6 +71,7 @@
     "iview": "^3.4.1",
     "lodash": "^4.17.11",
     "log4js": "^4.1.1",
+    "moment": "^2.24.0",
     "query-string": "^6.5.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
