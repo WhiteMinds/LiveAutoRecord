@@ -4,6 +4,9 @@
       <Button type="primary" icon="ios-arrow-back"  @click="$router.back()">
         返回
       </Button>
+      <Button type="primary" icon="md-sync"  @click="reloadPage">
+        刷新
+      </Button>
       <Button type="primary" icon="md-options" @click="showColumnsSetting = true">
         表头配置
       </Button>
@@ -92,15 +95,29 @@
             sortable: true
           },
           {
+            title: '文件',
+            key: 'file',
+            minWidth: 180,
+            sortable: true
+          },
+          {
             title: '操作',
             key: 'actions',
-            minWidth: 120
+            minWidth: 130
           }
         ],
         actions: [
           {
             attrs: { title: '播放' },
-            props: { icon: 'md-play' }
+            props: { icon: 'md-play' },
+            disabled: ({ row }) => !row.exist,
+            click: this.openPlayer
+          },
+          {
+            attrs: { title: '在文件夹中打开' },
+            props: { icon: 'ios-folder-open' },
+            disabled: ({ row }) => !row.exist,
+            click: this.openSaveFolder
           },
           {
             attrs: { title: '移除' },
@@ -165,6 +182,20 @@
         this.recordLogs = rows
         return count
       },
+
+      // Actions
+      // =============================================================================
+
+      reloadPage () {
+        this.$refs.betterTable.changePage(this.$refs.betterTable.page)
+      },
+      openPlayer ({ row }) {
+        // todo 待实现
+        // ... codes ...
+      },
+      openSaveFolder ({ row }) {
+        this.$electron.shell.showItemInFolder(row.file)
+      },
       removeRecordLog ({ row }) {
         let recordLog = row.getModel()
         this.$Modal.confirm({
@@ -174,9 +205,8 @@
             recordLog.setStatus(RecordLogStatus.Removing, true)
             try {
               await recordLog.destroy()
-              // 重新加载当前页
               this.$refs.betterTable.asyncDataAmount--
-              this.$refs.betterTable.changePage(this.$refs.betterTable.page)
+              this.reloadPage()
             } catch (err) {
               noticeError(err, '移除录播失败')
             }

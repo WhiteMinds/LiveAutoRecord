@@ -1,7 +1,7 @@
 export default {
   up (query, DataTypes) {
     return query.sequelize.transaction(async t => {
-      const addDefaultValue = (name, type, defaultValue) => query.changeColumn('Channels', name, { type, defaultValue }, { transaction: t })
+      const addDefaultValue = (name, type, defaultValue) => query.changeColumn('channels', name, { type, defaultValue }, { transaction: t })
 
       await addDefaultValue('address', DataTypes.STRING, '')
       await addDefaultValue('alias', DataTypes.STRING, '')
@@ -13,7 +13,7 @@ export default {
   },
   down (query, DataTypes) {
     return query.sequelize.transaction(async t => {
-      const delDefaultValue = (name, type) => query.changeColumn('Channels', name, type, { transaction: t })
+      const delDefaultValue = (name, type) => query.changeColumn('channels', name, type, { transaction: t })
 
       await delDefaultValue('address', DataTypes.STRING)
       await delDefaultValue('alias', DataTypes.STRING)

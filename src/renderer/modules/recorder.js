@@ -50,9 +50,10 @@ export default new Vue({
       if (channel.getStatus(ChannelStatus.Recording)) return
       channel.setStatus(ChannelStatus.Recording, true)
 
-      const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, channel.genRecordPath(), (err) => {
+      const savePath = channel.genRecordPath()
+      const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, savePath, (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
-        channel.record.recordLog.update({ stopped_at: new Date() }).catch(noticeError)
+        channel.record.recordLog.update({ stoppedAt: new Date() }).catch(noticeError)
         channel.record = null
         if (err) {
           if (err.message.trim().endsWith('Server returned 404 Not Found')) {
@@ -71,6 +72,7 @@ export default new Vue({
         alias: channel.alias,
         owner: channelInfo.owner,
         title: channelInfo.title,
+        file: savePath,
         quality: channel.qualities[streamInfo.quality],
         circuit: channel.circuits[streamInfo.circuit]
       })

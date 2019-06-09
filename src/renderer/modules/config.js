@@ -21,7 +21,7 @@ export default new Vue({
       },
       hiddenColumns: {
         [Route.Record]: [],
-        [Route.RecordHistory]: ['owner']
+        [Route.RecordHistory]: ['owner', 'file']
       }
     }
   },

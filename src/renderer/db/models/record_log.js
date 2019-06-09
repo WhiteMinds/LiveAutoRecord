@@ -1,3 +1,4 @@
+import fs from 'fs-extra'
 import platforms from '@/platforms'
 import { Platform } from 'const'
 
@@ -35,6 +36,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       defaultValue: ''
     },
+    file: {
+      type: DataTypes.STRING,
+      defaultValue: ''
+    },
     repaired: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
@@ -42,7 +47,8 @@ export default (sequelize, DataTypes) => {
     stoppedAt: DataTypes.DATE,
 
     // 虚拟字段
-    status: DataTypes.VIRTUAL
+    status: DataTypes.VIRTUAL,
+    exist: DataTypes.VIRTUAL
   }, {
     underscored: true
   })
@@ -55,6 +61,7 @@ export default (sequelize, DataTypes) => {
     constructor (...args) {
       super(...args)
       this.status = 0
+      this.exist = fs.existsSync(this.file)
     }
 
     // Static method

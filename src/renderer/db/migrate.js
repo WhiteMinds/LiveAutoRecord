@@ -46,7 +46,8 @@ export function run (sequelize) {
       new MigrationHack('01_ChangeColumn_Platform', require('./migrations/01_ChangeColumn_Platform')),
       new MigrationHack('02_ChangeColumns', require('./migrations/02_ChangeColumns')),
       new MigrationHack('03_RenameColumns_Timestamps', require('./migrations/03_RenameColumns_Timestamps')),
-      new MigrationHack('04_CreateTable_RecordLog', require('./migrations/04_CreateTable_RecordLog'))
+      new MigrationHack('04_CreateTable_RecordLog', require('./migrations/04_CreateTable_RecordLog')),
+      new MigrationHack('05_AddColumn_File', require('./migrations/05_AddColumn_File'))
     ]
   })
 

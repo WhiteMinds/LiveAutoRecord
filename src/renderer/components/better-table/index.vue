@@ -112,17 +112,21 @@
                   return action.show
                 })
                 .map(action => {
-                  // 实现loading
+                  // 实现loading和disabled
                   let loading = false
                   if (action.hasOwnProperty('loading')) {
                     loading = typeof action.loading === 'function' ? action.loading(params) : action.loading
+                  }
+                  let disabled = false
+                  if (action.hasOwnProperty('disabled')) {
+                    disabled = typeof action.disabled === 'function' ? action.disabled(params) : action.disabled
                   }
 
                   // 实现props, style等的附加
                   let btnClass = []
                   if (!action.text) btnClass.push('ivu-btn-only-icon')
                   let btnOptions = {
-                    props: { type: 'primary', size: 'small', loading },
+                    props: { type: 'primary', size: 'small', loading, disabled },
                     style: { marginRight: '8px' },
                     class: btnClass,
                     on: {
