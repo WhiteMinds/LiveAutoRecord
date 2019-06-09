@@ -94,6 +94,9 @@
       },
       addressValidator (...args) {
         let [, , callback] = args
+        // 正在解析地址, 暂不检测
+        if (this.parsing) return callback()
+        // 无验证器
         if (!this.platformObj.addressValidator) return callback()
         return this.platformObj.addressValidator(...args)
       },
