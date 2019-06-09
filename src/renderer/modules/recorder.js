@@ -5,15 +5,20 @@ import Vue from 'vue'
 import db from '@/db'
 import log from '@/modules/log'
 import config from '@/modules/config'
-import { noticeError, createNotice } from '@/helper'
+import { sleep, noticeError, createNotice } from '@/helper'
 import { ChannelStatus, EmptyFn } from 'const'
 
 export default new Vue({
   functional: true,
   methods: {
     init () {
-      setInterval(this.checkAllChannels, config.record.checkInterval * 1e3)
-      this.checkAllChannels()
+      this.checkLoop()
+    },
+    async checkLoop () {
+      while (1) {
+        await this.checkAllChannels()
+        await sleep(config.record.checkInterval * 1e3)
+      }
     },
     async checkAllChannels () {
       for (let channel of this.$store.channels) {
@@ -53,7 +58,7 @@ export default new Vue({
       const savePath = channel.genRecordPath()
       const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, savePath, (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
-        channel.record.recordLog.update({ stoppedAt: new Date() }).catch(noticeError)
+        channel.record.getRecordLog().update({ stoppedAt: new Date() }).catch(noticeError)
         channel.record = null
         if (err) {
           if (err.message.trim().endsWith('Server returned 404 Not Found')) {
@@ -80,7 +85,8 @@ export default new Vue({
       channel.record = {
         streamInfo,
         channelInfo,
-        recordLog,
+        // 不能直接把model给过去, 否则会因为vue的keys检测无限递归
+        getRecordLog: () => recordLog,
         stopRecord
       }
     },

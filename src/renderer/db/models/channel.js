@@ -60,13 +60,7 @@ export default (sequelize, DataTypes) => {
         return Platform[this.platform]
       }
     },
-    // 不能直接使用record对象, 因为record中有model对象, 会导致vue的keys检测无限递归
-    streamInfo: {
-      type: DataTypes.VIRTUAL,
-      get () {
-        return this.record && this.record.streamInfo
-      }
-    }
+    record: DataTypes.VIRTUAL
   }, {
     underscored: true
   })
@@ -80,6 +74,7 @@ export default (sequelize, DataTypes) => {
       super(...args)
       // 虚拟字段不支持defaultValue, 要在此处初始化
       this.status = 0
+      this.record = null
     }
 
     // Static method

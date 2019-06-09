@@ -126,9 +126,9 @@
           let data = channel.toJSON()
           data.getModel = () => channel
           data.getStatus = channel.getStatus
-          if (channel.streamInfo) {
-            data.usingQuality = channel.qualities[channel.streamInfo.quality]
-            data.usingCircuit = channel.circuits[channel.streamInfo.circuit]
+          if (channel.record) {
+            data.usingQuality = channel.qualities[channel.record.streamInfo.quality]
+            data.usingCircuit = channel.circuits[channel.record.streamInfo.circuit]
           }
           return data
         })
