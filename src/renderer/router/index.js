@@ -1,6 +1,7 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Router from 'vue-router'
-import { Route } from 'const'
+import { Route, Layout } from 'const'
 
 Vue.use(Router)
 
@@ -9,13 +10,25 @@ const routes = []
 // 路由util函数
 // =============================================================================
 
-function createRoute (name, component, options) {
+function createRoute (name, component, options = {}) {
   if (component && component.hasOwnProperty('default')) component = component.default
 
-  return Object.assign({
+  if (options.layout) {
+    _.merge(options, {
+      meta: {
+        layout: options.layout
+      }
+    })
+    delete options.layout
+  }
+
+  return _.merge({
     name,
     path: '/' + name,
-    component
+    component,
+    meta: {
+      layout: Layout.Sider
+    }
   }, options)
 }
 
@@ -37,6 +50,7 @@ createAndAddRoute(Route.VideoDownload, require('@/pages/video-download'))
 createAndAddRoute(Route.VideoProcess, require('@/pages/video-process'))
 createAndAddRoute(Route.Setting, require('@/pages/setting'))
 createAndAddRoute(Route.About, require('@/pages/about'))
+createAndAddRoute(Route.Player, require('@/pages/player'), { layout: Layout.Plain })
 routes.push({
   path: '*',
   redirect: { name: Route.Record }

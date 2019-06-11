@@ -2,6 +2,7 @@ import uuid4 from 'uuid/v4'
 import MD5 from 'crypto-js/md5'
 import cheerio from 'cheerio'
 import * as queryString from 'query-string'
+import log from '@/modules/log'
 import requester from '@/modules/requester'
 import { Platform } from 'const'
 
@@ -142,8 +143,13 @@ export async function getStream (address, quality, circuit, opts = {}) {
   let json = response.body
   // 不存在的房间, 已被封禁, 未开播
   if ([-3, -4, -5].includes(json.error)) return
+  // 时间戳错误, 目前不确定原因, 但重新获取几次sign函数可解决 (这里不return, 继续往下弹提示)
+  if (json.error === -9) delete signCaches[address]
   // 其他
-  if (json.error !== 0) throw new Error('Unexpected error code, ' + json.error)
+  if (json.error !== 0) {
+    log.error('Unexpected error code', json)
+    throw new Error('Unexpected error code, ' + json.error)
+  }
 
   // 检测是否支持指定的画质
   let target = json.data.multirates.find(obj => obj.name === quality)

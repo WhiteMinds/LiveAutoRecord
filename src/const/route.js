@@ -9,9 +9,15 @@ export const Route = {
   VideoDownload: '',
   VideoProcess: '',
   Setting: '',
-  About: ''
+  About: '',
+  Player: ''
 }
 
 for (let key in Route) {
   Route[key] = humps.decamelize(key, { separator: '-' })
+}
+
+export const Layout = {
+  Plain: 1,
+  Sider: 2
 }

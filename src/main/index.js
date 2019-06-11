@@ -2,26 +2,31 @@
 
 import fs from 'fs'
 import path from 'path'
+import ipc from 'electron-better-ipc'
 import { app, BrowserWindow, Tray, Menu } from 'electron'
+import config from './config'
+import store from './store'
+import './ipc'
+import { IPCMsg, Dev, WinURL } from 'const'
 const { version, build } = require('../../package.json')
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
+if (Dev) {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
 let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
-  ? `http://localhost:${process.env.DEV_PORT || 9080}`
-  : `file://${__dirname}/index.html`
 
 function init () {
   try {
     // 不设置id的话, 会导致通知无法使用
     app.setAppUserModelId(build.appId)
+
+    config.load()
+
     // 创建主窗口
     createMainWindow()
   } catch (err) {
@@ -51,19 +56,33 @@ function createMainWindow () {
 
   mainWindow.setMenu(null)
 
-  mainWindow.loadURL(winURL)
-
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
-
-  mainWindow.on('ready-to-show', () => {
+  mainWindow.loadURL(WinURL).then(() => {
     mainWindow.setTitle(`LAR 直播自动录制 [v${version}]`)
     mainWindow.show()
     mainWindow.focus()
   })
 
+  mainWindow.on('minimize', () => {
+    if (config.app.minimizeToTaskBar) {
+      mainWindow.hide()
+    }
+  })
+
+  mainWindow.on('close', (event) => {
+    // 有录制中的视频, 将关闭过程转交给主窗口
+    if (store.recordingChannels.length > 0) {
+      event.preventDefault()
+      ipc.callRenderer(mainWindow, IPCMsg.OpenCloseTip)
+    }
+  })
+
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
+
   createTray(mainWindow)
+
+  store.mainWindow = mainWindow
 }
 
 function createTray (win) {
@@ -75,11 +94,18 @@ function createTray (win) {
     },
     {
       label: '退出',
-      click: () => app.quit()
+      click: () => {
+        if (store.recordingChannels.length > 0) {
+          if (!win.isVisible()) win.show()
+          win.focus()
+          ipc.callRenderer(mainWindow, IPCMsg.OpenCloseTip)
+        } else {
+          app.quit()
+        }
+      }
     }
   ])
   tray.setContextMenu(menu)
-  // todo ToolTip考虑增加录制状态, 如"正在录制: 0"
   tray.setToolTip('LAR 直播自动录制')
   tray.on('click', () => win.show())
   win.appTray = tray

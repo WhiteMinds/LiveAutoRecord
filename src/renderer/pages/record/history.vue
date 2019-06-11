@@ -20,10 +20,11 @@
 
 <script>
   import moment from 'moment'
+  import ipc from 'electron-better-ipc'
   import db from '@/db'
   import config from '@/modules/config'
   import { noticeError } from '@/helper'
-  import { Platform, RecordLogStatus } from 'const'
+  import { Platform, RecordLogStatus, IPCMsg } from 'const'
 
   export default {
     name: 'history',
@@ -110,6 +111,7 @@
           {
             attrs: { title: '播放' },
             props: { icon: 'md-play' },
+            loading: ({ row }) => row.getStatus(RecordLogStatus.ReadyToPlay),
             disabled: ({ row }) => !row.exist,
             click: this.openPlayer
           },
@@ -189,9 +191,11 @@
       reloadPage () {
         this.$refs.betterTable.changePage(this.$refs.betterTable.page)
       },
-      openPlayer ({ row }) {
-        // todo 待实现
-        // ... codes ...
+      async openPlayer ({ row }) {
+        let recordLog = row.getModel()
+        recordLog.setStatus(RecordLogStatus.ReadyToPlay, true)
+        await ipc.callMain(IPCMsg.CreatePlayer)
+        recordLog.setStatus(RecordLogStatus.ReadyToPlay, false)
       },
       openSaveFolder ({ row }) {
         this.$electron.shell.showItemInFolder(row.file)

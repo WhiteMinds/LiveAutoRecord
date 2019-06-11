@@ -1,10 +1,12 @@
 import path from 'path'
 import fs from 'fs-extra'
+import _ from 'lodash'
+import ipc from 'electron-better-ipc'
 import format from 'string-template'
 import config from '@/modules/config'
 import platforms from '@/platforms'
 import { zerofill } from '@/helper'
-import { Platform, ChannelStatus, ChannelStatusPriority } from 'const'
+import { Platform, ChannelStatus, ChannelStatusPriority, IPCMsg } from 'const'
 
 export default (sequelize, DataTypes) => {
 
@@ -115,6 +117,13 @@ export default (sequelize, DataTypes) => {
         this.status = this.status | bit
       } else {
         this.status = this.status & ~bit
+      }
+
+      if (idx === ChannelStatus.Recording) {
+        ipc.callMain(IPCMsg.SetRecordingChannel, {
+          recording: status,
+          channel: _.pick(this, ['id', 'profile'])
+        })
       }
     }
 

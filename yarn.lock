@@ -3289,6 +3289,11 @@ ejs@^2.6.1:
   resolved "https://registry.npm.taobao.org/ejs/download/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
   integrity sha1-SY7A1JVlWrxvI81hho2SZGQHGqA=
 
+electron-better-ipc@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npm.taobao.org/electron-better-ipc/download/electron-better-ipc-0.2.0.tgz#b7af2f54818bead520cdacfe0683a10c9413e729"
+  integrity sha1-t68vVIGL6tUgzaz+BoOhDJQT5yk=
+
 electron-builder@^20.19.2:
   version "20.40.2"
   resolved "https://registry.npm.taobao.org/electron-builder/download/electron-builder-20.40.2.tgz#434751bbb57be17513eb501848a52d2573a307bb"
@@ -6156,12 +6161,7 @@ moment-timezone@^0.5.21:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0":
-  version "2.24.0"
-  resolved "https://registry.npm.taobao.org/moment/download/moment-2.24.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fmoment%2Fdownload%2Fmoment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
-  integrity sha1-DQVdU/UFKqZTyfbraLtdEr9cK1s=
-
-moment@^2.24.0:
+"moment@>= 2.9.0", moment@^2.24.0:
   version "2.24.0"
   resolved "https://registry.npm.taobao.org/moment/download/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha1-DQVdU/UFKqZTyfbraLtdEr9cK1s=

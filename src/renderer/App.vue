@@ -20,41 +20,59 @@
     </template>
 
     <template v-else>
-      <Sider :width="siderWidth" class="layout-sider">
-        <Menu theme="dark" width="auto" :activeName="Route.Record" @on-select="onMenuSelect">
-          <img src="@/assets/logo.png" class="layout-sider-logo" />
-          <MenuItem :name="Route.Record">
-            <Icon type="md-videocam"></Icon>
-            自动录播
-          </MenuItem>
-          <MenuItem :name="Route.VideoDownload">
-            <Icon type="md-cloud-download"></Icon>
-            视频下载
-          </MenuItem>
-          <MenuItem :name="Route.VideoProcess">
-            <Icon type="md-film"></Icon>
-            录播处理
-          </MenuItem>
-          <MenuItem :name="Route.Setting">
-            <Icon type="md-settings"></Icon>
-            软件设置
-          </MenuItem>
-          <MenuItem :name="Route.About">
-            <Icon type="md-school"></Icon>
-            关于作者
-          </MenuItem>
-        </Menu>
-      </Sider>
 
-      <Layout class="layout-content" :style="{marginLeft: siderWidth + 'px'}">
+      <!-- Layout Sider -->
+
+      <template v-if="$route.meta.layout === Layout.Sider">
+        <Sider :width="siderWidth" class="layout-sider">
+          <Menu theme="dark" width="auto" :activeName="Route.Record" @on-select="onMenuSelect">
+            <img src="@/assets/logo.png" class="layout-sider-logo" />
+            <MenuItem :name="Route.Record">
+              <Icon type="md-videocam"></Icon>
+              自动录播
+            </MenuItem>
+            <MenuItem :name="Route.VideoDownload">
+              <Icon type="md-cloud-download"></Icon>
+              视频下载
+            </MenuItem>
+            <MenuItem :name="Route.VideoProcess">
+              <Icon type="md-film"></Icon>
+              录播处理
+            </MenuItem>
+            <MenuItem :name="Route.Setting">
+              <Icon type="md-settings"></Icon>
+              软件设置
+            </MenuItem>
+            <MenuItem :name="Route.About">
+              <Icon type="md-school"></Icon>
+              关于作者
+            </MenuItem>
+          </Menu>
+        </Sider>
+
+        <Layout class="layout-content" :style="{marginLeft: siderWidth + 'px'}">
+          <router-view></router-view>
+        </Layout>
+      </template>
+
+      <!-- Layout Plain -->
+
+      <template v-else-if="$route.meta.layout === Layout.Plain">
         <router-view></router-view>
-      </Layout>
+      </template>
+
+      <!-- Layout Error -->
+
+      <template v-else>
+        错误的Layout
+      </template>
     </template>
   </Layout>
 </template>
 
 <script>
   import { remote } from 'electron'
+  import ipc from 'electron-better-ipc'
   import ffmpeg from 'fluent-ffmpeg'
   import ffmpegStatic from 'ffmpeg-static'
   import config from '@/modules/config'
@@ -62,13 +80,15 @@
   import log from '@/modules/log'
   import recorder from '@/modules/recorder'
   import { sleep, noticeError } from '@/helper'
-  import { Route } from 'const'
+  import { Route, Layout, ChannelStatus, IPCMsg } from 'const'
 
   export default {
     name: 'App',
     data () {
       return {
         Route,
+        Layout,
+
         starting: true,
         startSlow: false,
         startFailed: false,
@@ -94,16 +114,16 @@
     methods: {
       async init () {
         log.info('Initializing config module...')
-        config.init()
+        await config.init()
 
-        log.info('Initializing window event handler...')
-        const win = remote.getCurrentWindow()
-        win.on('minimize', () => {
-          if (config.app.minimizeToTaskBar) {
-            win.hide()
-          }
-        })
-        window.onbeforeunload = this.onAppQuit
+        if (this.$route.name === Route.Player) {
+          // 播放器不需要加载其他内容
+          this.starting = false
+          return
+        }
+
+        log.info('Initializing close tip handler...')
+        ipc.answerMain(IPCMsg.OpenCloseTip, this.OpenCloseTip)
 
         log.info('Initializing database module...')
         await db.init()
@@ -121,10 +141,7 @@
       onMenuSelect (name) {
         this.$router.push({ name })
       },
-      onAppQuit () {
-        // 无录制中的视频直接退出
-        if (this.$store.recordingChannels.length === 0) return
-
+      OpenCloseTip () {
         this.$Modal.confirm({
           title: '警告',
           content: `<p>有频道正在录制中</p><p>是否确认退出并停止录制?</p>`,
@@ -132,17 +149,15 @@
           onOk: async () => {
             try {
               this.$store.recordingChannels.forEach(channel => channel.stopRecord())
+              this.$store.channels.forEach(channel => channel.setStatus(ChannelStatus.NotCheck, true))
               await sleep(1e3)
-              window.onbeforeunload = null
-              window.close()
+              remote.app.quit()
             } catch (err) {
               noticeError(err)
               this.$Modal.remove()
             }
           }
         })
-
-        return false
       }
     }
   }
