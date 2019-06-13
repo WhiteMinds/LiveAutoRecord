@@ -194,7 +194,7 @@
       async openPlayer ({ row }) {
         let recordLog = row.getModel()
         recordLog.setStatus(RecordLogStatus.ReadyToPlay, true)
-        await ipc.callMain(IPCMsg.CreatePlayer)
+        await ipc.callMain(IPCMsg.CreatePlayer, recordLog.file)
         recordLog.setStatus(RecordLogStatus.ReadyToPlay, false)
       },
       openSaveFolder ({ row }) {

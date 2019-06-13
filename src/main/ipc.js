@@ -35,9 +35,9 @@ ipc.answerRenderer(IPCMsg.SetRecordingChannel, ({ recording, channel }) => {
 })
 
 ipc.answerRenderer(IPCMsg.CreatePlayer, (file) => {
-  let win = createWindow(WinURL + '/#/player', 'LAR 弹幕播放器', {
+  let win = createWindow(WinURL + '#/player', 'LAR 弹幕播放器', {
     webPreferences: {
-      additionalArguments: file
+      additionalArguments: ['--record-file', file]
     }
   })
 
@@ -50,8 +50,8 @@ ipc.answerRenderer(IPCMsg.CreatePlayer, (file) => {
 function createWindow (url, title, options) {
   options = _.merge({
     icon: path.join(__static, 'icon.ico'),
-    width: 1000,
-    height: 628,
+    width: 1600,
+    height: 750,
     useContentSize: true,
     webPreferences: {
       webSecurity: false,

@@ -14,7 +14,7 @@ const { version, build } = require('../../package.json')
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (Dev) {
+if (!Dev) {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
@@ -63,16 +63,19 @@ function createMainWindow () {
   })
 
   mainWindow.on('minimize', () => {
-    if (config.app.minimizeToTaskBar) {
+    if (config.data.app.minimizeToTaskBar) {
       mainWindow.hide()
     }
   })
 
   mainWindow.on('close', (event) => {
-    // 有录制中的视频, 将关闭过程转交给主窗口
     if (store.recordingChannels.length > 0) {
+      // 有录制中的视频, 将关闭过程转交给主窗口
       event.preventDefault()
       ipc.callRenderer(mainWindow, IPCMsg.OpenCloseTip)
+    } else {
+      // 主窗口关闭直接强制退出, 后面要兼容mac的话应该还要再修改
+      app.quit()
     }
   })
 

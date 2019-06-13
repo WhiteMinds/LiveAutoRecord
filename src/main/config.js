@@ -18,7 +18,7 @@ export default {
     },
     hiddenColumns: {
       [Route.Record]: [],
-      [Route.RecordHistory]: ['file', 'owner']
+      [Route.RecordHistory]: ['circuit', 'file', 'owner', 'platformCN']
     }
   },
   load () {
