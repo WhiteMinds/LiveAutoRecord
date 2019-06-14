@@ -1,5 +1,6 @@
 import uuid4 from 'uuid/v4'
 import MD5 from 'crypto-js/md5'
+import { VM } from 'vm2'
 import cheerio from 'cheerio'
 import * as queryString from 'query-string'
 import log from '@/modules/log'
@@ -10,6 +11,13 @@ import { Platform } from 'const'
 // =============================================================================
 
 const signCaches = {}
+
+// 因为斗鱼的sign混淆中会去验证一些window/document的函数是否是native的 (以此判断是否是浏览器环境), 所以这里直接proxy返回
+const disguisedNative = new Proxy({}, {
+  get: function (target, name) {
+    return 'function () { [native code] }'
+  }
+})
 
 // Exports
 // =============================================================================
@@ -189,8 +197,14 @@ async function getSignFn (address, rejectCache) {
   let code = json.data && json.data['room' + address]
   if (!code) throw new Error('Unexpected result with homeH5Enc, ' + JSON.stringify(json))
 
-  let genSign = new Function('CryptoJS', code + 'return ub98484234')
-  let sign = genSign({ MD5 })
+  const vm = new VM({
+    sandbox: {
+      CryptoJS: { MD5 },
+      window: disguisedNative,
+      document: disguisedNative
+    }
+  })
+  let sign = vm.run(code + ';ub98484234')
   signCaches[address] = sign
 
   return sign
