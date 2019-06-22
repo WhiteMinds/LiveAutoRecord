@@ -5,6 +5,7 @@ import cheerio from 'cheerio'
 import * as queryString from 'query-string'
 import log from '@/modules/log'
 import requester from '@/modules/requester'
+import DanmakuClient from './danmaku_client'
 import { Platform } from 'const'
 
 // Variables
@@ -179,7 +180,7 @@ export async function getStream (address, quality, circuit, opts = {}) {
 }
 
 export function getDanmakuClient (address) {
-  // todo 返回一个具有start/stop接口, 实现了event的弹幕client
+  return new DanmakuClient(address)
 }
 
 // Utils

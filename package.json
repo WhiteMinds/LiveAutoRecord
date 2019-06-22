@@ -63,6 +63,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "crypto-js": "^3.1.9-1",
+    "douyu-danmu": "^2.0.7",
     "dplayer": "^1.25.0",
     "electron-better-ipc": "^0.2.0",
     "ffmpeg-static": "^2.4.0",
@@ -81,6 +82,7 @@
     "string-template": "^1.0.0",
     "umzug": "^2.2.0",
     "uuid": "^3.3.2",
+    "vm2": "^3.8.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1"

@@ -143,7 +143,7 @@ export default (sequelize, DataTypes) => {
       return this.platformObj.getStream(this.address, this.quality, this.circuit)
     }
 
-    genRecordPath () {
+    genSavePath () {
       let now = new Date()
       let data = {
         platform: this.platformCN,
@@ -157,16 +157,21 @@ export default (sequelize, DataTypes) => {
       }
 
       let saveFolder = format(config.record.saveFolder, data)
-      let saveName = `${format(config.record.saveName, data)}.${config.record.saveFormat}`
+      let saveName = format(config.record.saveName, data)
+      let savePath = path.join(saveFolder, saveName)
       fs.ensureDirSync(saveFolder)
 
-      return path.join(saveFolder, saveName)
+      return {
+        record: `${savePath}.${config.record.saveFormat}`,
+        danmaku: `${savePath}.dm3`
+      }
     }
 
     stopRecord () {
       if (this.record) {
         this.record.stopRecord()
-        delete this.record.stopRecord
+        this.record.stopDanmaku()
+        delete this.record
       }
       this.setStatus(ChannelStatus.Recording, false)
 

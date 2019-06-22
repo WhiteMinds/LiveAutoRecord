@@ -160,7 +160,7 @@
         row.getModel().stopRecord()
       },
       openSaveFolder ({ row }) {
-        let fullPath = row.getModel().genRecordPath()
+        let fullPath = row.getModel().genSavePath().record
         this.$electron.shell.openItem(path.dirname(fullPath))
       },
       removeChannel ({ row }) {
