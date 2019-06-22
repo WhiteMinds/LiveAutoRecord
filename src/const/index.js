@@ -7,6 +7,7 @@ export * from './route'
 export * from './platform'
 export * from './channel'
 export * from './ipc'
+export * from './player'
 export * from './dm3'
 
 export const Dev = process.env.NODE_ENV === 'development'

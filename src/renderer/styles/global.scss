@@ -28,6 +28,13 @@
 // Override origin styles
 // =============================================================================
 
+[ripple] .ripple--container .ripple--body {
+  opacity: 0.2 !important;
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  -webkit-animation: rippler 1000ms;
+  animation: rippler 1000ms;
+}
+
 .ivu-btn-only-icon {
   & > .ivu-icon + span, & > span + .ivu-icon {
     margin-left: 0;
@@ -42,6 +49,32 @@
 
 .ivu-message {
   word-break: break-all;
+}
+
+.ivu-dropdown.metro {
+  .ivu-select-dropdown {
+    padding: 8px 0;
+    border-radius: 0;
+
+    .ivu-dropdown-item {
+      padding: 15px 16px;
+
+      &:hover {
+        background: #eee;
+      }
+
+      .title {
+        line-height: 25px;
+        color: #111;
+        font-size: 14px;
+      }
+
+      .desc {
+        line-height: 18px;
+        color: rgba(#111, 0.8);
+      }
+    }
+  }
 }
 
 // Page and widget styles

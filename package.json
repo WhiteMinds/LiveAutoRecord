@@ -61,6 +61,7 @@
     }
   },
   "dependencies": {
+    "argh": "^0.1.4",
     "cheerio": "^1.0.0-rc.3",
     "crypto-js": "^3.1.9-1",
     "douyu-danmu": "^2.0.7",
@@ -68,6 +69,7 @@
     "electron-better-ipc": "^0.2.0",
     "ffmpeg-static": "^2.4.0",
     "fluent-ffmpeg": "^2.1.2",
+    "flv.js": "^1.5.0",
     "fs-extra": "^7.0.1",
     "humps": "^2.0.1",
     "iview": "^3.4.1",
@@ -85,6 +87,7 @@
     "vm2": "^3.8.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
+    "vue-rippler": "^1.2.6",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
