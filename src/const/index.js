@@ -7,6 +7,7 @@ export * from './route'
 export * from './platform'
 export * from './channel'
 export * from './ipc'
+export * from './dm3'
 
 export const Dev = process.env.NODE_ENV === 'development'
 export const WinURL = Dev ? `http://localhost:${process.env.DEV_PORT || 9080}/` : `file://${__dirname}/index.html`
