@@ -140,6 +140,17 @@
 </script>
 
 <style lang="scss" scoped>
+  /deep/ {
+    .dplayer-danmaku .dplayer-danmaku-move {
+      animation: danmaku 10s linear;
+      animation-play-state: paused;
+    }
+
+    .dplayer-playing .dplayer-danmaku .dplayer-danmaku-move {
+      animation-play-state: running;
+    }
+  }
+
   .player {
     display: flex;
     width: 100%;
