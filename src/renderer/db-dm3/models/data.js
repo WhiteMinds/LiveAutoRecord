@@ -47,6 +47,14 @@ export default (sequelize, DataTypes) => {
     // Static method
     // ===========================================================================
 
+    static findBy (data) {
+      return this.findOne({ where: data })
+    }
+
+    static findAllBy (data) {
+      return this.findAll({ where: data })
+    }
+
     static findMessagesByPeriod (start, time) {
       return this.findAll({
         where: {

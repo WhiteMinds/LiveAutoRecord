@@ -54,11 +54,9 @@
   import DPlayer from 'dplayer'
   import { argv } from 'argh'
   import DM3 from '@/db-dm3'
-  import log from '@/modules/log'
+  import messageManage from './message_manage'
   import { ChatContent, ChatContentList, ChatContentTip } from 'const'
   import { noticeError } from '@/helper'
-
-  const DanmakuReadInterval = 30e3
 
   export default {
     name: 'player',
@@ -96,24 +94,21 @@
         // autoplay选项有bug, 所以这里主动调用play
         this.dp.play()
       },
-      danmakuFilePath () {
+      async danmakuFilePath () {
         this.db = null
         if (!this.danmakuFilePath) return
 
-        DM3(this.danmakuFilePath)
-          .then(db => {
-            this.db = db
-          })
-          .catch(err => {
-            noticeError(err, 'dm3数据加载失败')
-          })
+        try {
+          this.db = await DM3(this.danmakuFilePath)
+          await messageManage.load(this.db)
+        } catch (err) {
+          noticeError(err, 'dm3文件打开失败')
+        }
       }
     },
     mounted () {
       this.initDPlayer()
       this.recordFilePath = argv['record-file']
-
-      requestAnimationFrame(this.tick)
       console.log(this)
     },
     methods: {
@@ -122,54 +117,23 @@
           container: this.$refs.container,
           danmaku: true,
           apiBackend: {
-            read: ({ success }) => success()
+            read: ({ success }) => success([{ time: 0, text: '' }])
           }
         })
+
+        messageManage.init(this.dp)
+        messageManage.$on('msg', this.onMsg)
       },
-      async tick () {
-        if (!this.dp.video.paused) {
-          let time = this.dp.video.currentTime * 1e3
-
-          if (!this.danmaku.loading && this.db) {
-            if (time < this.danmaku.startTime || time > this.danmaku.endTime) {
-              // 读取
-              this.danmaku.loading = true
-              this.danmaku.startTime = time
-              this.danmaku.endTime = time + DanmakuReadInterval
-              try {
-                this.danmaku.list = await this.db.Data.findMessagesByPeriod(this.danmaku.startTime, this.danmaku.endTime)
-              } catch (err) {
-                log.error('Danmaku read error', err)
-                this.dp.notice('弹幕读取失败')
-              }
-              this.danmaku.loading = false
-            }
-          }
-
-          // 实时发送弹幕
-          for (let data of this.danmaku.list) {
-            // 遇到时间较后的弹幕, 停止循环
-            if (data.relativeTime > time) break
-            // 从弹幕列表中移除, 准备发送弹幕
-            this.danmaku.list.shift()
-            this.danmaku.startTime = data.relativeTime + 1
-            // 只有和当前时间相差不到一定时间的才发送 (因为可能会出现跳转后time迅速变化, 所以不能全部发送)
-            if (data.relativeTime < time - 100) continue
-
-            let msg = data.value
-            console.log('send msg', msg)
-            if (msg.type === 'chat') {
-              this.dp.danmaku.draw({
-                text: msg.text,
-                color: msg.color,
-                type: 'right'
-              })
-            }
-            // todo 发送到右侧, 同时还要对gift做处理
-          }
+      onMsg (msg) {
+        console.log('send msg', msg)
+        if (msg.type === 'chat') {
+          this.dp.danmaku.draw({
+            text: msg.text,
+            color: msg.color,
+            type: 'right'
+          })
         }
-
-        requestAnimationFrame(this.tick)
+        // todo 发送到右侧, 同时还要对gift做处理
       }
     }
   }
