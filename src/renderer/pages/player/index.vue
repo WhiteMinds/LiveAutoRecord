@@ -13,13 +13,13 @@
     <div class="right">
       <div class="chat-control">
         <div class="chat-control-left">
-          <Dropdown trigger="click" placement="bottom-start" class="metro">
+          <Dropdown trigger="click" placement="bottom-start" class="metro" @on-click="switchChatContent">
             <div ripple>
               {{ChatContent[chatContent]}}
               <Icon type="md-arrow-dropdown" size="20" />
             </div>
             <DropdownMenu slot="list">
-              <DropdownItem v-for="val in ChatContentList">
+              <DropdownItem v-for="val in ChatContentList" :name="val">
                 <p class="title">{{ChatContent[val]}}</p>
                 <p class="desc">{{ChatContentTip[val]}}</p>
               </DropdownItem>
@@ -41,6 +41,22 @@
         </div>
       </div>
       <div class="chat-container">
+        <div class="chat-content" v-for="content in contentList">
+          <div class="chat-content-left">
+            <img class="avatar" v-if="content.avatar" :src="content.avatar" :alt="content.sender[0]" />
+          </div>
+          <div class="chat-content-right">
+            <template v-if="content.type === 'chat'">
+              <span class="sender">{{content.sender}}</span>
+              <span class="text">{{content.text}}</span>
+            </template>
+
+            <template v-if="content.type === 'gift'">
+              <div class="sender">{{content.sender}}</div>
+              <!--  todo 待实现  -->
+            </template>
+          </div>
+        </div>
       </div>
       <div class="chat-bottom">
         <!-- 弹幕延迟: <i-input></i-input> -->
@@ -75,7 +91,9 @@
           startTime: -1,
           endTime: -1,
           list: []
-        }
+        },
+        contentList: [],
+        contentMax: 200
       }
     },
     computed: {
@@ -109,7 +127,6 @@
     mounted () {
       this.initDPlayer()
       this.recordFilePath = argv['record-file']
-      console.log(this)
     },
     methods: {
       initDPlayer () {
@@ -123,17 +140,42 @@
 
         messageManage.init(this.dp)
         messageManage.$on('msg', this.onMsg)
+        messageManage.$on('seek', this.onSeek)
       },
       onMsg (msg) {
-        console.log('send msg', msg)
         if (msg.type === 'chat') {
+          // 发送弹幕
           this.dp.danmaku.draw({
             text: msg.text,
             color: msg.color,
             type: 'right'
           })
         }
-        // todo 发送到右侧, 同时还要对gift做处理
+
+        // 发送到右侧
+        if (this.checkContent(msg)) {
+          this.contentList.push(msg)
+          if (this.contentList.length > this.contentMax) this.contentList.shift()
+        }
+      },
+      switchChatContent (value) {
+        this.chatContent = value
+        this.onSeek()
+      },
+      checkContent (content) {
+        if (this.chatContent === ChatContent.All) return true
+        if (this.chatContent === ChatContent.Chat && content.type === 'chat') return true
+      },
+      onSeek () {
+        this.contentList = []
+
+        let offset = messageManage.offset - 1
+        while (offset >= 0 && this.contentList.length < this.contentMax) {
+          const msg = messageManage.list[offset--]
+          if (this.checkContent(msg)) {
+            this.contentList.unshift(msg)
+          }
+        }
       }
     }
   }
@@ -277,6 +319,37 @@
 
             &:hover {
               background-color: #ddd;
+            }
+          }
+        }
+
+        &-content {
+          display: flex;
+          padding: 4px 24px;
+
+          &-left {
+            display: flex;
+            margin-right: 16px;
+
+            .avatar {
+              width: 24px;
+              height: 24px;
+              border-radius: 100%;
+            }
+          }
+
+          &-right {
+            align-self: center;
+            line-height: 16px;
+
+            .sender {
+              float: left;
+              margin-right: 8px;
+              color: rgba(#111, .6);
+            }
+
+            .text {
+              word-break: break-all;
             }
           }
         }

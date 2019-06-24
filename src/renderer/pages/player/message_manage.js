@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { DM3DataType } from 'const'
+import { Platform, DM3DataType } from 'const'
 import { noticeError } from '@/helper'
 
 export default new Vue({
@@ -8,6 +8,8 @@ export default new Vue({
     return {
       dp: null,
       loading: false,
+      version: null,
+      recordInfo: null,
       list: [],
       offset: 0
     }
@@ -21,8 +23,19 @@ export default new Vue({
     async load (dm3) {
       this.loading = true
       try {
+        this.version = (await dm3.Data.findBy({ type: DM3DataType.Version })).value
+        this.recordInfo = (await dm3.Data.findBy({ type: DM3DataType.RecordInfo })).value
         let dataList = await dm3.Data.findAllBy({ type: DM3DataType.Message })
         this.list = dataList.map(data => Object.assign({}, data.value, { time: data.relativeTime }))
+
+        switch (this.recordInfo.platform) {
+          case Platform.DouYu:
+            this.list.forEach(msg => {
+              if (msg.avatar) msg.avatar = `http://apic.douyucdn.cn/upload/${msg.avatar}_small.jpg`
+            })
+            break
+        }
+
         this.seek()
       } catch (err) {
         noticeError(err, 'dm3数据加载失败')
@@ -52,6 +65,7 @@ export default new Vue({
         }
         this.offset = this.list.length
       }
+      this.$emit('seek')
     }
   }
 })

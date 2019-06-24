@@ -54,7 +54,9 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "icon": "static/icon.ico"
+      "icon": "static/icon.ico",
+      "requestedExecutionLevel": "highestAvailable",
+      "_comment": "Because creating the log folder in the system drive requires privileges."
     },
     "linux": {
       "icon": "build/icons"

@@ -57,6 +57,7 @@ export default class Client extends EventEmitter {
   }
 
   stop () {
+    if (!this.client) return
     this.client.stop()
     this.client = null
     clearTimeout(this._gcclTimer)
