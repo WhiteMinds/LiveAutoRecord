@@ -1,6 +1,6 @@
 {
   "name": "live-auto-record",
-  "version": "3.0.0-beta.5",
+  "version": "3.0.0-beta.6",
   "author": "WhiteMinds <WhiteMind@qq.com>",
   "description": "多平台直播自动录制 & 处理工具",
   "license": "MIT",
@@ -55,8 +55,7 @@
     },
     "win": {
       "icon": "static/icon.ico",
-      "requestedExecutionLevel": "highestAvailable",
-      "_comment": "Because creating the log folder in the system drive requires privileges."
+      "requestedExecutionLevel": "highestAvailable"
     },
     "linux": {
       "icon": "build/icons"

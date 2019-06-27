@@ -40,10 +40,10 @@
           </Dropdown>
         </div>
       </div>
-      <div class="chat-container">
+      <div ref="chatContainer" class="chat-container">
         <div class="chat-content" v-for="content in contentList">
           <div class="chat-content-left">
-            <img class="avatar" v-if="content.avatar" :src="content.avatar" :alt="content.sender[0]" />
+            <img class="avatar" v-if="content.avatar" :src="content.avatar" @error="onContentAvatarError(content)" />
           </div>
           <div class="chat-content-right">
             <template v-if="content.type === 'chat'">
@@ -156,7 +156,12 @@
         if (this.checkContent(msg)) {
           this.contentList.push(msg)
           if (this.contentList.length > this.contentMax) this.contentList.shift()
+          this.$nextTick(() => this.scrollChatToBottom())
         }
+      },
+      onContentAvatarError (content) {
+        // 替换成1x1的透明gif
+        content.avatar = 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQImWNgYGBgAAAABQABh6FO1AAAAABJRU5ErkJggg=='
       },
       switchChatContent (value) {
         this.chatContent = value
@@ -175,6 +180,15 @@
           if (this.checkContent(msg)) {
             this.contentList.unshift(msg)
           }
+        }
+        this.$nextTick(() => this.scrollChatToBottom(true))
+      },
+      scrollChatToBottom (force) {
+        const elm = this.$refs.chatContainer
+        let bottom = elm.scrollHeight - elm.clientHeight
+        let dist = bottom - elm.scrollTop
+        if (force || dist <= 64) {
+          elm.scrollTop = bottom
         }
       }
     }
@@ -325,6 +339,7 @@
 
         &-content {
           display: flex;
+          min-height: 32px;
           padding: 4px 24px;
 
           &-left {

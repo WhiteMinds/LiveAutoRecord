@@ -111,7 +111,10 @@ export default new Vue({
           })
           client.start()
 
-          stopDanmaku = client.stop.bind(client)
+          stopDanmaku = () => {
+            client.stop()
+            dm3.sequelize.close()
+          }
         } catch (err) {
           noticeError(err, '弹幕录制启动失败')
         }
