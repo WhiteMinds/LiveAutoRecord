@@ -5,19 +5,22 @@
       <!-- todo 可以考虑这里制作一些提示 (左侧label给问号, 或者右上角给问号弹窗) -->
       <Form ref="form" :model="form" :rules="rules" :label-width="120">
         <FormItem label="录播时通知">
-          <i-switch v-model="form.notice" size="large"></i-switch>
+          <i-switch v-model="form.notice" size="large" />
+        </FormItem>
+        <FormItem label="自动检查">
+          <i-switch v-model="form.autoCheck" size="large" />
         </FormItem>
         <FormItem label="开播检查间隔 (秒)" prop="checkInterval">
-          <InputNumber v-model="form.checkInterval"></InputNumber>
+          <InputNumber v-model="form.checkInterval" />
         </FormItem>
         <FormItem label="自动分段 (分钟)" prop="segment">
-          <InputNumber v-model="form.segment"></InputNumber>
+          <InputNumber v-model="form.segment" />
         </FormItem>
         <FormItem label="录像保存路径" prop="saveFolder">
-          <i-input v-model="form.saveFolder"></i-input>
+          <i-input v-model="form.saveFolder" />
         </FormItem>
         <FormItem label="录像文件名" prop="saveName">
-          <i-input v-model="form.saveName"></i-input>
+          <i-input v-model="form.saveName" />
         </FormItem>
         <FormItem label="录像保存格式">
           <i-select v-model="form.saveFormat">

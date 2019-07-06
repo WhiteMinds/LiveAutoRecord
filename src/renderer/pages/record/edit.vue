@@ -45,6 +45,7 @@
   import db from '@/db'
   import platforms from '@/platforms'
   import recorder from '@/modules/recorder'
+  import config from '@/modules/config'
   import { noticeError } from '@/helper'
   import { Route, Platform, PlatformList, ChannelStatus } from 'const'
 
@@ -164,6 +165,7 @@
             this.$store.channels.push(this.model)
             this.$Message.success('保存成功')
             if (existed) this.$Message.warning(`频道 ${this.model.profile} 存在复数个`)
+            if (config.record.autoCheck) recorder.checkChannel(this.model, true).catch(noticeError)
           } else {
             Object.assign(this.model, this.form)
             await this.model.save()

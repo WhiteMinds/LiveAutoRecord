@@ -17,7 +17,7 @@ export default new Vue({
     },
     async checkLoop () {
       while (1) {
-        await this.checkAllChannels()
+        if (config.record.autoCheck) await this.checkAllChannels()
         await sleep(config.record.checkInterval * 1e3)
       }
     },

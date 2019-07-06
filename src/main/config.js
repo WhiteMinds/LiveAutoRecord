@@ -9,6 +9,7 @@ export default {
     },
     record: {
       notice: true,
+      autoCheck: true,
       checkInterval: 10,
       segment: 0,
       // 支持的自定义数据有platform, address, n种时间
