@@ -12,8 +12,7 @@ export default {
       autoCheck: true,
       checkInterval: 10,
       segment: 0,
-      // 支持的自定义数据有platform, address, n种时间
-      saveFolder: `${UserDataPath}\\{platform}\\{address}`,
+      saveFolder: `${UserDataPath}\\{platform}\\{alias}`,
       saveName: '{year}-{month}-{date} {hour}-{min}-{sec}',
       saveFormat: RecordFormat.FLV
     },

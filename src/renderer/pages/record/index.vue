@@ -127,8 +127,8 @@
           data.getModel = () => channel
           data.getStatus = channel.getStatus
           if (channel.record) {
-            data.usingQuality = channel.qualities[channel.record.streamInfo.quality]
-            data.usingCircuit = channel.circuits[channel.record.streamInfo.circuit]
+            data.usingQuality = channel.record.streamInfo.qualityCN
+            data.usingCircuit = channel.record.streamInfo.circuitCN
           }
           return data
         })

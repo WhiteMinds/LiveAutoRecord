@@ -175,7 +175,9 @@ export async function getStream (address, quality, circuit, opts = {}) {
   return {
     stream: `${json.data.rtmp_url}/${json.data.rtmp_live}`,
     quality,
-    circuit
+    circuit,
+    qualityCN: qualities[quality],
+    circuitCN: circuits[circuit]
   }
 }
 

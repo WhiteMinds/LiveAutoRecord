@@ -5,7 +5,7 @@ import ipc from 'electron-better-ipc'
 import format from 'string-template'
 import config from '@/modules/config'
 import platforms from '@/platforms'
-import { zerofill } from '@/helper'
+import { zerofill, illegalCharRemove } from '@/helper'
 import { Platform, ChannelStatus, ChannelStatusPriority, IPCMsg } from 'const'
 
 export default (sequelize, DataTypes) => {
@@ -143,11 +143,12 @@ export default (sequelize, DataTypes) => {
       return this.platformObj.getStream(this.address, this.quality, this.circuit)
     }
 
-    genSavePath () {
+    genSavePath (...extDataList) {
       let now = new Date()
       let data = {
         platform: this.platformCN,
         address: this.address,
+        alias: illegalCharRemove(this.alias),
         year: now.getFullYear(),
         month: zerofill(now.getMonth() + 1),
         date: zerofill(now.getDate()),
@@ -155,6 +156,9 @@ export default (sequelize, DataTypes) => {
         min: zerofill(now.getMinutes()),
         sec: zerofill(now.getSeconds())
       }
+      extDataList.forEach(extData => Object.assign(data, extData))
+      data.owner = illegalCharRemove(data.owner)
+      data.title = illegalCharRemove(data.title)
 
       let saveFolder = format(config.record.saveFolder, data)
       let saveName = format(config.record.saveName, data)

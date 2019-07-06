@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import fs from 'fs-extra'
 import request from 'request'
 import ffmpeg from 'fluent-ffmpeg'
@@ -56,7 +57,13 @@ export default new Vue({
       if (channel.getStatus(ChannelStatus.Recording)) return
       channel.setStatus(ChannelStatus.Recording, true)
 
-      const savePath = channel.genSavePath()
+      const savePath = channel.genSavePath(
+        _.pick(channelInfo, ['owner', 'title']),
+        {
+          quality: streamInfo.qualityCN,
+          circuit: streamInfo.circuitCN
+        }
+      )
 
       // 启动视频录制
       const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, savePath.record, (err) => {
@@ -85,8 +92,8 @@ export default new Vue({
         owner: channelInfo.owner,
         title: channelInfo.title,
         file: savePath.record,
-        quality: channel.qualities[streamInfo.quality],
-        circuit: channel.circuits[streamInfo.circuit]
+        quality: streamInfo.qualityCN,
+        circuit: streamInfo.circuitCN
       })
 
       let stopDanmaku = EmptyFn

@@ -27,3 +27,19 @@ export function createNotice (title, body) {
 export function zerofill (n, len = 2) {
   return _.padStart(n, len, '0')
 }
+
+export function illegalCharRemove (str) {
+  if (typeof str !== 'string') return str
+  switch (process.platform) {
+    case 'win32':
+      str = str.replace(/[<>:"|?*./\\]/g, '')
+      break
+    case 'linux':
+      str = str.replace(/\./g, '')
+      break
+    case 'darwin':
+      str = str.replace(/:/g, '')
+      break
+  }
+  return str
+}
