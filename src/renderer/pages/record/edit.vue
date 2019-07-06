@@ -9,7 +9,7 @@
           </i-select>
         </FormItem>
         <FormItem label="直播间" prop="address">
-          <i-input v-model="form.address" placeholder="直播间ID (复制直播间地址到此处将自动解析)" :disabled="!isNew || parsing"
+          <i-input v-model="form.address" placeholder="直播间ID (复制完整的直播间链接到此处将自动解析)" :disabled="!isNew || parsing"
                    @on-blur="onAddressChange" @on-enter="onAddressChange"></i-input>
         </FormItem>
         <FormItem label="别称">

@@ -17,7 +17,10 @@
           <InputNumber v-model="form.segment" />
         </FormItem>
         <FormItem label="录像保存路径" prop="saveFolder">
-          <i-input v-model="form.saveFolder" />
+          <input ref="saveFolderSelector" type="file" webkitdirectory @change="onSaveFolderSelect" />
+          <i-input v-model="form.saveFolder">
+            <Icon type="md-folder" slot="suffix" @click="$refs.saveFolderSelector.click()" />
+          </i-input>
         </FormItem>
         <FormItem label="录像文件名" prop="saveName">
           <i-input v-model="form.saveName" />
@@ -37,6 +40,7 @@
 </template>
 
 <script>
+  import path from 'path'
   import config from '@/modules/config'
   import { noticeError } from '@/helper'
   import { RecordFormat } from 'const'
@@ -90,6 +94,11 @@
           this.rules.saveName.push({ pattern: regex, message: '不支持的文件名格式', trigger: 'blur' })
         }
       },
+      onSaveFolderSelect (e) {
+        let file = e.target.files[0]
+        if (!file) return
+        this.form.saveFolder = path.join(file.path, '{platform}\\{owner}')
+      },
       async confirm () {
         this.saving = true
         let valid = await this.$refs.form.validate()
@@ -110,8 +119,24 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  input[type=file] {
+    display: none;
+  }
+
   .ivu-select {
     width: 100px;
+  }
+
+  .ivu-input-wrapper {
+    width: 500px;
+
+    .ivu-icon {
+      cursor: pointer;
+
+      &:hover {
+        color: #2d8cf0;
+      }
+    }
   }
 </style>

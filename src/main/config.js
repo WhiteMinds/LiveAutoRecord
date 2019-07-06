@@ -12,8 +12,8 @@ export default {
       autoCheck: true,
       checkInterval: 10,
       segment: 0,
-      saveFolder: `${UserDataPath}\\{platform}\\{alias}`,
-      saveName: '{year}-{month}-{date} {hour}-{min}-{sec}',
+      saveFolder: `${UserDataPath}\\{platform}\\{owner}`,
+      saveName: '{year}-{month}-{date} {hour}-{min}-{sec} {title}',
       saveFormat: RecordFormat.FLV
     },
     hiddenColumns: {
