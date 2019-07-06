@@ -68,7 +68,28 @@
         }
       }
     },
+    mounted () {
+      this.initRules()
+    },
     methods: {
+      initRules () {
+        let regex
+        switch (process.platform) {
+          case 'win32':
+            regex = /^(?:[a-z]:)?[/\\]{0,2}(?:[./\\ ](?![./\\\n])|[^<>:"|?*./\\ \n])+$/gi
+            break
+          case 'linux':
+            regex = /^[^\0.]+$/gi
+            break
+          case 'darwin':
+            regex = /^[^\0:]+$/gi
+            break
+        }
+        if (regex) {
+          this.rules.saveFolder.push({ pattern: regex, message: '不支持的路径格式', trigger: 'blur' })
+          this.rules.saveName.push({ pattern: regex, message: '不支持的文件名格式', trigger: 'blur' })
+        }
+      },
       async confirm () {
         this.saving = true
         let valid = await this.$refs.form.validate()
