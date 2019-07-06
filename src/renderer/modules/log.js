@@ -10,7 +10,7 @@ log4js.configure({
     console: { type: 'console', layout: { type: 'messagePassThrough' } },
     file: { type: 'file', filename: path.join(LogFolderPath, 'log.txt'), maxLogSize: 1048576, backups: 4 }
   },
-  categories: { default: { appenders: ['console', 'file'], level: 'debug' } }
+  categories: { default: { appenders: ['console', 'file'], level: process.env.LOG_LEVEL || 'debug' } }
 })
 
 export default log4js.getLogger('LAR')

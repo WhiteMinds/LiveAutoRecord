@@ -165,11 +165,11 @@
       },
       removeChannel ({ row }) {
         let channel = row.getModel()
+        channel.setStatus(ChannelStatus.Removing, true)
         this.$Modal.confirm({
           title: '警告',
           content: `<p>该操作不可逆</p><p>是否确认移除 ${channel.profile}?</p>`,
           onOk: async () => {
-            channel.setStatus(ChannelStatus.Removing, true)
             try {
               if (channel.getStatus(ChannelStatus.Recording)) channel.stopRecord()
               await channel.destroy()
@@ -177,6 +177,9 @@
             } catch (err) {
               noticeError(err, '移除录播失败')
             }
+            channel.setStatus(ChannelStatus.Removing, false)
+          },
+          onCancel: () => {
             channel.setStatus(ChannelStatus.Removing, false)
           }
         })
