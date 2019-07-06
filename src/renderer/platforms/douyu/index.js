@@ -51,6 +51,8 @@ export const preferred = {
   circuit: 'ws-h5'
 }
 
+export giftMap from './gift_map'
+
 export function getUrl (address) {
   let base = 'https://www.douyu.com/'
   return new URL(base + address)

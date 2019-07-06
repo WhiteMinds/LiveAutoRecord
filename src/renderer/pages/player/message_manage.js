@@ -1,6 +1,7 @@
 import Vue from 'vue'
-import { Platform, DM3DataType } from 'const'
+import platforms from '@/platforms'
 import { noticeError } from '@/helper'
+import { Platform, DM3DataType } from 'const'
 
 export default new Vue({
   functional: true,
@@ -32,6 +33,11 @@ export default new Vue({
           case Platform.DouYu:
             this.list.forEach(msg => {
               if (msg.avatar) msg.avatar = `http://apic.douyucdn.cn/upload/${msg.avatar}_small.jpg`
+              if (msg.gfid) {
+                let gift = platforms[Platform.DouYu].giftMap[msg.gfid]
+                if (gift) msg.gift = { name: gift.name, img: gift.himg }
+                else msg.gift = { name: '未知礼物' }
+              }
             })
             break
         }

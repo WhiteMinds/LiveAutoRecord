@@ -41,7 +41,7 @@
         </div>
       </div>
       <div ref="chatContainer" class="chat-container">
-        <div class="chat-content" v-for="content in contentList">
+        <div class="chat-content" :class="[content.type]" v-for="content in contentList">
           <div class="chat-content-left">
             <img class="avatar" v-if="content.avatar" :src="content.avatar" @error="onContentAvatarError(content)" />
           </div>
@@ -52,8 +52,13 @@
             </template>
 
             <template v-if="content.type === 'gift'">
-              <div class="sender">{{content.sender}}</div>
-              <!--  todo 待实现  -->
+              <span class="sender">{{content.sender}}</span>
+              <span class="gift-text">
+                赠送给主播
+                <img v-if="content.gift.img" :src="content.gift.img" />
+                {{content.gift.name}} x{{content.count}}
+                <template v-if="content.combo > 1 && content.combo !== content.count">(连击x{{content.combo}})</template>
+              </span>
             </template>
           </div>
         </div>
@@ -358,13 +363,31 @@
             line-height: 16px;
 
             .sender {
-              float: left;
               margin-right: 8px;
               color: rgba(#111, .6);
             }
 
             .text {
               word-break: break-all;
+            }
+
+            .gift-text {
+              display: inline-flex;
+              align-items: center;
+              word-break: break-all;
+              color: #888;
+
+              img {
+                width: 24px;
+                height: 24px;
+                margin: 0 8px;
+              }
+            }
+          }
+
+          &.chat {
+            .sender {
+              float: left;
             }
           }
         }
