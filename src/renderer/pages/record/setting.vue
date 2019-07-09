@@ -10,6 +10,9 @@
         <FormItem label="自动检查">
           <i-switch v-model="form.autoCheck" size="large" />
         </FormItem>
+        <FormItem label="多线检查">
+          <i-switch v-model="form.multiCheck" size="large" />
+        </FormItem>
         <FormItem label="开播检查间隔 (秒)" prop="checkInterval">
           <InputNumber v-model="form.checkInterval" />
         </FormItem>

@@ -10,6 +10,7 @@ export default {
     record: {
       notice: true,
       autoCheck: true,
+      multiCheck: false,
       checkInterval: 10,
       segment: 0,
       saveFolder: `${UserDataPath}\\{platform}\\{owner}`,

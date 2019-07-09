@@ -24,10 +24,14 @@ export default new Vue({
     },
     async checkAllChannels () {
       for (let channel of this.$store.channels) {
-        try {
-          await this.checkChannel(channel)
-        } catch (err) {
-          noticeError(err, '检查频道时发生错误')
+        if (config.record.multiCheck) {
+          this.checkChannel(channel).catch(err => noticeError(err, '检查频道时发生错误'))
+        } else {
+          try {
+            await this.checkChannel(channel)
+          } catch (err) {
+            noticeError(err, '检查频道时发生错误')
+          }
         }
       }
     },
