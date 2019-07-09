@@ -3,7 +3,7 @@
     <div class="left">
       <div ref="container" class="container"></div>
       <div class="bottom">
-        <div class="info">{{recordFileName}}</div>
+        <div class="info">{{title}}</div>
         <div class="control">
           <!-- 一些设置 -->
         </div>
@@ -108,6 +108,9 @@
       danmakuFilePath () {
         if (!this.recordFilePath) return
         return path.join(path.parse(this.recordFilePath).dir, this.recordFileName + '.dm3')
+      },
+      title () {
+        return messageManage.recordInfo ? messageManage.recordInfo.title : this.recordFileName
       }
     },
     watch: {
@@ -118,7 +121,11 @@
         this.dp.play()
       },
       async danmakuFilePath () {
-        this.db = null
+        if (this.db) {
+          await this.db.sequelize.close()
+          this.db = null
+          messageManage.reset()
+        }
         if (!this.danmakuFilePath) return
 
         try {
@@ -368,16 +375,15 @@
             }
 
             .text {
-              word-break: break-all;
+              word-break: break-word;
             }
 
             .gift-text {
-              display: inline-flex;
-              align-items: center;
               word-break: break-all;
               color: #888;
 
               img {
+                vertical-align: bottom;
                 width: 24px;
                 height: 24px;
                 margin: 0 8px;
@@ -388,6 +394,12 @@
           &.chat {
             .sender {
               float: left;
+            }
+          }
+
+          &.gift {
+            .chat-content-right {
+              line-height: 24px;
             }
           }
         }

@@ -21,6 +21,12 @@ export default new Vue({
       this.dp.on('seeked', this.seek)
       requestAnimationFrame(this.frame)
     },
+    reset () {
+      this.version = null
+      this.recordInfo = null
+      this.list = []
+      this.offset = 0
+    },
     async load (dm3) {
       this.loading = true
       try {
