@@ -18,6 +18,12 @@ if (!Dev) {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+// 全局错误捕捉
+process.on('uncaughtException', (err) => {
+  console.error(err)
+  fs.writeFileSync(`uncaught-${Date.now()}.log`, err.stack)
+})
+
 let mainWindow
 
 function init () {
@@ -32,7 +38,7 @@ function init () {
   } catch (err) {
     // 记录错误后再抛出
     console.error(err)
-    fs.writeFileSync('launch.log', err.stack)
+    fs.writeFileSync(`launch-${Date.now()}.log`, err.stack)
     throw err
   }
 }
