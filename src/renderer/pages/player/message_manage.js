@@ -55,7 +55,7 @@ export default new Vue({
       this.loading = false
     },
     frame () {
-      if (!this.loading && !this.dp.video.paused) {
+      if (!this.loading && !this.dp.video.paused && !this.dp.video.seeking) {
         const time = this.dp.video.currentTime * 1e3
         let item = this.list[this.offset]
         while (item && time > item.time) {
