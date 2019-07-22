@@ -202,20 +202,27 @@
       },
       removeRecordLog ({ row }) {
         let recordLog = row.getModel()
+        let onOk = async () => {
+          recordLog.setStatus(RecordLogStatus.Removing, true)
+          try {
+            await recordLog.destroy()
+            this.$refs.betterTable.asyncDataAmount--
+            this.reloadPage()
+          } catch (err) {
+            noticeError(err, '移除录播失败')
+          }
+          recordLog.setStatus(RecordLogStatus.Removing, false)
+        }
+
+        if (!recordLog.exist) {
+          onOk()
+          return
+        }
+
         this.$Modal.confirm({
           title: '警告: 该操作不可逆',
           content: `<p>是否确认移除ID为 <b>${recordLog.id}</b> 的记录?</p><p>注: 不包括磁盘文件</p>`,
-          onOk: async () => {
-            recordLog.setStatus(RecordLogStatus.Removing, true)
-            try {
-              await recordLog.destroy()
-              this.$refs.betterTable.asyncDataAmount--
-              this.reloadPage()
-            } catch (err) {
-              noticeError(err, '移除录播失败')
-            }
-            recordLog.setStatus(RecordLogStatus.Removing, false)
-          }
+          onOk
         })
       }
     }

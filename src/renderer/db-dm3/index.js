@@ -8,7 +8,7 @@ export default async function loadOrCreate (file) {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: file,
-    logging: (body, options) => log.debug(body)
+    logging: (body, options) => log.trace(body)
   })
 
   // 导入数据模型
