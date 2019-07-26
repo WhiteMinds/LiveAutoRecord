@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import fs from 'fs-extra'
+import uuid4 from 'uuid/v4'
 import request from 'request'
 import ffmpeg from 'fluent-ffmpeg'
 import Vue from 'vue'
@@ -164,6 +165,7 @@ export default new Vue({
       return req.abort.bind(req)
     },
     downloadStreamUseFfmpeg (url, savePath, callback = EmptyFn) {
+      const uuid = uuid4()
       const command = ffmpeg(url)
         .outputOptions(
           '-user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
@@ -173,7 +175,7 @@ export default new Vue({
         .output(savePath)
         .on('error', callback)
         .on('end', () => callback())
-        .on('stderr', stderrLine => log.trace('ffmpeg:', stderrLine))
+        .on('stderr', stderrLine => log.trace(`FFMPEG [${uuid}]:`, stderrLine))
       command.run()
 
       return () => command.ffmpegProc && command.ffmpegProc.stdin.write('q')
