@@ -122,8 +122,9 @@
           return
         }
 
-        log.info('Initializing close tip handler...')
+        log.info('Initializing partial ipc msg handler...')
         ipc.answerMain(IPCMsg.OpenCloseTip, this.OpenCloseTip)
+        this.heartLoop()
 
         log.info('Initializing database module...')
         await db.init()
@@ -158,6 +159,12 @@
             }
           }
         })
+      },
+      async heartLoop () {
+        while (1) {
+          await ipc.callMain(IPCMsg.Heart)
+          await sleep(10e3)
+        }
       }
     }
   }

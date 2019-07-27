@@ -12,10 +12,11 @@ const requester = rp.defaults({
   let origin = requester[method]
   requester[method] = function (...args) {
     const uuid = uuid4()
-    log.trace(`Request [${method}][${uuid}]:`, args)
+    log.trace(`Request [${method}][${uuid}]:`, JSON.stringify(args))
     return origin.apply(this, args).then(result => {
       if (result) {
         let body = result.constructor.name === 'IncomingMessage' ? result.body : result
+        body = typeof body === 'object' ? JSON.stringify(body) : body
         log.trace(`Result [${method}][${uuid}]:`, body)
       }
       return result

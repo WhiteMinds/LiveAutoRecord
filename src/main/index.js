@@ -7,7 +7,8 @@ import { app, BrowserWindow, Tray, Menu } from 'electron'
 import config from './config'
 import store from './store'
 import './ipc'
-import { IPCMsg, Dev, WinURL } from 'const'
+import { sleep } from './helper'
+import { IPCMsg, Dev, WinURL, EmptyFn } from 'const'
 const { version, build } = require('../../package.json')
 
 /**
@@ -19,27 +20,38 @@ if (!Dev) {
 }
 
 // 全局错误捕捉
-process.on('uncaughtException', (err) => {
-  console.error(err)
+const errorHandler = (err) => {
+  console.error('uncaught', err)
   fs.writeFileSync(`uncaught-${Date.now()}.log`, err.stack)
-})
+}
+process.on('uncaughtException', errorHandler)
+process.on('unhandledRejection', errorHandler)
 
 let mainWindow
+let tray
 
 function init () {
-  try {
-    // 不设置id的话, 会导致通知无法使用
-    app.setAppUserModelId(build.appId)
+  // 不设置id的话, 会导致通知无法使用
+  app.setAppUserModelId(build.appId)
 
-    config.load()
+  config.load()
 
-    // 创建主窗口
-    createMainWindow()
-  } catch (err) {
-    // 记录错误后再抛出
-    console.error(err)
-    fs.writeFileSync(`launch-${Date.now()}.log`, err.stack)
-    throw err
+  // 创建托盘和主窗口
+  createTray()
+  createMainWindow()
+
+  // 心跳包循环检查
+  process.nextTick(heartCheckLoop)
+}
+
+async function heartCheckLoop () {
+  while (1) {
+    if (mainWindow && mainWindow.lastHeart && (Date.now() - mainWindow.lastHeart > 15e3)) {
+      // main window died (white screen)
+      mainWindow.died = true
+      restartMainWindow()
+    }
+    await sleep(1e3)
   }
 }
 
@@ -59,6 +71,7 @@ function createMainWindow () {
     },
     show: false
   })
+  mainWindow.appTray = tray
 
   mainWindow.setMenu(null)
 
@@ -75,6 +88,7 @@ function createMainWindow () {
   })
 
   mainWindow.on('close', (event) => {
+    if (mainWindow.died) return
     if (store.recordingChannels.length > 0) {
       // 有录制中的视频, 将关闭过程转交给主窗口
       event.preventDefault()
@@ -89,24 +103,27 @@ function createMainWindow () {
     mainWindow = null
   })
 
-  createTray(mainWindow)
-
   store.mainWindow = mainWindow
 }
 
-function createTray (win) {
-  let tray = new Tray(`${__static}/tray.png`)
+function restartMainWindow () {
+  mainWindow.close()
+  createMainWindow()
+}
+
+function createTray () {
+  tray = new Tray(`${__static}/tray.png`)
   let menu = Menu.buildFromTemplate([
     {
       label: '显示/隐藏 窗口',
-      click: () => win.isVisible() ? win.hide() : win.show()
+      click: () => mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show()
     },
     {
       label: '退出',
       click: () => {
         if (store.recordingChannels.length > 0) {
-          if (!win.isVisible()) win.show()
-          win.focus()
+          if (!mainWindow.isVisible()) mainWindow.show()
+          mainWindow.focus()
           ipc.callRenderer(mainWindow, IPCMsg.OpenCloseTip)
         } else {
           app.quit()
@@ -116,21 +133,17 @@ function createTray (win) {
   ])
   tray.setContextMenu(menu)
   tray.setToolTip('LAR 直播自动录制')
-  tray.on('click', () => win.show())
-  win.appTray = tray
+  tray.on('click', () => mainWindow.show())
 }
 
 app.on('ready', init)
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
-})
+// 必须监听, 不然在restartMainWindow时会直接退出程序
+app.on('window-all-closed', EmptyFn)
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    init()
+    createMainWindow()
   }
 })
 
