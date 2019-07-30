@@ -62,6 +62,7 @@ export default (sequelize, DataTypes) => {
         return Platform[this.platform]
       }
     },
+    // 该属性在Recording状态一段时间后赋值
     record: DataTypes.VIRTUAL
   }, {
     underscored: true
@@ -109,6 +110,11 @@ export default (sequelize, DataTypes) => {
       let v = `${this.platformCN}-${this.address}`
       if (this.alias.trim()) v += ` (${this.alias})`
       return v
+    }
+
+    get isCorrectQuality () {
+      if (!this.record) return false
+      return this.record.streamInfo.quality === this.quality
     }
 
     setStatus (idx, status) {

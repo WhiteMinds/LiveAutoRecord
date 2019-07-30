@@ -162,15 +162,19 @@ export async function getStream (address, quality, circuit, opts = {}) {
     throw new Error('Unexpected error code, ' + json.error)
   }
 
+  // 流未准备好, 防止刚开播时的无效录制 (该选项可能导致开播前30秒左右无法录制到, 因为streamStatus在后端似乎有缓存, 所以暂时不使用)
+  // if (!json.data.streamStatus) return
+
   // 检测是否支持指定的画质
   let target = json.data.multirates.find(obj => obj.name === quality)
-  if (target && json.data.rate !== target.rate) {
+  if (json.data.rateSwitch && target && json.data.rate !== target.rate) {
     // 切换到目标画质
     return getStream(address, quality, circuit, Object.assign({}, opts, { rate: target.rate }))
   }
 
   // 实际使用的画质
-  if (!target) quality = json.data.multirates.find(obj => obj.rate === json.data.rate).name
+  if (!json.data.rateSwitch) quality = '原画'
+  else if (!target) quality = json.data.multirates.find(obj => obj.rate === json.data.rate).name
   // 实际使用的线路
   circuit = json.data.rtmp_cdn
 
@@ -178,8 +182,8 @@ export async function getStream (address, quality, circuit, opts = {}) {
     stream: `${json.data.rtmp_url}/${json.data.rtmp_live}`,
     quality,
     circuit,
-    qualityCN: qualities[quality],
-    circuitCN: circuits[circuit]
+    qualityCN: qualities[quality] || quality,
+    circuitCN: circuits[circuit] || circuit
   }
 }
 

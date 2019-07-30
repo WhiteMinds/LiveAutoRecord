@@ -8,7 +8,7 @@ import db from '@/db'
 import DM3 from '@/db-dm3'
 import log from '@/modules/log'
 import config from '@/modules/config'
-import { sleep, noticeError, createNotice } from '@/helper'
+import { sleep, noticeError, createNotice, waitChange } from '@/helper'
 import { ChannelStatus, DM3DataType, EmptyFn } from 'const'
 
 export default new Vue({
@@ -37,14 +37,20 @@ export default new Vue({
       }
     },
     async checkChannel (channel, force) {
+      // 已经在录制时不进行检查, 而是尝试切换到指定流
+      if (channel.record) {
+        await this.trySwitchToCorrectQuality(channel)
+        return
+      }
+
       // 目前来看, 有任何状态时, 都不应该进入检查状态, 所以status不为0时直接return, 除非force
       if (channel.status && !force) return
       if (channel.getStatus(ChannelStatus.Checking)) return
 
       // 检查开播状态, 如果在直播中则获取流信息
-      channel.setStatus(ChannelStatus.Checking, true)
       let channelInfo, streamInfo
       try {
+        channel.setStatus(ChannelStatus.Checking, true)
         channelInfo = await channel.getInfo()
         if (!channelInfo.living) return
         streamInfo = await channel.getStream()
@@ -53,10 +59,32 @@ export default new Vue({
         channel.setStatus(ChannelStatus.Checking, false)
       }
 
-      // 发出通知
-      if (config.record.notice) createNotice(channel.profile, channelInfo.title)
       // 开始录播
       await this.startRecord(channel, streamInfo, channelInfo)
+    },
+    async trySwitchToCorrectQuality (channel) {
+      if (channel.isCorrectQuality) return
+      if (channel.getStatus(ChannelStatus.Checking) || channel.getStatus(ChannelStatus.Switching) || channel.getStatus(ChannelStatus.Removing)) return
+
+      let streamInfo
+      try {
+        channel.setStatus(ChannelStatus.Checking, true)
+        streamInfo = await channel.getStream()
+        if (!streamInfo || streamInfo.quality !== channel.quality) return
+      } finally {
+        channel.setStatus(ChannelStatus.Checking, false)
+      }
+
+      // 开始切换过程, 停止旧的录制, 启动新的录制
+      try {
+        channel.setStatus(ChannelStatus.Switching, true)
+        let channelInfo = channel.record.channelInfo
+        channel.stopRecord()
+        let val = await waitChange(channel, 'record')
+        if (!val) await this.startRecord(channel, streamInfo, channelInfo)
+      } finally {
+        channel.setStatus(ChannelStatus.Switching, false)
+      }
     },
     async startRecord (channel, streamInfo, channelInfo) {
       if (channel.getStatus(ChannelStatus.Recording)) return
@@ -71,7 +99,7 @@ export default new Vue({
       )
 
       // 启动视频录制
-      const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, savePath.record, (err) => {
+      const stopRecord = this.downloadStreamUseFfmpeg(streamInfo.stream, savePath.record, { channel, channelInfo }, (err) => {
         channel.setStatus(ChannelStatus.Recording, false)
         channel.record.stopDanmaku()
         channel.record.getRecordLog().update({ stoppedAt: new Date() }).catch(noticeError)
@@ -79,7 +107,7 @@ export default new Vue({
 
         if (err) {
           if (err.message.trim().endsWith('Server returned 404 Not Found')) {
-            log.warn('ffmpeg error 404', streamInfo)
+            log.warn('ffmpeg error 404', JSON.stringify(streamInfo))
             return
           }
 
@@ -164,8 +192,10 @@ export default new Vue({
 
       return req.abort.bind(req)
     },
-    downloadStreamUseFfmpeg (url, savePath, callback = EmptyFn) {
+    downloadStreamUseFfmpeg (url, savePath, { channel, channelInfo }, callback = EmptyFn) {
       const uuid = uuid4()
+      let waitFirstFrame = true
+      let isSwitching = channel.getStatus(ChannelStatus.Switching)
       const command = ffmpeg(url)
         .outputOptions(
           '-user-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
@@ -175,7 +205,19 @@ export default new Vue({
         .output(savePath)
         .on('error', callback)
         .on('end', () => callback())
-        .on('stderr', stderrLine => log.trace(`FFMPEG [${uuid}]:`, stderrLine))
+        .on('stderr', stderrLine => {
+          log.trace(`FFMPEG [${uuid}]:`, stderrLine)
+
+          if (stderrLine.startsWith('frame=')) {
+            if (waitFirstFrame) {
+              waitFirstFrame = false
+              // 发出通知
+              if (config.record.notice && !isSwitching) createNotice(channel.profile, channelInfo.title)
+            }
+
+            // todo 在此处对长时间无frame时的情况做检查
+          }
+        })
       command.run()
 
       return () => command.ffmpegProc && command.ffmpegProc.stdin.write('q')

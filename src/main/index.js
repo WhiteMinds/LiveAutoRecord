@@ -107,6 +107,7 @@ function createMainWindow () {
 }
 
 function restartMainWindow () {
+  fs.appendFileSync('restart.log', Date.now() + '\n')
   mainWindow.close()
   createMainWindow()
 }

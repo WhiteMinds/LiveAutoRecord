@@ -43,3 +43,12 @@ export function illegalCharRemove (str) {
   }
   return str
 }
+
+export async function waitChange (obj, attr, maxWaitCount = 1200, interval = 50) {
+  let origin = obj[attr]
+  for (let i = 0; i < maxWaitCount; i++) {
+    await sleep(interval)
+    if (obj[attr] !== origin) return obj[attr]
+  }
+  throw new Error('Wait change timeout')
+}
