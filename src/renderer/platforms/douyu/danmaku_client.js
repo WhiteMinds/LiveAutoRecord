@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import net from 'net'
 import EventEmitter from 'events'
 import DouYuClient from 'douyu-danmu'
 import log from '@/modules/log'
@@ -27,6 +28,21 @@ DouYuClient.prototype._build_gift = function (...args) {
   result.avatar = msg.ic.replace(/@S/g, '/')
   if (!result.price) result.price = 0
   if (gift) Object.assign(result, gift)
+  return result
+}
+
+// 在其连接弹幕服务器时转向地址到 openapi-danmu.douyu.com
+let _start_tcp_origin = DouYuClient.prototype._start_tcp
+DouYuClient.prototype._start_tcp = function (...args) {
+  const connect_origin = net.Socket.prototype.connect
+  net.Socket.prototype.connect = function (...args) {
+    if (args[1] === 'openbarrage.douyutv.com') {
+      args[1] = 'openapi-danmu.douyu.com'
+    }
+    return connect_origin.apply(this, args)
+  }
+  let result = _start_tcp_origin.apply(this, args)
+  net.Socket.prototype.connect = connect_origin
   return result
 }
 
