@@ -7,7 +7,6 @@ import { app, BrowserWindow, Tray, Menu } from 'electron'
 import config from './config'
 import store from './store'
 import './ipc'
-import { sleep } from './helper'
 import { IPCMsg, Dev, WinURL, EmptyFn } from 'const'
 const { version, build } = require('../../package.json')
 
@@ -39,20 +38,6 @@ function init () {
   // 创建托盘和主窗口
   createTray()
   createMainWindow()
-
-  // 心跳包循环检查
-  process.nextTick(heartCheckLoop)
-}
-
-async function heartCheckLoop () {
-  while (1) {
-    if (mainWindow && mainWindow.lastHeart && (Date.now() - mainWindow.lastHeart > 15e3)) {
-      // main window died (white screen)
-      mainWindow.died = true
-      restartMainWindow()
-    }
-    await sleep(1e3)
-  }
 }
 
 function createMainWindow () {
@@ -88,7 +73,6 @@ function createMainWindow () {
   })
 
   mainWindow.on('close', (event) => {
-    if (mainWindow.died) return
     if (store.recordingChannels.length > 0) {
       // 有录制中的视频, 将关闭过程转交给主窗口
       event.preventDefault()
@@ -104,12 +88,6 @@ function createMainWindow () {
   })
 
   store.mainWindow = mainWindow
-}
-
-function restartMainWindow () {
-  fs.appendFileSync('restart.log', Date.now() + '\n')
-  mainWindow.close()
-  createMainWindow()
 }
 
 function createTray () {

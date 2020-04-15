@@ -44,10 +44,6 @@ ipc.answerRenderer(IPCMsg.CreatePlayer, (file) => {
   return new Promise(resolve => win.on('ready-to-show', resolve))
 })
 
-ipc.answerRenderer(IPCMsg.Heart, (data, sender) => {
-  sender.lastHeart = Date.now()
-})
-
 // Utils
 // =============================================================================
 

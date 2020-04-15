@@ -3,6 +3,5 @@ export const IPCMsg = {
   SetConfig: '2',
   SetRecordingChannel: '3',
   OpenCloseTip: '4',
-  CreatePlayer: '10',
-  Heart: '11'
+  CreatePlayer: '10'
 }
