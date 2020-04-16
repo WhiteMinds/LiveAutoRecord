@@ -91,7 +91,7 @@ function createMainWindow () {
 }
 
 function createTray () {
-  tray = new Tray(`${__static}/tray.png`)
+  tray = new Tray(path.join(__static, getTrayImageFileName()))
   let menu = Menu.buildFromTemplate([
     {
       label: '显示/隐藏 窗口',
@@ -113,6 +113,17 @@ function createTray () {
   tray.setContextMenu(menu)
   tray.setToolTip('LAR 直播自动录制')
   tray.on('click', () => mainWindow.show())
+}
+
+function getTrayImageFileName () {
+  switch (process.platform) {
+    case 'win32':
+      return 'tray.ico'
+    case 'darwin':
+    case 'linux':
+    default:
+      return 'tray.png'
+  }
 }
 
 app.on('ready', init)
