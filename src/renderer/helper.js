@@ -19,7 +19,10 @@ export function noticeError (err, tip = '发生了错误', duration = 10) {
 
 export function createNotice (title, body) {
   return new Notification(title, {
-    icon: path.join(__static, 'icon.ico'),
+    icon:
+      process.platform === 'win32'
+        ? path.join(__static, 'icon.ico')
+        : null,
     body
   })
 }
