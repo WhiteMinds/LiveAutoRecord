@@ -161,7 +161,7 @@
       },
       openSaveFolder ({ row }) {
         let fullPath = row.getModel().genSavePath().record
-        this.$electron.shell.openItem(path.dirname(fullPath))
+        this.$electron.shell.openPath(path.dirname(fullPath))
       },
       removeChannel ({ row }) {
         let channel = row.getModel()

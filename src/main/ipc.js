@@ -1,6 +1,6 @@
 import path from 'path'
-import ipc from 'electron-better-ipc'
-import { BrowserWindow } from 'electron'
+import { ipcMain as ipc } from 'electron-better-ipc'
+import { BrowserWindow, nativeImage } from 'electron'
 import _ from 'lodash'
 import config from './config'
 import store from './store'
@@ -49,7 +49,7 @@ ipc.answerRenderer(IPCMsg.CreatePlayer, (file) => {
 
 function createWindow (url, title, options) {
   options = _.merge({
-    icon: path.join(__static, 'icon.ico'),
+    icon: nativeImage.createFromPath(path.join(__static, 'icon.ico')),
     width: 1600,
     height: 750,
     useContentSize: true,

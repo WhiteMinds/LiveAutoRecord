@@ -20,7 +20,7 @@
 
 <script>
   import moment from 'moment'
-  import ipc from 'electron-better-ipc'
+  import { ipcRenderer as ipc } from 'electron-better-ipc'
   import db from '@/db'
   import config from '@/modules/config'
   import { noticeError } from '@/helper'

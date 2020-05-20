@@ -15,7 +15,7 @@ export const WinURL = Dev ? `http://localhost:${process.env.DEV_PORT || 9080}/` 
 
 export const UserDataPath = app.getPath('userData')
 export const ConfigFilePath = path.join(UserDataPath, 'lar_config.json')
-export const LogFolderPath = 'logs'
+export const LogFolderPath = path.join(UserDataPath, 'logs')
 
 export const EmptyFn = () => {}
 

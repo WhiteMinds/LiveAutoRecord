@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs-extra'
 import _ from 'lodash'
-import ipc from 'electron-better-ipc'
+import { ipcRenderer as ipc } from 'electron-better-ipc'
 import format from 'string-template'
 import config from '@/modules/config'
 import platforms from '@/platforms'

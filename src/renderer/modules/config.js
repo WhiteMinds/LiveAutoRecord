@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import ipc from 'electron-better-ipc'
+import { ipcRenderer as ipc } from 'electron-better-ipc'
 import { IPCMsg } from 'const'
 
 export default new Vue({

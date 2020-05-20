@@ -74,6 +74,8 @@
   import path from 'path'
   import DPlayer from 'dplayer'
   import { argv } from 'argh'
+  import express from 'express'
+  import cors from 'cors'
   import DM3 from '@/db-dm3'
   import messageManage from './message_manage'
   import { ChatContent, ChatContentList, ChatContentTip } from 'const'
@@ -88,6 +90,7 @@
         ChatContentTip,
 
         recordFilePath: '',
+        serverPort: 0,
         dp: null,
         db: null,
         chatContent: ChatContent.All,
@@ -116,7 +119,7 @@
     watch: {
       recordFilePath () {
         document.title = `LAR 弹幕播放器 - ${this.recordFilePath}`
-        this.dp.switchVideo({ url: this.recordFilePath })
+        this.dp.switchVideo({ url: `http://localhost:${this.serverPort}/video.flv` })
         // autoplay选项有bug, 所以这里主动调用play
         this.dp.play()
       },
@@ -137,10 +140,25 @@
       }
     },
     mounted () {
+      this.initExpress().then(() => {
+        this.recordFilePath = argv['record-file']
+      })
       this.initDPlayer()
-      this.recordFilePath = argv['record-file']
     },
     methods: {
+      // flvjs 使用的是 fetch，无法访问 file 协议，所以用一个临时 server 来中转
+      initExpress () {
+        return new Promise(resolve => {
+          const server = express()
+          server.use(cors())
+          // 访问任何路径都返回录像文件
+          server.use((req, res, next) => res.download(this.recordFilePath))
+          const listener = server.listen(0, () => {
+            this.serverPort = listener.address().port
+            resolve()
+          })
+        })
+      },
       initDPlayer () {
         this.dp = new DPlayer({
           container: this.$refs.container,

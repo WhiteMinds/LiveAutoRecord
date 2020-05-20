@@ -2,8 +2,8 @@
 
 import fs from 'fs'
 import path from 'path'
-import ipc from 'electron-better-ipc'
-import { app, BrowserWindow, Tray, Menu } from 'electron'
+import { ipcMain as ipc } from 'electron-better-ipc'
+import { app, BrowserWindow, Tray, Menu, nativeImage } from 'electron'
 import config from './config'
 import store from './store'
 import './ipc'
@@ -33,6 +33,9 @@ function init () {
   // 不设置id的话, 会导致通知无法使用
   app.setAppUserModelId(build.appId)
 
+  // 使 sqlite3 可以正常加载
+  app.allowRendererProcessReuse = false
+
   config.load()
 
   // 创建托盘和主窗口
@@ -45,7 +48,7 @@ function createMainWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    icon: path.join(__static, 'icon.ico'),
+    icon: nativeImage.createFromPath(path.join(__static, 'icon.ico')),
     width: 1280,
     height: 800,
     useContentSize: true,

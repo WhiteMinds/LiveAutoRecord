@@ -72,7 +72,7 @@
 
 <script>
   import { remote } from 'electron'
-  import ipc from 'electron-better-ipc'
+  import { ipcRenderer as ipc } from 'electron-better-ipc'
   import ffmpeg from 'fluent-ffmpeg'
   import ffmpegStatic from 'ffmpeg-static'
   import config from '@/modules/config'
