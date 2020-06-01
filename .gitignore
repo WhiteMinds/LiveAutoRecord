@@ -10,6 +10,7 @@ yarn-error.log
 thumbs.db
 !.gitkeep
 .idea
+.vscode
 design
 logs
 launch.log
