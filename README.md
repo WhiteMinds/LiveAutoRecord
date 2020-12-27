@@ -4,7 +4,7 @@
 
 #### Build Setup
 
-``` bash
+```bash
 # install dependencies
 yarn (or 'npm install')
 yarn rebuild:sqlite3 (or 'npm run rebuild:sqlite3')
@@ -19,6 +19,32 @@ yarn build (or 'npm run build')
 yarn lint (or 'npm run lint')
 
 ```
+
+## Screenshot
+
+#### 新增录播任务
+
+![](/readme-assets/5.png)
+
+#### 录播任务列表
+
+![](/readme-assets/1.png)
+
+#### 录播历史
+
+![](/readme-assets/2.png)
+
+#### 录播播放器
+
+![](/readme-assets/3.png)
+
+#### 录播播放器-网页全屏
+
+![](/readme-assets/4.png)
+
+#### 全局录播配置
+
+![](/readme-assets/6.png)
 
 ---
 
