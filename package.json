@@ -78,7 +78,7 @@
     "iview": "^3.4.1",
     "lodash": "^4.17.11",
     "log4js": "^4.1.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "query-string": "^6.5.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
