@@ -1,0 +1,17 @@
+{
+  "name": "@autorecord/electron",
+  "version": "0.0.1",
+  "description": "Integrate two packets http-server and web, packaged as the client",
+  "main": "./lib/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
+  "author": "WhiteMind",
+  "license": "LGPL"
+}

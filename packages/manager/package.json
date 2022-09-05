@@ -1,0 +1,31 @@
+{
+  "name": "@autorecord/manager",
+  "version": "0.0.5",
+  "description": "Batch scheduling recorders",
+  "main": "./lib/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
+  "author": "WhiteMind",
+  "license": "LGPL",
+  "dependencies": {
+    "ffmpeg-static": "^5.0.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "mitt": "^3.0.0",
+    "ramda": "^0.28.0"
+  },
+  "devDependencies": {
+    "@types/ffmpeg-static": "^3.0.1",
+    "@types/fluent-ffmpeg": "^2.1.20",
+    "@types/ramda": "^0.28.15"
+  },
+  "gitHead": "e6fe3468b3fa640dfae0e6eb73fefddee15e3e55"
+}

@@ -1,0 +1,17 @@
+{
+  "name": "@autorecord/web",
+  "version": "0.0.1",
+  "description": "Web operation interface",
+  "main": "./lib/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
+  "author": "WhiteMind",
+  "license": "LGPL"
+}
