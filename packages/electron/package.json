@@ -2,16 +2,58 @@
   "name": "@autorecord/electron",
   "version": "0.0.1",
   "description": "Integrate two packets http-server and web, packaged as the client",
-  "main": "./lib/index.js",
+  "main": "./dist/index.js",
   "private": true,
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "lint": "eslint -c .eslintrc --ext .ts ./src",
+    "app:dev": "tsc && concurrently \"vite ../web\" \" electron .\" \"tsc -w\"",
+    "app:build": "npm run vite:build && tsc && electron-builder",
+    "app:preview": "npm run vite:build && tsc && electron ."
   },
-  "files": [
-    "lib"
-  ],
+  "build": {
+    "appId": "YourAppID",
+    "asar": true,
+    "directories": {
+      "buildResources": "assets",
+      "output": "release/${version}"
+    },
+    "files": [
+      "dist"
+    ],
+    "mac": {
+      "artifactName": "${productName}_${version}.${ext}",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}_${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": false
+    }
+  },
   "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
   "author": "WhiteMind",
-  "license": "LGPL"
+  "license": "LGPL",
+  "dependencies": {
+    "@autorecord/http-server": "^0.0.1"
+  },
+  "devDependencies": {
+    "electron": "^20.1.1",
+    "electron-builder": "^23.3.3"
+  }
 }
