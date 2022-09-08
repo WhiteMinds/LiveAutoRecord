@@ -7,9 +7,6 @@ ffmpeg.setFfmpegPath(ffmpegPath)
 
 export type ChannelId = string
 
-export type SerializedRecorder = Pick<RecorderProvider, 'id'> &
-  RecorderCreateOpts
-
 export const Qualities = ['lowest', 'low', 'medium', 'high', 'highest'] as const
 export type Quality = typeof Qualities[number]
 
@@ -24,6 +21,10 @@ export interface RecorderCreateOpts {
   // 该项为用户配置，不同源（CDN）的优先级，如果设置了此项，将优先根据此决定使用哪个源，除非所有的指定源无效
   sourcePriorities: string[]
   extra?: string
+}
+
+export interface SerializedRecorder extends RecorderCreateOpts {
+  providerId: RecorderProvider['id']
 }
 
 export type RecorderState = 'idle' | 'recording' | 'stopping-record'
@@ -114,6 +115,7 @@ export interface RecorderManager
     providerId: RecorderProvider['id'],
     opts: RecorderCreateOpts
   ): Recorder
+  removeRecorder(this: RecorderManager, recorder: Recorder): void
 
   isCheckLoopRunning: boolean
   startCheckLoop(this: RecorderManager): void
@@ -183,6 +185,12 @@ export function createRecorderManager(): RecorderManager {
 
       return recorder
     },
+    removeRecorder(recorder) {
+      const idx = this.recorders.findIndex((item) => item === recorder)
+      if (idx === -1) return
+      recorder.recordHandle?.stop()
+      this.recorders.splice(idx, 1)
+    },
 
     isCheckLoopRunning: false,
     startCheckLoop() {
@@ -221,7 +229,7 @@ export function defaultFromJSON(
   provider: RecorderProvider,
   json: SerializedRecorder
 ): Recorder {
-  return provider.createRecorder(R.omit(['id'], json))
+  return provider.createRecorder(R.omit(['providerId'], json))
 }
 
 export function defaultToJSON(
@@ -229,7 +237,7 @@ export function defaultToJSON(
   recorder: Recorder
 ): SerializedRecorder {
   return {
-    id: provider.id,
+    providerId: provider.id,
     ...R.pick(
       [
         'channelId',
