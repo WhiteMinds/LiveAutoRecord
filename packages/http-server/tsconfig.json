@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "CommonJS",
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
     "sourceMap": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "esModuleInterop": true,
     "removeComments": false,
     "noUnusedParameters": false,

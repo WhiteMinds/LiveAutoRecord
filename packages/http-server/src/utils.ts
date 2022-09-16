@@ -1,4 +1,4 @@
-import R from 'ramda'
+import * as R from 'ramda'
 
 export function pick<T extends Record<string, any>, U extends keyof T>(
   object: T,
