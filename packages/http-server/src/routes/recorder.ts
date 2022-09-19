@@ -1,7 +1,6 @@
 import { Recorder, RecorderCreateOpts, RecordHandle } from '@autorecord/manager'
 import { Router } from 'express'
-import { createRecorder } from '../controller'
-import { recorderManager } from '../manager'
+import { recorderManager, saveRecordersConfig } from '../manager'
 import { assertObjectType, assertStringType, omit } from '../utils'
 
 const router = Router()
@@ -19,14 +18,14 @@ router
     assertObjectType(createOpts)
     const recorder = recorderManager.addRecorder(
       providerId,
-      // TODO: 这里先不做完整验证，以后再加
+      // TODO: 这里先不做 schema 校验，以后再加
       createOpts as RecorderCreateOpts
     )
-    // TODO: 这里最好做一些措施防止写入失败时（比如数据库所在的盘写满了）回滚 addRecorder
-    await createRecorder(recorder.toJSON())
     res.json({
       payload: recorderToClient(recorder),
     })
+    // TODO: 目前没必要性能优化，直接全量写回。另外可以考虑监听 manager 的事件来自动触发。
+    saveRecordersConfig()
   })
 
 type ClientRecorder = Omit<

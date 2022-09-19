@@ -10,8 +10,5 @@
   "devDependencies": {
     "lerna": "^5.4.0"
   },
-  "packageManager": "yarn@3.2.3",
-  "resolutions": {
-    "sequelize@^6.21.4": "patch:sequelize@npm%3A6.21.4#./.yarn/patches/sequelize-npm-6.21.4-b13967ce7f.patch"
-  }
+  "packageManager": "yarn@3.2.3"
 }

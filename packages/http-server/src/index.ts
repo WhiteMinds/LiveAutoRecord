@@ -2,14 +2,10 @@ import './prepare'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
-import { initDB } from './db'
 import { initRecorderManager } from './manager'
 import { router } from './routes'
 
 export async function startServer() {
-  console.log('initializing db')
-  await initDB()
-
   console.log('initializing recorder manager')
   await initRecorderManager()
 
