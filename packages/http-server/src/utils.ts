@@ -1,5 +1,32 @@
 import * as R from 'ramda'
 
+export function assert(assertion: unknown, msg?: string): asserts assertion {
+  if (!assertion) {
+    throw new Error(msg)
+  }
+}
+
+export function assertStringType(
+  data: unknown,
+  msg?: string
+): asserts data is string {
+  assert(typeof data === 'string', msg)
+}
+
+export function assertNumberType(
+  data: unknown,
+  msg?: string
+): asserts data is number {
+  assert(typeof data === 'number', msg)
+}
+
+export function assertObjectType(
+  data: unknown,
+  msg?: string
+): asserts data is object {
+  assert(typeof data === 'object', msg)
+}
+
 export function pick<T extends Record<string, any>, U extends keyof T>(
   object: T,
   ...props: U[]

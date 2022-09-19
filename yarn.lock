@@ -64,10 +64,12 @@ __metadata:
     "@types/ffmpeg-static": ^3.0.1
     "@types/fluent-ffmpeg": ^2.1.20
     "@types/ramda": ^0.28.15
+    "@types/string-template": ^1.0.2
     ffmpeg-static: ^5.0.2
     fluent-ffmpeg: ^2.1.2
     mitt: ^3.0.0
     ramda: ^0.28.0
+    string-template: ^1.0.0
   languageName: unknown
   linkType: soft
 
@@ -1712,6 +1714,13 @@ __metadata:
     "@types/mime": "*"
     "@types/node": "*"
   checksum: b6ac93d471fb0f53ddcac1f9b67572a09cd62806f7db5855244b28f6f421139626f24799392566e97d1ffc61b12f9de7f30380c39fcae3c8a161fe161d44edf2
+  languageName: node
+  linkType: hard
+
+"@types/string-template@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@types/string-template@npm:1.0.2"
+  checksum: 25b07ab4c7062dfd57c6a100a9eaac4cca9c836a1fff85351e143cf1696b311c322ca0f6f7a2bad834deeedfd0cb7ca96c180c36983092864169151e32abc15f
   languageName: node
   linkType: hard
 
@@ -8184,6 +8193,13 @@ __metadata:
   version: 2.0.0
   resolution: "strict-uri-encode@npm:2.0.0"
   checksum: eaac4cf978b6fbd480f1092cab8b233c9b949bcabfc9b598dd79a758f7243c28765ef7639c876fa72940dac687181b35486ea01ff7df3e65ce3848c64822c581
+  languageName: node
+  linkType: hard
+
+"string-template@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "string-template@npm:1.0.0"
+  checksum: 15b0e8616ff25f3ddcd42e4a58a6833cc7be81029f97afc7b8f8d2e7c4d482a136e67399d207b7d2c31080e7a88266c670131a59e50ebc482bfeddb06b3a4215
   languageName: node
   linkType: hard
 

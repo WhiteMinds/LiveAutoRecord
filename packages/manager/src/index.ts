@@ -1,7 +1,9 @@
+import path from 'path'
 import mitt, { Emitter } from 'mitt'
 import ffmpeg from 'fluent-ffmpeg'
 import ffmpegPath from 'ffmpeg-static'
 import R from 'ramda'
+import format from 'string-template'
 
 ffmpeg.setFfmpegPath(ffmpegPath)
 
@@ -56,8 +58,7 @@ export interface Recorder extends Emitter<{}>, RecorderCreateOpts {
   checkLiveStatusAndRecord(
     this: Recorder,
     opts: {
-      saveFolder: string
-      saveName: string
+      getSavePath(data: { owner: string; title: string }): string
     }
   ): Promise<RecordHandle | null>
   // 正在进行的录制的操作接口
@@ -120,9 +121,15 @@ export interface RecorderManager
   isCheckLoopRunning: boolean
   startCheckLoop(this: RecorderManager): void
   stopCheckLoop(this: RecorderManager): void
+
+  savePathRule: string
 }
 
-export function createRecorderManager(): RecorderManager {
+export function createRecorderManager(
+  opts: {
+    savePathRule?: string
+  } = {}
+): RecorderManager {
   const providerMap: Record<RecorderProvider['id'], RecorderProvider> = {}
   const recorders: Recorder[] = []
 
@@ -140,9 +147,9 @@ export function createRecorderManager(): RecorderManager {
       if (recorder == null) return
 
       const handle = await recorder.checkLiveStatusAndRecord({
-        // TODO: 需要 name 生成规则
-        saveFolder: __dirname,
-        saveName: recorder.channelId,
+        getSavePath(data) {
+          return genSavePathFromRule(manager, recorder, data)
+        },
       })
       if (handle == null) return
 
@@ -216,9 +223,45 @@ export function createRecorderManager(): RecorderManager {
       // TODO: emit updated event
       clearTimeout(checkLoopTimer)
     },
+
+    savePathRule:
+      opts.savePathRule ??
+      path.join(
+        __dirname,
+        '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}'
+      ),
   }
 
   return manager
+}
+
+function genSavePathFromRule(
+  manager: RecorderManager,
+  recorder: Recorder,
+  extData: {
+    owner: string
+    title: string
+  }
+): string {
+  // TODO: 这里随便写的，后面再优化
+  const provider = manager.providers.find(
+    (p) => p.id === recorder.toJSON().providerId
+  )
+
+  const now = new Date()
+  const params = {
+    platform: provider?.name ?? 'unknown',
+    channelId: recorder.channelId,
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    date: now.getDate(),
+    hour: now.getHours(),
+    min: now.getMinutes(),
+    sec: now.getSeconds(),
+    ...extData,
+  }
+
+  return format(manager.savePathRule, params)
 }
 
 /**

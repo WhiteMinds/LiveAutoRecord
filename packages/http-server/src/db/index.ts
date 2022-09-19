@@ -13,5 +13,7 @@ type ExtractInstanceType<T> = T extends { new (): infer C } ? C : never
 export const Recorder = defineRecorderModel(sequelize)
 export type Recorder = ExtractInstanceType<typeof Recorder>
 
-// sequelize.sync({ force: true })
-sequelize.sync({ alter: true })
+export async function initDB(): Promise<void> {
+  // sequelize.sync({ force: true })
+  await sequelize.sync({ alter: true })
+}
