@@ -45,6 +45,27 @@ router
     saveRecordersConfig()
   })
 
+router
+  .route('/recorders/:id')
+  .get(async (req, res) => {
+    const { id } = req.params
+    const recorder = recorderManager.recorders.find((item) => item.id === id)
+    res.json({
+      payload: recorder && recorderToClient(recorder),
+    })
+  })
+  .delete((req, res) => {
+    const { id } = req.params
+    const recorder = recorderManager.recorders.find((item) => item.id === id)
+    if (recorder == null) {
+      res.json({})
+      return
+    }
+    recorderManager.removeRecorder(recorder)
+    res.json({})
+    saveRecordersConfig()
+  })
+
 type ClientRecorder = Omit<
   Recorder,
   // TODO: 可以改成排除所有方法 & EmitterProps

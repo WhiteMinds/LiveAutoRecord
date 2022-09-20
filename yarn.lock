@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@autorecord/douyu-recorder@npm:1.0.2"
+"@autorecord/douyu-recorder@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@autorecord/douyu-recorder@npm:1.0.3"
   dependencies:
-    "@autorecord/manager": ^0.0.6
+    "@autorecord/manager": ^0.0.7
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -24,7 +24,7 @@ __metadata:
     ramda: ^0.28.0
     uuid: ^8.3.2
     vm2: ^3.9.10
-  checksum: 7bb2e05281774dd72fb03b349aefc601fa232a9f68e12cad27c99be7f26843c2ef1b0149a1082f2ac83a2ccd2f3915f500df1d7d4bf0ba09b1ddaf8ffad8ce7e
+  checksum: e09882cf3e340c56d2d214faf7f88f29f3a19a0f699a508f9ee0e0632df9cd44bd7f650fe461af84a717d73a6f24aa0441542c2994c6085933eb355007ba17aa
   languageName: node
   linkType: hard
 
@@ -42,8 +42,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/douyu-recorder": ^1.0.2
-    "@autorecord/manager": ^0.0.5
+    "@autorecord/douyu-recorder": ^1.0.3
+    "@autorecord/manager": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.185
@@ -61,7 +61,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.5, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.7, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
@@ -69,26 +69,15 @@ __metadata:
     "@types/fluent-ffmpeg": ^2.1.20
     "@types/ramda": ^0.28.15
     "@types/string-template": ^1.0.2
+    "@types/uuid": ^8.3.4
     ffmpeg-static: ^5.0.2
     fluent-ffmpeg: ^2.1.2
     mitt: ^3.0.0
     ramda: ^0.28.0
     string-template: ^1.0.0
+    uuid: ^9.0.0
   languageName: unknown
   linkType: soft
-
-"@autorecord/manager@npm:^0.0.6":
-  version: 0.0.6
-  resolution: "@autorecord/manager@npm:0.0.6"
-  dependencies:
-    ffmpeg-static: ^5.0.2
-    fluent-ffmpeg: ^2.1.2
-    mitt: ^3.0.0
-    ramda: ^0.28.0
-    string-template: ^1.0.0
-  checksum: fcb0d0358716bf34e8b5416a8933b9f792e0ebeefc6106af46378fd618f2892e30d3c6d5aa64020cb9841bb6aebe15be231e5922c663eecbe22ecd9cd8352ad9
-  languageName: node
-  linkType: hard
 
 "@autorecord/web@workspace:packages/web":
   version: 0.0.0-use.local
@@ -1760,6 +1749,13 @@ __metadata:
   version: 1.0.2
   resolution: "@types/string-template@npm:1.0.2"
   checksum: 25b07ab4c7062dfd57c6a100a9eaac4cca9c836a1fff85351e143cf1696b311c322ca0f6f7a2bad834deeedfd0cb7ca96c180c36983092864169151e32abc15f
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^8.3.4":
+  version: 8.3.4
+  resolution: "@types/uuid@npm:8.3.4"
+  checksum: 6f11f3ff70f30210edaa8071422d405e9c1d4e53abbe50fdce365150d3c698fe7bbff65c1e71ae080cbfb8fded860dbb5e174da96fdbbdfcaa3fb3daa474d20f
   languageName: node
   linkType: hard
 
@@ -8666,6 +8662,15 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
+  languageName: node
+  linkType: hard
+
+"uuid@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "uuid@npm:9.0.0"
+  bin:
+    uuid: dist/bin/uuid
+  checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
   languageName: node
   linkType: hard
 

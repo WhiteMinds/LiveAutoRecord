@@ -4,6 +4,7 @@ import ffmpeg from 'fluent-ffmpeg'
 import ffmpegPath from 'ffmpeg-static'
 import R from 'ramda'
 import format from 'string-template'
+import { v4 as uuid } from 'uuid'
 
 ffmpeg.setFfmpegPath(ffmpegPath)
 
@@ -42,6 +43,8 @@ export interface RecordHandle {
 }
 
 export interface Recorder extends Emitter<{}>, RecorderCreateOpts {
+  // 唯一 id，目前仅运行时存在，用于操作时的标记
+  id: string
   // 该项由 recorder 自身控制，决定有哪些可用的视频流
   availableStreams: string[]
   // 该项由 recorder 自身控制，决定有哪些可用的源（CDN）
@@ -294,6 +297,10 @@ export function defaultToJSON(
       recorder
     ),
   }
+}
+
+export function genRecorderUUID(): Recorder['id'] {
+  return uuid()
 }
 
 export const createFFMPEGBuilder = ffmpeg

@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/manager",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "description": "Batch scheduling recorders",
   "main": "./lib/index.js",
   "publishConfig": {
@@ -21,13 +21,15 @@
     "fluent-ffmpeg": "^2.1.2",
     "mitt": "^3.0.0",
     "ramda": "^0.28.0",
-    "string-template": "^1.0.0"
+    "string-template": "^1.0.0",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/ffmpeg-static": "^3.0.1",
     "@types/fluent-ffmpeg": "^2.1.20",
     "@types/ramda": "^0.28.15",
-    "@types/string-template": "^1.0.2"
+    "@types/string-template": "^1.0.2",
+    "@types/uuid": "^8.3.4"
   },
   "gitHead": "e6fe3468b3fa640dfae0e6eb73fefddee15e3e55"
 }
