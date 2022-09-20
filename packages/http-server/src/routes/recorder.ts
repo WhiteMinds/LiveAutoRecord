@@ -2,14 +2,31 @@ import { Recorder, RecorderCreateOpts, RecordHandle } from '@autorecord/manager'
 import { Router } from 'express'
 import { recorderManager, saveRecordersConfig } from '../manager'
 import { assertObjectType, assertStringType, omit } from '../utils'
+import { createPagedResultGetter, getNumberFromQuery } from './utils'
 
 const router = Router()
 
 router
   .route('/recorders')
   .get(async (req, res) => {
+    const page = getNumberFromQuery(req, 'page', { defaultValue: 1, min: 1 })
+    const pageSize = getNumberFromQuery(req, 'pageSize', {
+      defaultValue: 10,
+      min: 1,
+      max: 9999,
+    })
+
+    const pagedGetter = createPagedResultGetter(async (startIdx, count) => {
+      return {
+        items: recorderManager.recorders
+          .slice(startIdx, startIdx + count)
+          .map((item) => recorderToClient(item)),
+        total: recorderManager.recorders.length,
+      }
+    })
+
     res.json({
-      payload: recorderManager.recorders.map((item) => recorderToClient(item)),
+      payload: await pagedGetter(page, pageSize),
     })
   })
   .post(async (req, res) => {
