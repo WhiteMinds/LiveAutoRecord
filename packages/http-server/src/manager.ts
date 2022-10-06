@@ -27,7 +27,7 @@ export async function initRecorderManager(): Promise<void> {
   )
   for (let i = 0; i < serializedRecorders.length; i++) {
     const serialized = serializedRecorders[i]
-    recorderManager.addRecorder(serialized.providerId, serialized)
+    recorderManager.addRecorder(serialized)
   }
 
   recorderManager.startCheckLoop()

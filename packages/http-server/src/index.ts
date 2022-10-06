@@ -5,6 +5,8 @@ import cors from 'cors'
 import { initRecorderManager } from './manager'
 import { router } from './routes'
 
+export * from './routes/api_types'
+
 export async function startServer() {
   console.log('initializing recorder manager')
   await initRecorderManager()

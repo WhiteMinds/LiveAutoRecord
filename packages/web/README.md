@@ -1,3 +1,15 @@
+# 一些设计理念
+
+## Services
+
+Service 这个概念主要是用来抽象出一个虚拟的服务，让调用方通过它来与任意的调用方不可见的外部（或内部）系统交互，比如 RemoteAPIService。
+
+这样做的好处是将外部系统的影响控制在了 Service 内部，高内聚低耦合。
+
+目前默认 Service 是全局单例，需要初始化的服务随应用启动时显示的进行初始化。
+
+之后如果需要为模块提供同服务抽象的不同实现（APIServiceWithHTTP / APIServiceWithSocket），可以再加一层 IoC，然后把初始化放到容器层。
+
 # Vue 3 + TypeScript + Vite
 
 This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.

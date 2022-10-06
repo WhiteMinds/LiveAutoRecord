@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@autorecord/douyu-recorder@npm:1.0.3"
+"@autorecord/douyu-recorder@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "@autorecord/douyu-recorder@npm:1.0.5"
   dependencies:
-    "@autorecord/manager": ^0.0.7
+    "@autorecord/manager": ^0.0.9
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -24,7 +24,7 @@ __metadata:
     ramda: ^0.28.0
     uuid: ^8.3.2
     vm2: ^3.9.10
-  checksum: e09882cf3e340c56d2d214faf7f88f29f3a19a0f699a508f9ee0e0632df9cd44bd7f650fe461af84a717d73a6f24aa0441542c2994c6085933eb355007ba17aa
+  checksum: b69be05d83b3879f6ebc6243b8cc5700f2b62d8c23bd6498a3287c3a8d0a43fd4b05ffb8df8ce0374634dd2e5c2144fb4bf7a553479f5f4ecea6636e09626f9b
   languageName: node
   linkType: hard
 
@@ -42,8 +42,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/douyu-recorder": ^1.0.3
-    "@autorecord/manager": "workspace:^"
+    "@autorecord/douyu-recorder": ^1.0.5
+    "@autorecord/manager": ^0.0.9
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.185
@@ -61,7 +61,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.7, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.9, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
@@ -83,9 +83,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/web@workspace:packages/web"
   dependencies:
+    "@autorecord/http-server": ^0.0.1
     "@headlessui/vue": ^1.7.2
     "@vitejs/plugin-vue": ^3.1.0
     autoprefixer: ^10.4.11
+    axios: ^0.27.2
     postcss: ^8.4.16
     tailwindcss: ^3.1.8
     typescript: ^4.6.4

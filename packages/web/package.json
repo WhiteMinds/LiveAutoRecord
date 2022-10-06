@@ -11,10 +11,12 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.2",
+    "axios": "^0.27.2",
     "vue": "^3.2.37",
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
+    "@autorecord/http-server": "^0.0.1",
     "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.11",
     "postcss": "^8.4.16",

@@ -1,6 +1,8 @@
 <template>
   <div class="flex min-h-screen">
-    <div class="w-48 p-2 bg-[#EFF3F4] space-y-1 border-r border-r-[#E3E5E6]">
+    <div
+      class="flex-shrink-0 w-48 p-2 bg-[#EFF3F4] space-y-1 border-r border-r-[#E3E5E6]"
+    >
       <MenuItem :route-name="RouteNames.RecordersManage">
         <template #icon="{ svgProps }">
           <IconRecorder v-bind="svgProps" />
