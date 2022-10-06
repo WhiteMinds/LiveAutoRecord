@@ -14,6 +14,7 @@ export const Qualities = ['lowest', 'low', 'medium', 'high', 'highest'] as const
 export type Quality = typeof Qualities[number]
 
 export interface RecorderCreateOpts {
+  providerId: RecorderProvider['id']
   channelId: ChannelId
   remarks?: string
   autoCheckLiveStatusAndRecord?: boolean
@@ -26,9 +27,7 @@ export interface RecorderCreateOpts {
   extra?: string
 }
 
-export interface SerializedRecorder extends RecorderCreateOpts {
-  providerId: RecorderProvider['id']
-}
+export interface SerializedRecorder extends RecorderCreateOpts {}
 
 export type RecorderState = 'idle' | 'recording' | 'stopping-record'
 
@@ -39,7 +38,7 @@ export interface RecordHandle {
 
   savePath: string
 
-  stop(this: RecordHandle): Promise<void>
+  stop: (this: RecordHandle) => Promise<void>
 }
 
 export interface Recorder extends Emitter<{}>, RecorderCreateOpts {
@@ -55,20 +54,20 @@ export interface Recorder extends Emitter<{}>, RecorderCreateOpts {
   // 随机的一条近期弹幕 / 评论
   // recently comment: { time, text, ... }
 
-  getChannelURL(this: Recorder): string
+  getChannelURL: (this: Recorder) => string
 
   // TODO: 这个接口以后可能会拆成两个，因为要考虑有些网站可能会提供批量检查直播状态的接口，比如斗鱼
-  checkLiveStatusAndRecord(
+  checkLiveStatusAndRecord: (
     this: Recorder,
     opts: {
       getSavePath(data: { owner: string; title: string }): string
     }
-  ): Promise<RecordHandle | null>
+  ) => Promise<RecordHandle | null>
   // 正在进行的录制的操作接口
   recordHandle?: RecordHandle
 
   // 提取需要序列化存储的数据到扁平的 json 数据结构
-  toJSON(this: Recorder): SerializedRecorder
+  toJSON: (this: Recorder) => SerializedRecorder
 }
 
 export interface RecorderProvider {
@@ -79,22 +78,25 @@ export interface RecorderProvider {
   siteURL: string
 
   // 用基础的域名、路径等方式快速决定一个 URL 是否能匹配此 provider
-  matchURL(this: RecorderProvider, channelURL: string): boolean
+  matchURL: (this: RecorderProvider, channelURL: string) => boolean
   // 从一个与当前 provider 匹配的 URL 中解析与获取对应频道的一些信息
-  resolveChannelInfoFromURL(
+  resolveChannelInfoFromURL: (
     this: RecorderProvider,
     channelURL: string
-  ): Promise<{
+  ) => Promise<{
     id: ChannelId
     title: string
     owner: string
   } | null>
-  createRecorder(this: RecorderProvider, opts: RecorderCreateOpts): Recorder
+  createRecorder: (
+    this: RecorderProvider,
+    opts: Omit<RecorderCreateOpts, 'providerId'>
+  ) => Recorder
 
-  fromJSON<T extends SerializedRecorder>(
+  fromJSON: <T extends SerializedRecorder>(
     this: RecorderProvider,
     json: T
-  ): Recorder
+  ) => Recorder
 }
 
 export interface RecorderManager
@@ -102,28 +104,27 @@ export interface RecorderManager
     error: unknown
   }> {
   providers: RecorderProvider[]
-  loadRecorderProvider(this: RecorderManager, provider: RecorderProvider): void
-  unloadRecorderProvider(
+  loadRecorderProvider: (
+    this: RecorderManager,
+    provider: RecorderProvider
+  ) => void
+  unloadRecorderProvider: (
     this: RecorderManager,
     providerId: RecorderProvider['id']
-  ): void
+  ) => void
   // TODO: 这个或许可以去掉或者改改，感觉不是很有必要
-  getChannelURLMatchedRecorderProviders(
+  getChannelURLMatchedRecorderProviders: (
     this: RecorderManager,
     channelURL: string
-  ): RecorderProvider[]
+  ) => RecorderProvider[]
 
   recorders: Recorder[]
-  addRecorder(
-    this: RecorderManager,
-    providerId: RecorderProvider['id'],
-    opts: RecorderCreateOpts
-  ): Recorder
-  removeRecorder(this: RecorderManager, recorder: Recorder): void
+  addRecorder: (this: RecorderManager, opts: RecorderCreateOpts) => Recorder
+  removeRecorder: (this: RecorderManager, recorder: Recorder) => void
 
   isCheckLoopRunning: boolean
-  startCheckLoop(this: RecorderManager): void
-  stopCheckLoop(this: RecorderManager): void
+  startCheckLoop: (this: RecorderManager) => void
+  stopCheckLoop: (this: RecorderManager) => void
 
   savePathRule: string
 }
@@ -185,11 +186,11 @@ export function createRecorderManager(
     },
 
     recorders,
-    addRecorder(providerId, opts) {
-      const provider = providerMap[providerId]
+    addRecorder(opts) {
+      const provider = providerMap[opts.providerId]
       if (provider == null) throw new Error('')
 
-      const recorder = provider.createRecorder(opts)
+      const recorder = provider.createRecorder(R.omit(['providerId'], opts))
       this.recorders.push(recorder)
       // TODO: emit updated event
 
