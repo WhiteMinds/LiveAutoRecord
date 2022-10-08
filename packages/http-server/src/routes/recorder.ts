@@ -71,6 +71,7 @@ async function stopRecord(
 
   if (recorder.recordHandle != null) {
     await recorder.recordHandle.stop()
+    // TODO: 或许还应该自动将 recorder.autoCheckLiveStatusAndRecord 设置为 false
   }
   return recorderToClient(recorder)
 }
@@ -93,7 +94,7 @@ router
     // TODO: 这里的类型限制还是有些问题，Nullable 的 key（如 extra）如果没写在这也不会报错，之后想想怎么改
     const args = pick(
       // TODO: 这里先不做 schema 校验，以后再加
-      (req.body ?? {}) as Required<Omit<API.addRecorder.Args, 'id'>>,
+      (req.body ?? {}) as Omit<API.addRecorder.Args, 'id'>,
       'providerId',
       'channelId',
       'remarks',

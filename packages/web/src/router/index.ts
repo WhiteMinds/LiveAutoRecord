@@ -4,6 +4,7 @@ import RecordersManage from '../views/RecordersManage/index.vue'
 import RecorderEdit from '../views/RecordersManage/RecorderEdit.vue'
 import RecordProcessing from '../views/RecordProcessing/index.vue'
 import ApplicationSettings from '../views/ApplicationSettings/index.vue'
+import RecordersManageSettings from '../views/RecordersManage/Settings.vue'
 
 export const RouteNames = valuesToMapWithKVEqual([
   'Root',
@@ -31,7 +32,7 @@ const routes: RouteRecordRaw[] = [
       {
         name: RouteNames.RecordersSetting,
         path: 'settings',
-        component: RecordersManage,
+        component: RecordersManageSettings,
       },
       {
         name: RouteNames.RecordHistory,

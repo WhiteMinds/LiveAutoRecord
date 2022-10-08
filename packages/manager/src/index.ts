@@ -128,6 +128,7 @@ export interface RecorderManager
   addRecorder: (this: RecorderManager, opts: RecorderCreateOpts) => Recorder
   removeRecorder: (this: RecorderManager, recorder: Recorder) => void
 
+  autoCheckLiveStatusAndRecord: boolean
   isCheckLoopRunning: boolean
   startCheckLoop: (this: RecorderManager) => void
   stopCheckLoop: (this: RecorderManager) => void
@@ -135,10 +136,12 @@ export interface RecorderManager
   savePathRule: string
 }
 
+export type RecorderManagerCreateOpts = Partial<
+  Pick<RecorderManager, 'savePathRule' | 'autoCheckLiveStatusAndRecord'>
+>
+
 export function createRecorderManager(
-  opts: {
-    savePathRule?: string
-  } = {}
+  opts: RecorderManagerCreateOpts = {}
 ): RecorderManager {
   const providerMap: Record<RecorderProvider['id'], RecorderProvider> = {}
   const recorders: Recorder[] = []
@@ -213,6 +216,7 @@ export function createRecorderManager(
       this.recorders.splice(idx, 1)
     },
 
+    autoCheckLiveStatusAndRecord: opts.autoCheckLiveStatusAndRecord ?? true,
     isCheckLoopRunning: false,
     startCheckLoop() {
       if (this.isCheckLoopRunning) return

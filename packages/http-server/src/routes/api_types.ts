@@ -1,6 +1,7 @@
 import {
   Recorder,
   RecorderCreateOpts,
+  RecorderManagerCreateOpts,
   RecorderProvider,
   RecordHandle,
 } from '@autorecord/manager'
@@ -78,5 +79,17 @@ export namespace API {
     }
 
     export type Resp = ClientRecorder
+  }
+
+  export namespace getManager {
+    export interface Args {}
+
+    export type Resp = RecorderManagerCreateOpts
+  }
+
+  export namespace updateManager {
+    export type Args = RecorderManagerCreateOpts
+
+    export type Resp = RecorderManagerCreateOpts
   }
 }

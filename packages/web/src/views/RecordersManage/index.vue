@@ -9,7 +9,9 @@
             <Button class="bg-gray-200">+ 新增</Button>
           </router-link>
           <Button class="bg-gray-200">录制历史</Button>
-          <Button class="bg-gray-200">录制设置</Button>
+          <router-link :to="{ name: RouteNames.RecordersSetting }">
+            <Button class="bg-gray-200">录制设置</Button>
+          </router-link>
         </div>
       </div>
 

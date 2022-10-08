@@ -69,6 +69,23 @@ async function stopRecord(
   return resp.data.payload
 }
 
+async function getManager(
+  args: API.getManager.Args
+): Promise<API.getManager.Resp> {
+  const resp = await requester.get<{ payload: API.getManager.Resp }>('/manager')
+  return resp.data.payload
+}
+
+async function updateManager(
+  args: API.updateManager.Args
+): Promise<API.updateManager.Resp> {
+  const resp = await requester.patch<{ payload: API.updateManager.Resp }>(
+    '/manager',
+    args
+  )
+  return resp.data.payload
+}
+
 export const LARServerService = {
   getRecorders,
   getRecorder,
@@ -76,4 +93,6 @@ export const LARServerService = {
   updateRecorder,
   removeRecorder,
   stopRecord,
+  getManager,
+  updateManager,
 }
