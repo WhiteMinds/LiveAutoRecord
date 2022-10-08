@@ -36,9 +36,45 @@ export namespace API {
     }
   }
 
-  export namespace addRecorder {
+  export namespace getRecorder {
     export interface Args {
-      createOpts: RecorderCreateOpts
+      id: Recorder['id']
+    }
+
+    export type Resp = ClientRecorder
+  }
+
+  export namespace addRecorder {
+    export type Args = Omit<RecorderCreateOpts, 'id'>
+
+    export type Resp = ClientRecorder
+  }
+
+  export namespace updateRecorder {
+    export type Args = Pick<
+      RecorderCreateOpts,
+      | 'id'
+      | 'remarks'
+      | 'autoCheckLiveStatusAndRecord'
+      | 'quality'
+      | 'streamPriorities'
+      | 'sourcePriorities'
+    >
+
+    export type Resp = ClientRecorder
+  }
+
+  export namespace removeRecorder {
+    export interface Args {
+      id: Recorder['id']
+    }
+
+    export type Resp = null
+  }
+
+  export namespace stopRecord {
+    export interface Args {
+      id: Recorder['id']
     }
 
     export type Resp = ClientRecorder

@@ -1,4 +1,3 @@
-import fs from 'fs'
 import path from 'path'
 import { createRecorderManager, SerializedRecorder } from '@autorecord/manager'
 import { provider as providerForDY } from '@autorecord/douyu-recorder'

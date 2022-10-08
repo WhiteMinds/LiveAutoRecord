@@ -1,7 +1,7 @@
-import { Recorder, RecorderCreateOpts } from '@autorecord/manager'
+import { Recorder } from '@autorecord/manager'
 import { Router } from 'express'
 import { recorderManager, saveRecordersConfig } from '../manager'
-import { assertObjectType, assertStringType, omit } from '../utils'
+import { omit, pick } from '../utils'
 import { API, ClientRecorder } from './api_types'
 import { createPagedResultGetter, getNumberFromQuery } from './utils'
 
@@ -24,12 +24,54 @@ async function getRecorders(
   return pagedGetter(args.page, args.pageSize)
 }
 
-async function addRecorder(
-  args: API.addRecorder.Args
-): Promise<API.addRecorder.Resp> {
-  const recorder = recorderManager.addRecorder(args.createOpts)
+function getRecorder(args: API.getRecorder.Args): API.getRecorder.Resp {
+  const recorder = recorderManager.recorders.find((item) => item.id === args.id)
+  // TODO: 之后再处理
+  if (recorder == null) throw new Error('404')
+
+  return recorderToClient(recorder)
+}
+
+function addRecorder(args: API.addRecorder.Args): API.addRecorder.Resp {
+  const recorder = recorderManager.addRecorder(args)
   // TODO: 目前没必要性能优化，直接全量写回。另外可以考虑监听 manager 的事件来自动触发。
   saveRecordersConfig()
+  return recorderToClient(recorder)
+}
+
+function updateRecorder(
+  args: API.updateRecorder.Args
+): API.updateRecorder.Resp {
+  const recorder = recorderManager.recorders.find((item) => item.id === args.id)
+  // TODO: 之后再处理
+  if (recorder == null) throw new Error('404')
+
+  Object.assign(recorder, omit(args, 'id'))
+  // TODO: recorder emit event?
+  saveRecordersConfig()
+  return recorderToClient(recorder)
+}
+
+function removeRecorder(
+  args: API.removeRecorder.Args
+): API.removeRecorder.Resp {
+  const recorder = recorderManager.recorders.find((item) => item.id === args.id)
+  if (recorder == null) return null
+
+  recorderManager.removeRecorder(recorder)
+  saveRecordersConfig()
+  return null
+}
+
+async function stopRecord(
+  args: API.stopRecord.Args
+): Promise<API.stopRecord.Resp> {
+  const recorder = recorderManager.recorders.find((item) => item.id === args.id)
+  if (recorder == null) throw new Error('404')
+
+  if (recorder.recordHandle != null) {
+    await recorder.recordHandle.stop()
+  }
   return recorderToClient(recorder)
 }
 
@@ -45,42 +87,55 @@ router
       max: 9999,
     })
 
-    res.json({
-      payload: await getRecorders({ page, pageSize }),
-    })
+    res.json({ payload: await getRecorders({ page, pageSize }) })
   })
   .post(async (req, res) => {
-    const { createOpts } = req.body ?? {}
-    assertObjectType(createOpts)
+    // TODO: 这里的类型限制还是有些问题，Nullable 的 key（如 extra）如果没写在这也不会报错，之后想想怎么改
+    const args = pick(
+      // TODO: 这里先不做 schema 校验，以后再加
+      (req.body ?? {}) as Required<Omit<API.addRecorder.Args, 'id'>>,
+      'providerId',
+      'channelId',
+      'remarks',
+      'autoCheckLiveStatusAndRecord',
+      'quality',
+      'streamPriorities',
+      'sourcePriorities',
+      'extra'
+    )
 
-    res.json({
-      payload: await addRecorder({
-        // TODO: 这里先不做 schema 校验，以后再加
-        createOpts: createOpts as RecorderCreateOpts,
-      }),
-    })
+    res.json({ payload: addRecorder(args) })
   })
 
 router
   .route('/recorders/:id')
-  .get(async (req, res) => {
+  .get((req, res) => {
     const { id } = req.params
-    const recorder = recorderManager.recorders.find((item) => item.id === id)
-    res.json({
-      payload: recorder && recorderToClient(recorder),
-    })
+    res.json({ payload: getRecorder({ id }) })
+  })
+  .patch((req, res) => {
+    const { id } = req.params
+    const patch = pick(
+      // TODO: 这里先不做 schema 校验，以后再加
+      req.body as Omit<API.updateRecorder.Args, 'id'>,
+      'remarks',
+      'autoCheckLiveStatusAndRecord',
+      'quality',
+      'streamPriorities',
+      'sourcePriorities'
+    )
+
+    res.json({ payload: updateRecorder({ id, ...patch }) })
   })
   .delete((req, res) => {
     const { id } = req.params
-    const recorder = recorderManager.recorders.find((item) => item.id === id)
-    if (recorder == null) {
-      res.json({})
-      return
-    }
-    recorderManager.removeRecorder(recorder)
-    res.json({})
-    saveRecordersConfig()
+    res.json({ payload: removeRecorder({ id }) })
   })
+
+router.route('/recorders/:id/stop_record').post(async (req, res) => {
+  const { id } = req.params
+  res.json({ payload: await stopRecord({ id }) })
+})
 
 function recorderToClient(recorder: Recorder): ClientRecorder {
   return {

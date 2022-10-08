@@ -16,7 +16,11 @@ export type Quality = typeof Qualities[number]
 export interface RecorderCreateOpts {
   providerId: RecorderProvider['id']
   channelId: ChannelId
+  // 预期上它应该是一个系统内的唯一 id，用于操作时的目标指定
+  id?: string
+  // 备注，可填入频道名、主播名等
   remarks?: string
+  // 为空时由 manager 决定默认值（相当于继承），不为空时覆盖 manager 的全局设置
   autoCheckLiveStatusAndRecord?: boolean
   // 该项为用户配置，交给 recorder 作为决定使用哪个视频流的依据
   quality: Quality
@@ -24,10 +28,13 @@ export interface RecorderCreateOpts {
   streamPriorities: string[]
   // 该项为用户配置，不同源（CDN）的优先级，如果设置了此项，将优先根据此决定使用哪个源，除非所有的指定源无效
   sourcePriorities: string[]
+  // 可持久化的额外字段，让 provider 开发者可以实现更多的 customize
   extra?: string
 }
 
-export interface SerializedRecorder extends RecorderCreateOpts {}
+type PickRequired<T, K extends keyof T> = T & Pick<Required<T>, K>
+
+export type SerializedRecorder = PickRequired<RecorderCreateOpts, 'id'>
 
 export type RecorderState = 'idle' | 'recording' | 'stopping-record'
 
@@ -42,7 +49,6 @@ export interface RecordHandle {
 }
 
 export interface Recorder extends Emitter<{}>, RecorderCreateOpts {
-  // 唯一 id，目前仅运行时存在，用于操作时的标记
   id: string
   // 该项由 recorder 自身控制，决定有哪些可用的视频流
   availableStreams: string[]
@@ -142,8 +148,12 @@ export function createRecorderManager(
 
   const multiThreadCheck = async () => {
     const maxThreadCount = 3
+    // 这里暂时不打算用 state == recording 来过滤，而是由 provider 内部自己处理录制过程中的 check
     const needCheckRecorders = recorders.filter(
-      (r) => r.autoCheckLiveStatusAndRecord ?? true
+      (r) =>
+        r.autoCheckLiveStatusAndRecord ??
+        // TODO: 这里是全局默认值，应该要从配置里读
+        true
     )
 
     const checkOnce = async () => {
@@ -287,6 +297,7 @@ export function defaultToJSON(
     providerId: provider.id,
     ...R.pick(
       [
+        'id',
         'channelId',
         'remarks',
         'autoCheckLiveStatusAndRecord',

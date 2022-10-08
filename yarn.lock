@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@autorecord/douyu-recorder@npm:1.0.5"
+"@autorecord/douyu-recorder@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@autorecord/douyu-recorder@npm:1.0.7"
   dependencies:
-    "@autorecord/manager": ^0.0.9
+    "@autorecord/manager": ^0.0.10
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -24,7 +24,7 @@ __metadata:
     ramda: ^0.28.0
     uuid: ^8.3.2
     vm2: ^3.9.10
-  checksum: b69be05d83b3879f6ebc6243b8cc5700f2b62d8c23bd6498a3287c3a8d0a43fd4b05ffb8df8ce0374634dd2e5c2144fb4bf7a553479f5f4ecea6636e09626f9b
+  checksum: 46f153c26f2ef16a804086cf51e364160f2bda9e8b568b25f1ecb958a9e94e52b649d068f022bffcf75645457a73548ca4294a7bf0cffffca427ea4121010b49
   languageName: node
   linkType: hard
 
@@ -32,18 +32,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/electron@workspace:packages/electron"
   dependencies:
-    "@autorecord/http-server": ^0.0.1
+    "@autorecord/http-server": ^0.0.2
     electron: ^20.1.1
     electron-builder: ^23.3.3
   languageName: unknown
   linkType: soft
 
-"@autorecord/http-server@^0.0.1, @autorecord/http-server@workspace:packages/http-server":
+"@autorecord/http-server@^0.0.2, @autorecord/http-server@workspace:packages/http-server":
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/douyu-recorder": ^1.0.5
-    "@autorecord/manager": ^0.0.9
+    "@autorecord/douyu-recorder": ^1.0.7
+    "@autorecord/manager": ^0.0.10
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
     "@types/lodash": ^4.14.185
@@ -61,7 +61,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.9, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.10, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
@@ -83,12 +83,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/web@workspace:packages/web"
   dependencies:
-    "@autorecord/http-server": ^0.0.1
+    "@autorecord/http-server": ^0.0.2
     "@headlessui/vue": ^1.7.2
+    "@types/ramda": ^0.28.15
     "@vitejs/plugin-vue": ^3.1.0
     autoprefixer: ^10.4.11
     axios: ^0.27.2
     postcss: ^8.4.16
+    ramda: ^0.28.0
     tailwindcss: ^3.1.8
     typescript: ^4.6.4
     vite: ^3.1.0

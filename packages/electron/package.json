@@ -50,7 +50,7 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/http-server": "^0.0.1"
+    "@autorecord/http-server": "^0.0.2"
   },
   "devDependencies": {
     "electron": "^20.1.1",

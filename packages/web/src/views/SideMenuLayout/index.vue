@@ -1,7 +1,7 @@
 <template>
-  <div class="flex min-h-screen">
+  <div class="flex">
     <div
-      class="flex-shrink-0 w-48 p-2 bg-[#EFF3F4] space-y-1 border-r border-r-[#E3E5E6]"
+      class="flex-shrink-0 w-48 min-h-screen p-2 space-y-2 bg-[#EFF3F4] border-r border-r-[#E3E5E6]"
     >
       <MenuItem :route-name="RouteNames.RecordersManage">
         <template #icon="{ svgProps }">
@@ -23,7 +23,7 @@
       </MenuItem>
     </div>
 
-    <div class="flex-grow">
+    <div class="flex-grow h-screen overflow-auto">
       <router-view />
     </div>
   </div>
@@ -32,7 +32,7 @@
 <script setup lang="ts">
 import { RouteNames } from '../../router'
 import MenuItem from './MenuItem.vue'
-import IconRecorder from './recorder.svg'
-import IconVideo from './video.svg'
-import IconSettings from './settings.svg'
+import IconRecorder from './recorder.svg?component'
+import IconVideo from './video.svg?component'
+import IconSettings from './settings.svg?component'
 </script>

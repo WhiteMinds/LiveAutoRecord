@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { API } from '@autorecord/http-server'
+import { omit } from '../../utils'
 
 const requester = axios.create({
   // TODO: 暂时用固定值
@@ -21,6 +22,58 @@ async function getRecorders(
   return resp.data.payload
 }
 
+async function getRecorder(
+  args: API.getRecorder.Args
+): Promise<API.getRecorder.Resp> {
+  const resp = await requester.get<{ payload: API.getRecorder.Resp }>(
+    `/recorders/${args.id}`
+  )
+  return resp.data.payload
+}
+
+async function addRecorder(
+  args: API.addRecorder.Args
+): Promise<API.addRecorder.Resp> {
+  const resp = await requester.post<{ payload: API.addRecorder.Resp }>(
+    `/recorders`,
+    args
+  )
+  return resp.data.payload
+}
+
+async function updateRecorder(
+  args: API.updateRecorder.Args
+): Promise<API.updateRecorder.Resp> {
+  const resp = await requester.patch<{ payload: API.updateRecorder.Resp }>(
+    `/recorders/${args.id}`,
+    omit(args, 'id')
+  )
+  return resp.data.payload
+}
+
+async function removeRecorder(
+  args: API.removeRecorder.Args
+): Promise<API.removeRecorder.Resp> {
+  const resp = await requester.delete<{ payload: API.removeRecorder.Resp }>(
+    `/recorders/${args.id}`
+  )
+  return resp.data.payload
+}
+
+async function stopRecord(
+  args: API.stopRecord.Args
+): Promise<API.stopRecord.Resp> {
+  const resp = await requester.post<{ payload: API.stopRecord.Resp }>(
+    `/recorders/${args.id}/stop_record`
+  )
+  return resp.data.payload
+}
+
 export const LARServerService = {
   getRecorders,
+  getRecorder,
+  addRecorder,
+  updateRecorder,
+  removeRecorder,
+  stopRecord,
 }
