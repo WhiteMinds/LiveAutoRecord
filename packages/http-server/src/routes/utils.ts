@@ -6,6 +6,7 @@ type PagedResultGetter<T = unknown> = (
 ) => Promise<{
   page: number
   pageSize: number
+  total: number
   totalPage: number
   items: T[]
 }>
@@ -22,6 +23,7 @@ export function createPagedResultGetter<T>(
     return {
       page,
       pageSize,
+      total,
       totalPage: Math.ceil(total / pageSize),
       items,
     }

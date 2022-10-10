@@ -39,6 +39,8 @@ export type SerializedRecorder = PickRequired<RecorderCreateOpts, 'id'>
 export type RecorderState = 'idle' | 'recording' | 'stopping-record'
 
 export interface RecordHandle {
+  // 表示这一次录制操作的唯一 id
+  id: string
   stream: string
   source: string
   url: string
@@ -48,7 +50,13 @@ export interface RecordHandle {
   stop: (this: RecordHandle) => Promise<void>
 }
 
-export interface Recorder extends Emitter<{}>, RecorderCreateOpts {
+export interface Recorder
+  extends Emitter<{
+      RecordStart: RecordHandle
+      RecordStop: RecordHandle
+      Updated: (keyof Recorder)[]
+    }>,
+    RecorderCreateOpts {
   id: string
   // 该项由 recorder 自身控制，决定有哪些可用的视频流
   availableStreams: string[]
@@ -108,6 +116,11 @@ export interface RecorderProvider {
 export interface RecorderManager
   extends Emitter<{
     error: unknown
+    RecordStart: { recorder: Recorder; recordHandle: RecordHandle }
+    RecordStop: { recorder: Recorder; recordHandle: RecordHandle }
+    RecorderUpdated: { recorder: Recorder; keys: (keyof Recorder)[] }
+    RecorderAdded: Recorder
+    RecorderRemoved: Recorder
   }> {
   providers: RecorderProvider[]
   loadRecorderProvider: (
@@ -151,26 +164,22 @@ export function createRecorderManager(
 
   const multiThreadCheck = async () => {
     const maxThreadCount = 3
-    // 这里暂时不打算用 state == recording 来过滤，而是由 provider 内部自己处理录制过程中的 check
+    // 这里暂时不打算用 state == recording 来过滤，provider 必须内部自己处理录制过程中的 check，
+    // 这样可以防止一些意外调用 checkLiveStatusAndRecord 时出现重复录制。
     const needCheckRecorders = recorders.filter(
       (r) =>
-        r.autoCheckLiveStatusAndRecord ??
-        // TODO: 这里是全局默认值，应该要从配置里读
-        true
+        r.autoCheckLiveStatusAndRecord ?? manager.autoCheckLiveStatusAndRecord
     )
 
     const checkOnce = async () => {
       const recorder = needCheckRecorders.pop()
       if (recorder == null) return
 
-      const handle = await recorder.checkLiveStatusAndRecord({
+      await recorder.checkLiveStatusAndRecord({
         getSavePath(data) {
           return genSavePathFromRule(manager, recorder, data)
         },
       })
-      if (handle == null) return
-
-      // TODO: 似乎不需要处理 handle？
     }
 
     const threads = R.range(0, maxThreadCount).map(async () => {
@@ -205,7 +214,18 @@ export function createRecorderManager(
 
       const recorder = provider.createRecorder(R.omit(['providerId'], opts))
       this.recorders.push(recorder)
-      // TODO: emit updated event
+
+      recorder.on('RecordStart', (recordHandle) =>
+        this.emit('RecordStart', { recorder, recordHandle })
+      )
+      recorder.on('RecordStop', (recordHandle) =>
+        this.emit('RecordStop', { recorder, recordHandle })
+      )
+      recorder.on('Updated', (keys) =>
+        this.emit('RecorderUpdated', { recorder, keys })
+      )
+
+      this.emit('RecorderAdded', recorder)
 
       return recorder
     },
@@ -214,6 +234,7 @@ export function createRecorderManager(
       if (idx === -1) return
       recorder.recordHandle?.stop()
       this.recorders.splice(idx, 1)
+      this.emit('RecorderRemoved', recorder)
     },
 
     autoCheckLiveStatusAndRecord: opts.autoCheckLiveStatusAndRecord ?? true,
@@ -221,6 +242,7 @@ export function createRecorderManager(
     startCheckLoop() {
       if (this.isCheckLoopRunning) return
       this.isCheckLoopRunning = true
+      // TODO: emit updated event
 
       const checkLoop = async () => {
         try {
@@ -315,7 +337,12 @@ export function defaultToJSON(
   }
 }
 
+// 目前是假设使用环境的规模都比较小，不太容易遇到性能问题，所以用 string uuid 作为 id 来简化开发的复杂度。
+// 后面如果需要再高一些的规模，可以优化成分布式 id 生成器，或者其他的异步生成 id 的方案。
 export function genRecorderUUID(): Recorder['id'] {
+  return uuid()
+}
+export function genRecordUUID(): RecordHandle['id'] {
   return uuid()
 }
 

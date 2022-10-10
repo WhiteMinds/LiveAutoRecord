@@ -10,5 +10,8 @@
   "devDependencies": {
     "lerna": "^5.4.0"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "resolutions": {
+    "@types/better-sqlite3@^7.6.1": "patch:@types/better-sqlite3@npm%3A7.6.1#./.yarn/patches/@types-better-sqlite3-npm-7.6.1-2ca0448334.patch"
+  }
 }

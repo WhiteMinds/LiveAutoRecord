@@ -8,7 +8,9 @@
           <router-link :to="{ name: RouteNames.NewRecorder }">
             <Button class="bg-gray-200">+ 新增</Button>
           </router-link>
-          <Button class="bg-gray-200">录制历史</Button>
+          <router-link :to="{ name: RouteNames.Records }">
+            <Button class="bg-gray-200">录制历史</Button>
+          </router-link>
           <router-link :to="{ name: RouteNames.RecordersSetting }">
             <Button class="bg-gray-200">录制设置</Button>
           </router-link>

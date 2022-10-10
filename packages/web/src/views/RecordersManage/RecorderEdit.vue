@@ -53,10 +53,11 @@
     <div>
       自动检查并录制：
       <label>
+        <!-- TODO: 这里如果给 undefined 会无法上报，但目前默认值是 undefined，所以这里要处理下 getter 之类的 -->
         <input
           type="radio"
           name="autoCheckLiveStatusAndRecord"
-          :value="undefined"
+          :value="null"
           v-model="recorder.autoCheckLiveStatusAndRecord"
         />
         继承

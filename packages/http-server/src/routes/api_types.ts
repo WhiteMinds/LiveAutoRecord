@@ -5,12 +5,14 @@ import {
   RecorderProvider,
   RecordHandle,
 } from '@autorecord/manager'
+import { RecordModel } from '../db'
 
 export interface PagedArgs {
   page: number
   pageSize: number
 }
 export interface PagedResp extends PagedArgs {
+  total: number
   totalPage: number
 }
 
@@ -27,6 +29,8 @@ export type ClientRecorder = Omit<
   channelURL: string
   recordHandle?: Omit<RecordHandle, 'stop'>
 }
+
+export type ClientRecord = RecordModel
 
 export namespace API {
   export namespace getRecorders {
@@ -91,5 +95,15 @@ export namespace API {
     export type Args = RecorderManagerCreateOpts
 
     export type Resp = RecorderManagerCreateOpts
+  }
+
+  export namespace getRecords {
+    export interface Args extends PagedArgs {
+      recorderId?: Recorder['id']
+    }
+
+    export interface Resp extends PagedResp {
+      items: ClientRecord[]
+    }
   }
 }

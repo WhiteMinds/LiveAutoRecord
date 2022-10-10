@@ -3,6 +3,7 @@ import { createRecorderManager, SerializedRecorder } from '@autorecord/manager'
 import { provider as providerForDY } from '@autorecord/douyu-recorder'
 import { paths } from './env'
 import { asyncDebounce, readJSONFile, writeJSONFile } from './utils'
+import { insertRecord, updateRecordStopTime } from './db'
 
 const recordersConfigPath = path.join(paths.config, 'recorders.json')
 const managerConfigPath = path.join(paths.config, 'manager.json')
@@ -30,6 +31,32 @@ export async function initRecorderManager(): Promise<void> {
   }
 
   recorderManager.startCheckLoop()
+
+  recorderManager.on('RecordStart', ({ recorder, recordHandle }) => {
+    const recordId = recordHandle.id
+
+    insertRecord({
+      id: recordId,
+      recorderId: recorder.id,
+      savePath: recordHandle.savePath,
+      startTimestamp: Date.now(),
+    })
+
+    const updateRecordOnceRecordStop: Parameters<
+      typeof recorderManager.on<'RecordStop'>
+    >[1] = ({ recordHandle }) => {
+      if (recordHandle.id !== recordId) return
+
+      updateRecordStopTime({
+        id: recordId,
+        stopTimestamp: Date.now(),
+      })
+
+      recorderManager.off('RecordStop', updateRecordOnceRecordStop)
+    }
+
+    recorderManager.on('RecordStop', updateRecordOnceRecordStop)
+  })
 }
 
 // TODO: 应该在程序即将退出时立刻触发缓冲的函数

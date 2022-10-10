@@ -86,6 +86,18 @@ async function updateManager(
   return resp.data.payload
 }
 
+async function getRecords(
+  args: API.getRecords.Args
+): Promise<API.getRecords.Resp> {
+  const resp = await requester.get<{ payload: API.getRecords.Resp }>(
+    '/records',
+    {
+      params: args,
+    }
+  )
+  return resp.data.payload
+}
+
 export const LARServerService = {
   getRecorders,
   getRecorder,
@@ -95,4 +107,5 @@ export const LARServerService = {
   stopRecord,
   getManager,
   updateManager,
+  getRecords,
 }

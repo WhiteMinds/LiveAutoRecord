@@ -5,6 +5,7 @@ import RecorderEdit from '../views/RecordersManage/RecorderEdit.vue'
 import RecordProcessing from '../views/RecordProcessing/index.vue'
 import ApplicationSettings from '../views/ApplicationSettings/index.vue'
 import RecordersManageSettings from '../views/RecordersManage/Settings.vue'
+import Records from '../views/Records/index.vue'
 
 export const RouteNames = valuesToMapWithKVEqual([
   'Root',
@@ -12,7 +13,8 @@ export const RouteNames = valuesToMapWithKVEqual([
   'RecordersSetting',
   'NewRecorder',
   'RecorderEdit',
-  'RecordHistory',
+  'RecorderRecords',
+  'Records',
   'RecordProcessing',
   'Settings',
   'Player',
@@ -35,9 +37,9 @@ const routes: RouteRecordRaw[] = [
         component: RecordersManageSettings,
       },
       {
-        name: RouteNames.RecordHistory,
+        name: RouteNames.Records,
         path: 'history',
-        component: RecordersManage,
+        component: Records,
       },
       {
         name: RouteNames.NewRecorder,
@@ -50,9 +52,9 @@ const routes: RouteRecordRaw[] = [
         component: RecorderEdit,
       },
       {
-        name: RouteNames.RecordHistory,
+        name: RouteNames.RecorderRecords,
         path: ':id/history',
-        component: RecordersManage,
+        component: Records,
       },
     ],
   },

@@ -11,7 +11,11 @@
     <p>状态：{{ stateText }}</p>
     <div class="flex flex-wrap gap-2 mt-3">
       <Button @click="stopRecord">终止</Button>
-      <Button>历史</Button>
+      <router-link
+        :to="{ name: RouteNames.RecorderRecords, params: { id: recorder.id } }"
+      >
+        <Button>历史</Button>
+      </router-link>
       <router-link
         :to="{ name: RouteNames.RecorderEdit, params: { id: recorder.id } }"
       >
