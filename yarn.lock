@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.8":
-  version: 1.0.8
-  resolution: "@autorecord/douyu-recorder@npm:1.0.8"
+"@autorecord/douyu-recorder@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "@autorecord/douyu-recorder@npm:1.0.9"
   dependencies:
-    "@autorecord/manager": ^0.0.10
+    "@autorecord/manager": ^0.0.13
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -24,7 +24,7 @@ __metadata:
     ramda: ^0.28.0
     uuid: ^8.3.2
     vm2: ^3.9.10
-  checksum: 5307b1355d94a1aef072fa170f3dc19858df9934dcbdb181061f45935af409a19af88281c33839614956e0e108957b3a5d57fc72f585aca3a4f31d429e7f477b
+  checksum: d4ae17c725f52ac9e1813744263923de8d146e2505b634744f5dcd9b7178128079fb6f99f9605cdfca1d77a6f00bf8dfaa4c27e903cfa4d734e7e99075c8bbbb
   languageName: node
   linkType: hard
 
@@ -42,7 +42,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/douyu-recorder": ^1.0.8
+    "@autorecord/douyu-recorder": ^1.0.9
     "@autorecord/manager": "workspace:^"
     "@types/better-sqlite3": ^7.6.1
     "@types/cors": ^2.8.12
@@ -63,21 +63,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "@autorecord/manager@npm:0.0.10"
-  dependencies:
-    ffmpeg-static: ^5.0.2
-    fluent-ffmpeg: ^2.1.2
-    mitt: ^3.0.0
-    ramda: ^0.28.0
-    string-template: ^1.0.0
-    uuid: ^9.0.0
-  checksum: f7f417da95858b841e1745d6a651b8ab986da0636862dcc8c845aafd552ab7fdbd4bde3b17d74d5276fe7289a6306fb24eb03b5cb683f50e94e7b7a718d36357
-  languageName: node
-  linkType: hard
-
-"@autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.13, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
