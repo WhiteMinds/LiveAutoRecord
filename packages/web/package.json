@@ -17,7 +17,7 @@
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
-    "@autorecord/http-server": "^0.0.2",
+    "@autorecord/http-server": "workspace:^",
     "@types/ramda": "^0.28.15",
     "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.11",

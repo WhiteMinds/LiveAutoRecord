@@ -32,18 +32,18 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/electron@workspace:packages/electron"
   dependencies:
-    "@autorecord/http-server": ^0.0.2
+    "@autorecord/http-server": "workspace:^"
     electron: ^20.1.1
     electron-builder: ^23.3.3
   languageName: unknown
   linkType: soft
 
-"@autorecord/http-server@^0.0.2, @autorecord/http-server@workspace:packages/http-server":
+"@autorecord/http-server@workspace:^, @autorecord/http-server@workspace:packages/http-server":
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
     "@autorecord/douyu-recorder": ^1.0.8
-    "@autorecord/manager": ^0.0.12
+    "@autorecord/manager": "workspace:^"
     "@types/better-sqlite3": ^7.6.1
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
@@ -63,7 +63,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.12, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@npm:^0.0.10":
+  version: 0.0.10
+  resolution: "@autorecord/manager@npm:0.0.10"
+  dependencies:
+    ffmpeg-static: ^5.0.2
+    fluent-ffmpeg: ^2.1.2
+    mitt: ^3.0.0
+    ramda: ^0.28.0
+    string-template: ^1.0.0
+    uuid: ^9.0.0
+  checksum: f7f417da95858b841e1745d6a651b8ab986da0636862dcc8c845aafd552ab7fdbd4bde3b17d74d5276fe7289a6306fb24eb03b5cb683f50e94e7b7a718d36357
+  languageName: node
+  linkType: hard
+
+"@autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
@@ -81,25 +95,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "@autorecord/manager@npm:0.0.10"
-  dependencies:
-    ffmpeg-static: ^5.0.2
-    fluent-ffmpeg: ^2.1.2
-    mitt: ^3.0.0
-    ramda: ^0.28.0
-    string-template: ^1.0.0
-    uuid: ^9.0.0
-  checksum: f7f417da95858b841e1745d6a651b8ab986da0636862dcc8c845aafd552ab7fdbd4bde3b17d74d5276fe7289a6306fb24eb03b5cb683f50e94e7b7a718d36357
-  languageName: node
-  linkType: hard
-
 "@autorecord/web@workspace:packages/web":
   version: 0.0.0-use.local
   resolution: "@autorecord/web@workspace:packages/web"
   dependencies:
-    "@autorecord/http-server": ^0.0.2
+    "@autorecord/http-server": "workspace:^"
     "@headlessui/vue": ^1.7.2
     "@types/ramda": ^0.28.15
     "@vitejs/plugin-vue": ^3.1.0

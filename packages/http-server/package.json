@@ -18,7 +18,7 @@
   "license": "LGPL",
   "dependencies": {
     "@autorecord/douyu-recorder": "^1.0.8",
-    "@autorecord/manager": "^0.0.12",
+    "@autorecord/manager": "workspace:^",
     "better-sqlite3": "^7.6.2",
     "cors": "^2.8.5",
     "env-paths": "^2.0.0",
