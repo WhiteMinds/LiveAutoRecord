@@ -20,8 +20,8 @@ export interface RecorderCreateOpts {
   id?: string
   // 备注，可填入频道名、主播名等
   remarks?: string
-  // 为空时由 manager 决定默认值（相当于继承），不为空时覆盖 manager 的全局设置
-  autoCheckLiveStatusAndRecord?: boolean
+  // 为 true 时跳过自动检查
+  disableAutoCheck?: boolean
   // 该项为用户配置，交给 recorder 作为决定使用哪个视频流的依据
   quality: Quality
   // 该项为用户配置，不同画质的视频流的优先级，如果设置了此项，将优先根据此决定使用哪个流，除非所有的指定流无效
@@ -166,10 +166,7 @@ export function createRecorderManager(
     const maxThreadCount = 3
     // 这里暂时不打算用 state == recording 来过滤，provider 必须内部自己处理录制过程中的 check，
     // 这样可以防止一些意外调用 checkLiveStatusAndRecord 时出现重复录制。
-    const needCheckRecorders = recorders.filter(
-      (r) =>
-        r.autoCheckLiveStatusAndRecord ?? manager.autoCheckLiveStatusAndRecord
-    )
+    const needCheckRecorders = recorders.filter((r) => !r.disableAutoCheck)
 
     const checkOnce = async () => {
       const recorder = needCheckRecorders.pop()
@@ -326,7 +323,7 @@ export function defaultToJSON(
         'id',
         'channelId',
         'remarks',
-        'autoCheckLiveStatusAndRecord',
+        'disableAutoCheck',
         'quality',
         'streamPriorities',
         'sourcePriorities',

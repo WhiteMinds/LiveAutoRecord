@@ -71,7 +71,7 @@ async function stopRecord(
 
   if (recorder.recordHandle != null) {
     await recorder.recordHandle.stop()
-    // TODO: 或许还应该自动将 recorder.autoCheckLiveStatusAndRecord 设置为 false
+    // TODO: 或许还应该自动将 recorder.disableAutoCheck 设置为 true
   }
   return recorderToClient(recorder)
 }
@@ -98,7 +98,7 @@ router
       'providerId',
       'channelId',
       'remarks',
-      'autoCheckLiveStatusAndRecord',
+      'disableAutoCheck',
       'quality',
       'streamPriorities',
       'sourcePriorities',
@@ -120,7 +120,7 @@ router
       // TODO: 这里先不做 schema 校验，以后再加
       req.body as Omit<API.updateRecorder.Args, 'id'>,
       'remarks',
-      'autoCheckLiveStatusAndRecord',
+      'disableAutoCheck',
       'quality',
       'streamPriorities',
       'sourcePriorities'

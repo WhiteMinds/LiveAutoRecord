@@ -60,7 +60,7 @@ export namespace API {
       RecorderCreateOpts,
       | 'id'
       | 'remarks'
-      | 'autoCheckLiveStatusAndRecord'
+      | 'disableAutoCheck'
       | 'quality'
       | 'streamPriorities'
       | 'sourcePriorities'

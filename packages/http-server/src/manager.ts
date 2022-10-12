@@ -30,7 +30,9 @@ export async function initRecorderManager(): Promise<void> {
     recorderManager.addRecorder(serialized)
   }
 
-  recorderManager.startCheckLoop()
+  if (recorderManager.autoCheckLiveStatusAndRecord) {
+    recorderManager.startCheckLoop()
+  }
 
   recorderManager.on('RecordStart', ({ recorder, recordHandle }) => {
     const recordId = recordHandle.id
