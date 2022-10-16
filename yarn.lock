@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.9":
-  version: 1.0.9
-  resolution: "@autorecord/douyu-recorder@npm:1.0.9"
+"@autorecord/douyu-recorder@npm:^1.0.10":
+  version: 1.0.10
+  resolution: "@autorecord/douyu-recorder@npm:1.0.10"
   dependencies:
-    "@autorecord/manager": ^0.0.13
+    "@autorecord/manager": ^0.0.15
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -24,7 +24,8 @@ __metadata:
     ramda: ^0.28.0
     uuid: ^8.3.2
     vm2: ^3.9.10
-  checksum: d4ae17c725f52ac9e1813744263923de8d146e2505b634744f5dcd9b7178128079fb6f99f9605cdfca1d77a6f00bf8dfaa4c27e903cfa4d734e7e99075c8bbbb
+    ws: ^8.9.0
+  checksum: 0f9526b36d4f7c0b777b9d8324ef78bc219df8ee77a80af37a547428611557de7061ff0132a4ae9641f4600710f208ea140f887a4bc95d6020b63fce255bb6b5
   languageName: node
   linkType: hard
 
@@ -42,7 +43,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/douyu-recorder": ^1.0.9
+    "@autorecord/douyu-recorder": ^1.0.10
     "@autorecord/manager": "workspace:^"
     "@types/better-sqlite3": ^7.6.1
     "@types/cors": ^2.8.12
@@ -63,21 +64,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@npm:^0.0.13":
-  version: 0.0.13
-  resolution: "@autorecord/manager@npm:0.0.13"
-  dependencies:
-    ffmpeg-static: ^5.0.2
-    fluent-ffmpeg: ^2.1.2
-    mitt: ^3.0.0
-    ramda: ^0.28.0
-    string-template: ^1.0.0
-    uuid: ^9.0.0
-  checksum: 322f0d68e47c14ffeeb2e29780036910485a6e605a4343ba39f408ac7c39981a4dc6edd9e378ef0a77089c76f56e44dfa0543835f229497eab3f9f5f4b38d318
-  languageName: node
-  linkType: hard
-
-"@autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.15, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
@@ -9870,6 +9857,21 @@ __metadata:
     type-fest: ^0.4.1
     write-json-file: ^3.2.0
   checksum: 7864d44370f42a6761f6898d07ee2818c7a2faad45116580cf779f3adaf94e4bea5557612533a6c421c32323253ecb63b50615094960a637aeaef5df0fd2d6cd
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.9.0":
+  version: 8.9.0
+  resolution: "ws@npm:8.9.0"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ^5.0.2
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 23aa0f021b2eb65c108ec4c3e08c0d81ba01f82b500432dfe327fd6be36079c1d81fdb0eac6464d2a0eb49904d34a9ab8c59619d673fa07b8346f83aeb0cbf12
   languageName: node
   linkType: hard
 

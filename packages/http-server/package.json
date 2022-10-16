@@ -17,7 +17,7 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/douyu-recorder": "^1.0.9",
+    "@autorecord/douyu-recorder": "^1.0.10",
     "@autorecord/manager": "workspace:^",
     "better-sqlite3": "^7.6.2",
     "cors": "^2.8.5",
