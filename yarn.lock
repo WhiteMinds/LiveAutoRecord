@@ -63,17 +63,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.13, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@npm:^0.0.13":
+  version: 0.0.13
+  resolution: "@autorecord/manager@npm:0.0.13"
+  dependencies:
+    ffmpeg-static: ^5.0.2
+    fluent-ffmpeg: ^2.1.2
+    mitt: ^3.0.0
+    ramda: ^0.28.0
+    string-template: ^1.0.0
+    uuid: ^9.0.0
+  checksum: 322f0d68e47c14ffeeb2e29780036910485a6e605a4343ba39f408ac7c39981a4dc6edd9e378ef0a77089c76f56e44dfa0543835f229497eab3f9f5f4b38d318
+  languageName: node
+  linkType: hard
+
+"@autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
     "@types/ffmpeg-static": ^3.0.1
     "@types/fluent-ffmpeg": ^2.1.20
+    "@types/lodash": ^4.14.186
     "@types/ramda": ^0.28.15
     "@types/string-template": ^1.0.2
     "@types/uuid": ^8.3.4
     ffmpeg-static: ^5.0.2
     fluent-ffmpeg: ^2.1.2
+    lodash: ^4.17.21
     mitt: ^3.0.0
     ramda: ^0.28.0
     string-template: ^1.0.0
@@ -1683,6 +1699,13 @@ __metadata:
   version: 4.14.185
   resolution: "@types/lodash@npm:4.14.185"
   checksum: f81d13da5ecab110ca9c5c7cc2bedc3c9802a6acf668576aecd1b8f4b134ed81d06c15f1e600fb08f05975098280a0d97d30cddfc2cb39ec1c6b56e971ca53b3
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:^4.14.186":
+  version: 4.14.186
+  resolution: "@types/lodash@npm:4.14.186"
+  checksum: ee0c1368a8100bb6efb88335107473a41928fc307ff1ef4ff1278868ccddba9c04c68c36d1ffe3a0392ef4a956e1955f7de3203ec09df4f1655dd1b88485c549
   languageName: node
   linkType: hard
 

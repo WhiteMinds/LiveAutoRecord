@@ -7,7 +7,6 @@ import path from 'path'
 import { paths } from '../env'
 
 const dbPath = path.join(paths.data, 'data.sqlite')
-console.log({ dbPath })
 
 const db = new Database(dbPath, {
   verbose: (sql) => console.log('exec sql:', sql),
