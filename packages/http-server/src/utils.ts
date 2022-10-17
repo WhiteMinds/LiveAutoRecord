@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import * as R from 'ramda'
-import { debounce } from 'lodash'
+import { debounce, throttle } from 'lodash'
 
 export function assert(assertion: unknown, msg?: string): asserts assertion {
   if (!assertion) {
@@ -114,4 +114,28 @@ export function asyncDebounce(
   const debounced = debounce(_fn, time)
 
   return debounced
+}
+
+export function asyncThrottle(
+  fn: () => Promise<void>,
+  time: number
+): () => void {
+  let savingPromise: Promise<void> | null = null
+  let hasDeferred = false
+
+  const throttled = throttle(() => {
+    if (savingPromise != null) {
+      hasDeferred = true
+      return
+    }
+
+    savingPromise = fn().finally(() => {
+      savingPromise = null
+      if (hasDeferred) {
+        throttled()
+      }
+    })
+  }, time)
+
+  return throttled
 }

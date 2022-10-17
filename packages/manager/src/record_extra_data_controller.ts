@@ -4,7 +4,7 @@
  */
 import fs from 'fs'
 import { Message } from './common'
-import { throttle } from 'lodash'
+import { asyncThrottle } from './utils'
 
 export interface RecordExtraData {
   meta: {
@@ -29,24 +29,14 @@ export function createRecordExtraDataController(
     messages: [],
   }
 
-  // 这里做了节流、单例异步、执行过程中再执行将产生一次 deferSave，最后 deferSaves 会被节流过滤成单个
-  let savingPromise: Promise<void> | null = null
-  const save = throttle(() => {
-    if (savingPromise != null) {
-      savingPromise.then(save)
-      return
-    }
-
-    savingPromise = fs.promises
-      .writeFile(savePath, JSON.stringify(data))
-      .finally(() => {
-        savingPromise = null
-      })
-  }, 30e3)
+  const scheduleSave = asyncThrottle(
+    () => fs.promises.writeFile(savePath, JSON.stringify(data)),
+    30e3
+  )
 
   const addMessage: RecordExtraDataController['addMessage'] = (comment) => {
     data.messages.push(comment)
-    save()
+    scheduleSave()
   }
 
   const setMeta: RecordExtraDataController['setMeta'] = (meta) => {
@@ -54,7 +44,7 @@ export function createRecordExtraDataController(
       ...data.meta,
       ...meta,
     }
-    save()
+    scheduleSave()
   }
 
   return {

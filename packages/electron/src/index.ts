@@ -19,8 +19,11 @@ function createWindow() {
 
   // and load the index.html of the app.
   if (isDev) {
-    mainWindow.loadURL('http://localhost:5173')
-    mainWindow.webContents.openDevTools() // Open the DevTools.
+    // TODO: 目前因为 web 启动有点延迟，所以先临时加个 timeout
+    setTimeout(() => {
+      mainWindow.loadURL('http://localhost:5173')
+      mainWindow.webContents.openDevTools() // Open the DevTools.
+    }, 1e3)
   } else {
     mainWindow.loadFile(join(__dirname, '../../index.html'))
   }

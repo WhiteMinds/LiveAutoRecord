@@ -8,7 +8,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "app:dev": "tsc && concurrently \"vite ../web\" \" electron .\" \"tsc -w\"",
+    "app:dev": "tsc && concurrently \"cd ../http-server && yarn watch\" \"cd ../web && yarn dev\" \" electron .\" \"tsc -w\"",
     "app:build": "npm run vite:build && tsc && electron-builder",
     "app:preview": "npm run vite:build && tsc && electron ."
   },
@@ -50,7 +50,8 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/http-server": "workspace:^"
+    "@autorecord/http-server": "workspace:^",
+    "concurrently": "^7.4.0"
   },
   "devDependencies": {
     "electron": "^20.1.1",

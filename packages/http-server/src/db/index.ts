@@ -1,18 +1,19 @@
 /**
- * 用 sequelize 做 ORM 太重了，这个应用更适合轻量一点的，所以选了 better-sqlite3
+ * 预期上这里要选一个轻量级的文件数据库，从调研结果看，sqlite 的库基本都要 native 模块，
+ * 这会提升 node / electron 混合的项目的复杂度，因为需要经常切换 electron-build & node-gyp 编译。
+ * 所以最后选了其他的文件类型，目前使用 json 库来尝试看看，缺点是这些字符串类型的库
+ * 都需要数据库全量载入到内存，对于内存占用和文件空间占用都会偏大。
  */
 import { Recorder, RecordHandle } from '@autorecord/manager'
-import Database, { Statement, Transaction } from 'better-sqlite3'
 import path from 'path'
+import { Low, JSONFile } from './lowdb'
 import { paths } from '../env'
+import { assert, asyncThrottle } from '../utils'
 
-const dbPath = path.join(paths.data, 'data.sqlite')
+export interface DatabaseSchema {
+  records: RecordModel[]
+}
 
-const db = new Database(dbPath, {
-  verbose: (sql) => console.log('exec sql:', sql),
-})
-
-// 注意，这里改了就要改创建表的语句
 export interface RecordModel {
   id: RecordHandle['id']
   recorderId: Recorder['id']
@@ -20,17 +21,27 @@ export interface RecordModel {
   startTimestamp: number
   stopTimestamp?: number
 }
-db.exec(`
-CREATE TABLE IF NOT EXISTS records(
-  id TEXT PRIMARY KEY,
-  recorderId TEXT NOT NULL,
-  savePath TEXT NOT NULL,
-  startTimestamp DATE NOT NULL,
-  stopTimestamp DATE
-);
-`)
 
-interface QueryRecordsOpts {
+const dbPath = path.join(paths.data, 'data.json')
+const adapter = new JSONFile<DatabaseSchema>(dbPath)
+const db = new Low(adapter)
+
+export async function initDB() {
+  await db.read()
+  if (db.data == null) {
+    db.data = { records: [] }
+  }
+}
+
+function assertDBReady<T>(db: Low<T>): asserts db is Low<T> & { data: T } {
+  return assert(db.data, 'Must initialize the db before using it')
+}
+
+// TODO: 可能需要一个双文件缓冲写入的机制，防止意外情况写入中断文件损坏，lowdb 好像已经做了？
+// TODO: 测试暂时用 1s
+const scheduleSave = asyncThrottle(() => db.write(), 1e3)
+
+export interface QueryRecordsOpts {
   recorderId?: Recorder['id']
   start?: number
   count?: number
@@ -39,61 +50,41 @@ export function getRecords(opts: QueryRecordsOpts = {}): {
   items: RecordModel[]
   total: number
 } {
-  // TODO: 不知道这个库的最佳实践是不是类似这样的，先糊着，后面再研究研究
+  assertDBReady(db)
 
-  let conditionSql = ''
+  // TODO: 之后性能有问题的话应该可以用 transduce 做优化
+  let items = db.data.records
   if (opts.recorderId != null) {
-    conditionSql = ' where recorderId = @recorderId'
+    items = items.filter((item) => item.recorderId === opts.recorderId)
   }
-
-  let cursorSql = ''
-  if (opts.count != null) {
-    cursorSql += ' limit @count'
-  }
+  const count = items.length
   if (opts.start != null) {
-    cursorSql += ' offset @start'
+    items = items.slice(opts.start)
   }
-
-  let selectSql = 'SELECT * from records'
-  const selectStmt = db.prepare<QueryRecordsOpts>(
-    selectSql + conditionSql + cursorSql
-  )
-
-  let countSql = 'SELECT count(*) as count from records'
-  const countStmt = db.prepare<Omit<QueryRecordsOpts, 'start' | 'count'>>(
-    countSql + conditionSql
-  )
-  const { count } = countStmt.get({ recorderId: opts.recorderId }) as {
-    count: number
+  if (opts.count != null) {
+    items = items.slice(0, opts.count)
   }
-
-  // 这个类型没办法，声明里写死了 any
-  const items = selectStmt.all(opts) as RecordModel[]
 
   return { items, total: count }
 }
 
-// 注意，这里改了就要改插入的语句
-type InsertRecordProps = RecordModel
-// better-sqlite3 内部用的类型在一个未公开的 namespace BetterSqlite3 上，这里要导出的话
-// 无法用它的泛型自动推断，只能手动约束。不知道是不是故意这么设计的，感觉像 bug。
-const _insertRecord: Statement<[InsertRecordProps]> = db.prepare(
-  'INSERT INTO records (id, recorderId, savePath, startTimestamp) VALUES (@id, @recorderId, @savePath, @startTimestamp)'
-)
-export const insertRecord = _insertRecord.run.bind(_insertRecord)
+export type InsertRecordProps = RecordModel
 
-// TODO: 这里不支持泛型，已经提 PR 了等 merge 后 upgrade，目前先 patch
-// https://github.com/DefinitelyTyped/DefinitelyTyped/pull/62623
-export const insertRecords: Transaction<(items: InsertRecordProps[]) => void> =
-  db.transaction((items) => {
-    for (const item of items) _insertRecord.run(item)
-  })
+export function insertRecord(props: InsertRecordProps): void {
+  assertDBReady(db)
+  const model: RecordModel = props
+  db.data.records.push(model)
+  scheduleSave()
+}
 
-const _updateRecordStopTime: Statement<
-  Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>
-> = db.prepare(
-  'UPDATE records set stopTimestamp = @stopTimestamp where id = @id'
-)
-export const updateRecordStopTime = _updateRecordStopTime.run.bind(
-  _updateRecordStopTime
-)
+export function updateRecordStopTime(
+  props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>
+): void {
+  assertDBReady(db)
+  // TODO: 性能有问题的话可以在 insert 时做个索引表
+  const record = db.data.records.find((record) => record.id === props.id)
+  if (record == null) return
+
+  record.stopTimestamp = props.stopTimestamp
+  scheduleSave()
+}
