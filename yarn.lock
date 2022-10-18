@@ -12,11 +12,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "@autorecord/douyu-recorder@npm:1.0.10"
+"@autorecord/douyu-recorder@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "@autorecord/douyu-recorder@npm:1.0.11"
   dependencies:
-    "@autorecord/manager": ^0.0.15
+    "@autorecord/manager": ^0.0.16
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -25,7 +25,7 @@ __metadata:
     uuid: ^8.3.2
     vm2: ^3.9.10
     ws: ^8.9.0
-  checksum: 0f9526b36d4f7c0b777b9d8324ef78bc219df8ee77a80af37a547428611557de7061ff0132a4ae9641f4600710f208ea140f887a4bc95d6020b63fce255bb6b5
+  checksum: f6c502ce3d0f195233b733a08a3fc06581f730591257714bdf45deac8bfdefe6448f61b057a883e187568a37c9a91d67448da52f1469c89fc4eb1f737ebc3e1f
   languageName: node
   linkType: hard
 
@@ -44,7 +44,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/douyu-recorder": ^1.0.10
+    "@autorecord/douyu-recorder": ^1.0.11
     "@autorecord/manager": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
@@ -64,7 +64,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.15, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.16, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
