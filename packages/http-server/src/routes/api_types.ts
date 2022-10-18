@@ -3,6 +3,7 @@ import {
   RecorderCreateOpts,
   RecorderManagerCreateOpts,
   RecorderProvider,
+  RecordExtraData,
   RecordHandle,
 } from '@autorecord/manager'
 import { RecordModel } from '../db'
@@ -77,6 +78,14 @@ export namespace API {
     export type Resp = null
   }
 
+  export namespace startRecord {
+    export interface Args {
+      id: Recorder['id']
+    }
+
+    export type Resp = ClientRecorder
+  }
+
   export namespace stopRecord {
     export interface Args {
       id: Recorder['id']
@@ -105,5 +114,13 @@ export namespace API {
     export interface Resp extends PagedResp {
       items: ClientRecord[]
     }
+  }
+
+  export namespace getRecordExtraData {
+    export interface Args {
+      id: RecordModel['id']
+    }
+
+    export type Resp = RecordExtraData
   }
 }

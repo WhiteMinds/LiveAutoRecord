@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { Router } from 'express'
 import { API } from './api_types'
 import { createPagedResultGetter, getNumberFromQuery } from './utils'
@@ -33,6 +35,46 @@ router.route('/records').get(async (req, res) => {
   })
 
   res.json({ payload: await getRecords({ recorderId, page, pageSize }) })
+})
+
+router.route('/records/:id/video').get(async (req, res) => {
+  const { id } = req.params
+  const record = db.getRecord(id)
+  if (record == null) {
+    res.json({ payload: null }).status(404)
+    return
+  }
+
+  if (!fs.existsSync(record.savePath)) {
+    res.json({ payload: null }).status(404)
+    return
+  }
+
+  res.download(record.savePath)
+})
+
+router.route('/records/:id/extra_data').get(async (req, res) => {
+  const { id } = req.params
+  const record = db.getRecord(id)
+  if (record == null) {
+    res.json({ payload: null }).status(404)
+    return
+  }
+
+  const extraDataPath = path.join(
+    path.dirname(record.savePath),
+    path.basename(record.savePath, path.extname(record.savePath)) + '.json'
+  )
+  if (!fs.existsSync(extraDataPath)) {
+    res.json({ payload: null }).status(404)
+    return
+  }
+
+  const buffer = await fs.promises.readFile(extraDataPath)
+
+  res.json({
+    payload: JSON.parse(buffer.toString()),
+  })
 })
 
 export { router }

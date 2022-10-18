@@ -1,4 +1,4 @@
-import { Recorder } from '@autorecord/manager'
+import { genSavePathFromRule, Recorder } from '@autorecord/manager'
 import { Router } from 'express'
 import { recorderManager, saveRecordersConfig } from '../manager'
 import { omit, pick } from '../utils'
@@ -61,6 +61,23 @@ function removeRecorder(
   recorderManager.removeRecorder(recorder)
   saveRecordersConfig()
   return null
+}
+
+async function startRecord(
+  args: API.startRecord.Args
+): Promise<API.startRecord.Resp> {
+  const recorder = recorderManager.recorders.find((item) => item.id === args.id)
+  if (recorder == null) throw new Error('404')
+
+  if (recorder.recordHandle == null) {
+    await recorder.checkLiveStatusAndRecord({
+      getSavePath(data) {
+        return genSavePathFromRule(recorderManager, recorder, data)
+      },
+    })
+  }
+
+  return recorderToClient(recorder)
 }
 
 async function stopRecord(
@@ -133,6 +150,10 @@ router
     res.json({ payload: removeRecorder({ id }) })
   })
 
+router.route('/recorders/:id/start_record').post(async (req, res) => {
+  const { id } = req.params
+  res.json({ payload: await startRecord({ id }) })
+})
 router.route('/recorders/:id/stop_record').post(async (req, res) => {
   const { id } = req.params
   res.json({ payload: await stopRecord({ id }) })

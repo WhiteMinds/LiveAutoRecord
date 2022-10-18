@@ -10,7 +10,17 @@
     <p>备注：{{ recorder.remarks }}</p>
     <p>状态：{{ stateText }}</p>
     <div class="flex flex-wrap gap-2 mt-3">
-      <Button @click="stopRecord">终止</Button>
+      <Button v-if="recorder.state === 'idle'" @click="startRecord">
+        刷新
+      </Button>
+      <Button
+        v-else
+        @click="stopRecord"
+        :disabled="recorder.state === 'stopping-record'"
+      >
+        终止
+      </Button>
+
       <router-link
         :to="{ name: RouteNames.RecorderRecords, params: { id: recorder.id } }"
       >
@@ -46,6 +56,13 @@ const stateText = computed(() =>
     ? `正在录制 ${recorder.value.usedSource} / ${recorder.value.usedStream}`
     : recorder.value.state
 )
+
+const startRecord = async () => {
+  const res = await LARServerService.startRecord({
+    id: recorder.value.id,
+  })
+  recorder.value = res
+}
 
 const stopRecord = async () => {
   const res = await LARServerService.stopRecord({

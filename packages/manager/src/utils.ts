@@ -1,15 +1,18 @@
-import { throttle } from 'lodash'
+import { DebouncedFunc, throttle } from 'lodash'
 
 export type PickRequired<T, K extends keyof T> = T & Pick<Required<T>, K>
 
 export function asyncThrottle(
   fn: () => Promise<void>,
-  time: number
-): () => void {
+  time: number,
+  opts: {
+    immediateRunWhenEndOfDefer?: boolean
+  } = {}
+): DebouncedFunc<() => void> {
   let savingPromise: Promise<void> | null = null
   let hasDeferred = false
 
-  const throttled = throttle(() => {
+  const wrappedWithAllowDefer = () => {
     if (savingPromise != null) {
       hasDeferred = true
       return
@@ -18,10 +21,16 @@ export function asyncThrottle(
     savingPromise = fn().finally(() => {
       savingPromise = null
       if (hasDeferred) {
-        throttled()
+        if (opts.immediateRunWhenEndOfDefer) {
+          wrappedWithAllowDefer()
+        } else {
+          throttled()
+        }
       }
     })
-  }, time)
+  }
+
+  const throttled = throttle(wrappedWithAllowDefer, time)
 
   return throttled
 }

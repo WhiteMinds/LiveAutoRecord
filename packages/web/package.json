@@ -12,12 +12,15 @@
   "dependencies": {
     "@headlessui/vue": "^1.7.2",
     "axios": "^0.27.2",
+    "dplayer": "^1.27.0",
+    "flv.js": "^1.6.2",
     "ramda": "^0.28.0",
     "vue": "^3.2.37",
     "vue-router": "^4.0.0"
   },
   "devDependencies": {
     "@autorecord/http-server": "workspace:^",
+    "@types/dplayer": "^1.25.2",
     "@types/ramda": "^0.28.15",
     "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.11",

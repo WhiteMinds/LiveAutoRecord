@@ -1,7 +1,12 @@
 <template>
   <div>
     录像历史：
-    <div v-for="record in records">{{ record.savePath }}</div>
+    <div v-for="record in records">
+      {{ record.savePath }}
+      <router-link :to="{ name: RouteNames.Player, query: { id: record.id } }">
+        <button>play</button>
+      </router-link>
+    </div>
   </div>
 </template>
 

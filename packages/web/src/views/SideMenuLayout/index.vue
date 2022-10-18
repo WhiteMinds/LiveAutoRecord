@@ -9,6 +9,12 @@
         </template>
         自动录播
       </MenuItem>
+      <MenuItem :route-name="RouteNames.Player">
+        <template #icon="{ svgProps }">
+          <IconPlayer v-bind="svgProps" />
+        </template>
+        播放器
+      </MenuItem>
       <MenuItem :route-name="RouteNames.RecordProcessing">
         <template #icon="{ svgProps }">
           <IconVideo v-bind="svgProps" />
@@ -33,6 +39,7 @@
 import { RouteNames } from '../../router'
 import MenuItem from './MenuItem.vue'
 import IconRecorder from './recorder.svg?component'
+import IconPlayer from './player.svg?component'
 import IconVideo from './video.svg?component'
 import IconSettings from './settings.svg?component'
 </script>

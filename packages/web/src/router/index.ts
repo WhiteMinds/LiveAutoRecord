@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { valuesToMapWithKVEqual } from '../utils'
 import RecordersManage from '../views/RecordersManage/index.vue'
 import RecorderEdit from '../views/RecordersManage/RecorderEdit.vue'
+import Player from '../views/Player/index.vue'
 import RecordProcessing from '../views/RecordProcessing/index.vue'
 import ApplicationSettings from '../views/ApplicationSettings/index.vue'
 import RecordersManageSettings from '../views/RecordersManage/Settings.vue'
@@ -71,7 +72,7 @@ const routes: RouteRecordRaw[] = [
   {
     name: RouteNames.Player,
     path: '/player',
-    component: RecordersManage,
+    component: Player,
   },
 ]
 

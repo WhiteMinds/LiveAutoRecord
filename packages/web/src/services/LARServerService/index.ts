@@ -60,6 +60,15 @@ async function removeRecorder(
   return resp.data.payload
 }
 
+async function startRecord(
+  args: API.startRecord.Args
+): Promise<API.startRecord.Resp> {
+  const resp = await requester.post<{ payload: API.startRecord.Resp }>(
+    `/recorders/${args.id}/start_record`
+  )
+  return resp.data.payload
+}
+
 async function stopRecord(
   args: API.stopRecord.Args
 ): Promise<API.stopRecord.Resp> {
@@ -98,14 +107,25 @@ async function getRecords(
   return resp.data.payload
 }
 
+async function getRecordExtraData(
+  args: API.getRecordExtraData.Args
+): Promise<API.getRecordExtraData.Resp> {
+  const resp = await requester.get<{ payload: API.getRecordExtraData.Resp }>(
+    `/records/${args.id}/extra_data`
+  )
+  return resp.data.payload
+}
+
 export const LARServerService = {
   getRecorders,
   getRecorder,
   addRecorder,
   updateRecorder,
   removeRecorder,
+  startRecord,
   stopRecord,
   getManager,
   updateManager,
   getRecords,
+  getRecordExtraData,
 }

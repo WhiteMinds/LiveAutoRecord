@@ -11,6 +11,7 @@ export interface MessageSender {
 }
 
 export interface Comment {
+  type: 'comment'
   timestamp: number
   text: string
   color?: string
@@ -19,6 +20,7 @@ export interface Comment {
 }
 
 export interface GiveGift {
+  type: 'give_gift'
   timestamp: number
   name: string
   count: number

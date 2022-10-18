@@ -198,7 +198,7 @@ export function createRecorderManager(
   return manager
 }
 
-function genSavePathFromRule(
+export function genSavePathFromRule(
   manager: RecorderManager,
   recorder: Recorder,
   extData: {

@@ -90,10 +90,13 @@ __metadata:
   dependencies:
     "@autorecord/http-server": "workspace:^"
     "@headlessui/vue": ^1.7.2
+    "@types/dplayer": ^1.25.2
     "@types/ramda": ^0.28.15
     "@vitejs/plugin-vue": ^3.1.0
     autoprefixer: ^10.4.11
     axios: ^0.27.2
+    dplayer: ^1.27.0
+    flv.js: ^1.6.2
     postcss: ^8.4.16
     ramda: ^0.28.0
     tailwindcss: ^3.1.8
@@ -1590,6 +1593,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/dplayer@npm:^1.25.2":
+  version: 1.25.2
+  resolution: "@types/dplayer@npm:1.25.2"
+  checksum: aebf91bc13ea8e012bec860fc0b4f6a046bd4aef98bef5b7e7dd7cd9903ae5b71f5b22db13d2a0a0809ed15b57c7cc1b9b5eae998793b7b777893bd097f605b9
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:^4.17.18":
   version: 4.17.30
   resolution: "@types/express-serve-static-core@npm:4.17.30"
@@ -2556,7 +2566,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^0.27.2":
+"axios@npm:0.27.2, axios@npm:^0.27.2":
   version: 0.27.2
   resolution: "axios@npm:0.27.2"
   dependencies:
@@ -2581,6 +2591,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  languageName: node
+  linkType: hard
+
+"balloon-css@npm:^1.0.3":
+  version: 1.2.0
+  resolution: "balloon-css@npm:1.2.0"
+  checksum: 2f9bf379240afb3ffd45e80d974e96536444151f74ead9aa5968445fc414ee3460b2204c2ec8d0c1ef4e26446fce5606621fabc8741c2553ec7852042f7d31fb
   languageName: node
   linkType: hard
 
@@ -4067,6 +4084,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dplayer@npm:^1.27.0":
+  version: 1.27.0
+  resolution: "dplayer@npm:1.27.0"
+  dependencies:
+    axios: 0.27.2
+    balloon-css: ^1.0.3
+    promise-polyfill: 8.2.3
+    rxjs: ^7.5.6
+  checksum: 3066c64fd4efa63395daa1358407de2124799c572db1878869e2b4a544d33d6273631f55b3821f9277a949489fa4355bda4a3dcdcfbceb91225bcaaf4d38cdc8
+  languageName: node
+  linkType: hard
+
 "duplexer3@npm:^0.1.4":
   version: 0.1.5
   resolution: "duplexer3@npm:0.1.5"
@@ -4265,6 +4294,13 @@ __metadata:
   version: 4.1.1
   resolution: "es6-error@npm:4.1.1"
   checksum: ae41332a51ec1323da6bbc5d75b7803ccdeddfae17c41b6166ebbafc8e8beb7a7b80b884b7fab1cc80df485860ac3c59d78605e860bb4f8cd816b3d6ade0d010
+  languageName: node
+  linkType: hard
+
+"es6-promise@npm:^4.2.8":
+  version: 4.2.8
+  resolution: "es6-promise@npm:4.2.8"
+  checksum: 95614a88873611cb9165a85d36afa7268af5c03a378b35ca7bda9508e1d4f1f6f19a788d4bc755b3fd37c8ebba40782018e02034564ff24c9d6fa37e959ad57d
   languageName: node
   linkType: hard
 
@@ -4822,6 +4858,16 @@ __metadata:
     async: ">=0.2.9"
     which: ^1.1.1
   checksum: ab7ed909486298f33b991af051c38e40410ae5b03b0b6d33d0855636a0b56330ffe9efed6c7eedb00f1c6c713c795cbdb283f6f2216db925ae5e737a22c6a97f
+  languageName: node
+  linkType: hard
+
+"flv.js@npm:^1.6.2":
+  version: 1.6.2
+  resolution: "flv.js@npm:1.6.2"
+  dependencies:
+    es6-promise: ^4.2.8
+    webworkify-webpack: ^2.1.5
+  checksum: 349b8e9670f7fd1b8d7a0660d3fc1e42af49544e2666a254563e96afdf75a111df6849eb19b12dd9bad8567d178ef696eaded44dabe16b6bb2d346060e40696d
   languageName: node
   linkType: hard
 
@@ -7673,6 +7719,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"promise-polyfill@npm:8.2.3":
+  version: 8.2.3
+  resolution: "promise-polyfill@npm:8.2.3"
+  checksum: f320278bab8b8ce32f0e2f377d75aabe35c90a79f92b3e001db084d635da1fb8740ba8a26b5c1c2b4cdca5a4c988f9b6b3eb30f0b151d0362d3d9c1675024a8f
+  languageName: node
+  linkType: hard
+
 "promise-retry@npm:^2.0.1":
   version: 2.0.1
   resolution: "promise-retry@npm:2.0.1"
@@ -8182,6 +8235,15 @@ __metadata:
   dependencies:
     tslib: ^2.1.0
   checksum: fc05f01364a74dac57490fb3e07ea63b422af04017fae1db641a009073f902ef69f285c5daac31359620dc8d9aee7d81e42b370ca2a8573d1feae0b04329383b
+  languageName: node
+  linkType: hard
+
+"rxjs@npm:^7.5.6":
+  version: 7.5.7
+  resolution: "rxjs@npm:7.5.7"
+  dependencies:
+    tslib: ^2.1.0
+  checksum: edabcdb73b0f7e0f5f6e05c2077aff8c52222ac939069729704357d6406438acca831c24210db320aba269e86dbe1a400f3769c89101791885121a342fb15d9c
   languageName: node
   linkType: hard
 
@@ -9544,6 +9606,13 @@ __metadata:
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
   checksum: c92a0a6ab95314bde9c32e1d0a6dfac83b578f8fa5f21e675bc2706ed6981bc26b7eb7e6a1fab158e5ce4adf9caa4a0aee49a52505d4d13c7be545f15021b17c
+  languageName: node
+  linkType: hard
+
+"webworkify-webpack@npm:^2.1.5":
+  version: 2.1.5
+  resolution: "webworkify-webpack@npm:2.1.5"
+  checksum: c506ac632d8e72fbfc96e6bd9e6764268e8d08dec40706189786cfb01fac6191fb919ad9eca4d420bd8f52d0f152a939ed545da09bcac792934eb2c150a8006f
   languageName: node
   linkType: hard
 

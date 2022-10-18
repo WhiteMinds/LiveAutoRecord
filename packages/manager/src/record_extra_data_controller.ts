@@ -9,6 +9,7 @@ import { asyncThrottle } from './utils'
 export interface RecordExtraData {
   meta: {
     title?: string
+    recordStartTimestamp: number
   }
   /** 这个数组预期上是一个根据 timestamp 排序的有序数组，方便做一些时间段查询 */
   messages: Message[]
@@ -19,19 +20,25 @@ export interface RecordExtraDataController {
   readonly data: RecordExtraData
   addMessage: (message: Message) => void
   setMeta: (meta: Partial<RecordExtraData['meta']>) => void
+  flush: () => void
 }
 
 export function createRecordExtraDataController(
   savePath: string
 ): RecordExtraDataController {
   const data: RecordExtraData = {
-    meta: {},
+    meta: {
+      recordStartTimestamp: Date.now(),
+    },
     messages: [],
   }
 
   const scheduleSave = asyncThrottle(
     () => fs.promises.writeFile(savePath, JSON.stringify(data)),
-    30e3
+    30e3,
+    {
+      immediateRunWhenEndOfDefer: true,
+    }
   )
 
   const addMessage: RecordExtraDataController['addMessage'] = (comment) => {
@@ -47,9 +54,15 @@ export function createRecordExtraDataController(
     scheduleSave()
   }
 
+  const flush: RecordExtraDataController['flush'] = () => {
+    scheduleSave()
+    scheduleSave.flush()
+  }
+
   return {
     data,
     addMessage,
     setMeta,
+    flush,
   }
 }
