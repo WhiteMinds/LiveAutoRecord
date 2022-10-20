@@ -26,7 +26,6 @@ export type ClientRecorder = Omit<
   | 'recordHandle'
   | 'toJSON'
 > & {
-  providerName: RecorderProvider['name']
   channelURL: string
   recordHandle?: Omit<RecordHandle, 'stop'>
 }

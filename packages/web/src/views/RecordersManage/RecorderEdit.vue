@@ -4,7 +4,15 @@
     <template v-else>正在编辑录制频道 {{ recorderId }}</template>
     <p>loading:{{ loading }}</p>
 
-    <div>平台：{{ recorder.providerName }}</div>
+    <div v-if="!isCreating">平台：{{ providerName }}</div>
+    <div v-else>
+      平台：
+      <select v-model="recorder.providerId">
+        <option v-for="provider in providers" :value="provider.id">
+          {{ provider.name }}
+        </option>
+      </select>
+    </div>
 
     <div>
       频道：
@@ -67,7 +75,7 @@
 
 <script setup lang="ts">
 import type { API, ClientRecorder } from '@autorecord/http-server'
-import { onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { RouteNames } from '../../router'
 import { LARServerService } from '../../services/LARServerService'
@@ -77,8 +85,12 @@ import Button from '../../components/Button/index.vue'
 // 这里先直接手动定义一个一样的。
 // import { Qualities } from '@autorecord/manager'
 const Qualities = ['lowest', 'low', 'medium', 'high', 'highest'] as const
-// TODO: 这个应该是从服务器拉取一个支持的 providers 列表，抽取第一个的 id，临时手写下
-const defaultProviderId = 'DouYu'
+// TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
+const providers = [
+  { id: 'DouYu', name: '斗鱼' },
+  { id: 'Bilibili', name: 'Bilibili' },
+]
+const defaultProviderId = providers[0].id
 
 const route = useRoute()
 const router = useRouter()
@@ -90,12 +102,15 @@ const recorder = reactive<
 >({
   // TODO: 看起来应该把这两个字段整合成 providerInfo / provider？
   providerId: defaultProviderId,
-  providerName: '斗鱼',
   channelId: '',
   quality: 'low',
   streamPriorities: [],
   sourcePriorities: [],
 })
+
+const providerName = computed(
+  () => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知'
+)
 
 onMounted(async () => {
   if (isCreating) return

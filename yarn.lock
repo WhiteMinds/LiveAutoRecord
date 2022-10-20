@@ -12,6 +12,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@autorecord/bilibili-recorder@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.0"
+  dependencies:
+    "@autorecord/manager": ^0.0.16
+    axios: ^0.27.2
+    blive-message-listener: ^0.3.0
+    ramda: ^0.28.0
+  checksum: a9f5af47ca953a802a794f718d85fcc90cfe188c671e21b0b141077d0e4d031d9b8b141835b3469cd3358f99d1e9b7c8a27e1369206b49967950101aa710895d
+  languageName: node
+  linkType: hard
+
 "@autorecord/douyu-recorder@npm:^1.0.11":
   version: 1.0.11
   resolution: "@autorecord/douyu-recorder@npm:1.0.11"
@@ -44,6 +56,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
+    "@autorecord/bilibili-recorder": ^1.0.0
     "@autorecord/douyu-recorder": ^1.0.11
     "@autorecord/manager": "workspace:^"
     "@types/cors": ^2.8.12
@@ -2656,6 +2669,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"blive-message-listener@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "blive-message-listener@npm:0.3.0"
+  dependencies:
+    tiny-bilibili-ws: ^0.0.5
+  checksum: 3729cd1d219db68c0c681d6b3eb7beeac889a265ed1bc34dc679a86513703327c84e10457dcabd597d5e3aa11765c49b5edfcb8884c2ebb8c2c2180d07c04dd2
+  languageName: node
+  linkType: hard
+
 "bluebird-lst@npm:^1.0.9":
   version: 1.0.9
   resolution: "bluebird-lst@npm:1.0.9"
@@ -4593,7 +4615,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^4.0.4":
+"eventemitter3@npm:^4.0.4, eventemitter3@npm:^4.0.7":
   version: 4.0.7
   resolution: "eventemitter3@npm:4.0.7"
   checksum: 1875311c42fcfe9c707b2712c32664a245629b42bb0a5a84439762dd0fd637fc54d078155ea83c2af9e0323c9ac13687e03cfba79b03af9f40c89b4960099374
@@ -7370,6 +7392,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pako@npm:^2.0.4":
+  version: 2.0.4
+  resolution: "pako@npm:2.0.4"
+  checksum: 82b9b0b99dd830c9103856a6dbd10f0cb2c8c32b9768184727ea381a99666de9a47a069d2e6efe6acf09336f363956b50835c196ef9311b34b7274d420eb0d88
+  languageName: node
+  linkType: hard
+
 "parent-module@npm:^1.0.0":
   version: 1.0.1
   resolution: "parent-module@npm:1.0.1"
@@ -8947,6 +8976,17 @@ __metadata:
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd
+  languageName: node
+  linkType: hard
+
+"tiny-bilibili-ws@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "tiny-bilibili-ws@npm:0.0.5"
+  dependencies:
+    eventemitter3: ^4.0.7
+    pako: ^2.0.4
+    ws: ^8.9.0
+  checksum: 9722d995487c734b0f761c5b1c1b28a61576209b79cab66470c68c9cb998f76c77e477665cca25f3bfb90867236e1628c62cb179244fd0a564628e58c1a7822f
   languageName: node
   linkType: hard
 

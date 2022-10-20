@@ -1,6 +1,7 @@
 import path from 'path'
 import { createRecorderManager, SerializedRecorder } from '@autorecord/manager'
-import { provider as providerForDY } from '@autorecord/douyu-recorder'
+import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
+import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { paths } from './env'
 import { asyncDebounce, readJSONFile, writeJSONFile } from './utils'
 import { insertRecord, updateRecordStopTime } from './db'
@@ -11,7 +12,8 @@ const managerConfigPath = path.join(paths.config, 'manager.json')
 export const recorderManager = createRecorderManager()
 
 export async function initRecorderManager(): Promise<void> {
-  recorderManager.loadRecorderProvider(providerForDY)
+  recorderManager.loadRecorderProvider(providerForDouYu)
+  recorderManager.loadRecorderProvider(providerForBilibili)
 
   const managerConfig = await readJSONFile<ManagerConfig>(managerConfigPath, {
     savePathRule: path.join(

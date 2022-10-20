@@ -170,9 +170,6 @@ function recorderToClient(recorder: Recorder): ClientRecorder {
       'recordHandle',
       'toJSON'
     ),
-    providerName:
-      recorderManager.providers.find(({ id }) => id === recorder.providerId)
-        ?.name ?? 'unknown',
     channelURL: recorder.getChannelURL(),
     recordHandle: recorder.recordHandle && omit(recorder.recordHandle, 'stop'),
   }

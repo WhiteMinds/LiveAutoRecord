@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white shadow rounded p-4">
-    <p>平台：{{ recorder.providerName }}</p>
+    <p>平台：{{ providerName }}</p>
     <p>
       频道：
       <a :href="recorder.channelURL" target="_blank">
@@ -46,10 +46,21 @@ import { LARServerService } from '../../services/LARServerService'
 const props = defineProps<{ modelValue: ClientRecorder }>()
 const emit = defineEmits(['update:modelValue'])
 
+// TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
+const providers = [
+  { id: 'DouYu', name: '斗鱼' },
+  { id: 'Bilibili', name: 'Bilibili' },
+]
+
 const recorder = computed({
   get: () => props.modelValue,
   set: (value) => emit('update:modelValue', value),
 })
+
+const providerName = computed(
+  () =>
+    providers.find((p) => p.id === recorder.value.providerId)?.name ?? '未知'
+)
 
 const stateText = computed(() =>
   recorder.value.state === 'recording'
