@@ -110,7 +110,6 @@ __metadata:
     autoprefixer: ^10.4.11
     axios: ^0.27.2
     dplayer: ^1.27.0
-    flv.js: ^1.6.2
     postcss: ^8.4.16
     ramda: ^0.28.0
     tailwindcss: ^3.1.8
@@ -4320,13 +4319,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"es6-promise@npm:^4.2.8":
-  version: 4.2.8
-  resolution: "es6-promise@npm:4.2.8"
-  checksum: 95614a88873611cb9165a85d36afa7268af5c03a378b35ca7bda9508e1d4f1f6f19a788d4bc755b3fd37c8ebba40782018e02034564ff24c9d6fa37e959ad57d
-  languageName: node
-  linkType: hard
-
 "esbuild-android-64@npm:0.15.7":
   version: 0.15.7
   resolution: "esbuild-android-64@npm:0.15.7"
@@ -4881,16 +4873,6 @@ __metadata:
     async: ">=0.2.9"
     which: ^1.1.1
   checksum: ab7ed909486298f33b991af051c38e40410ae5b03b0b6d33d0855636a0b56330ffe9efed6c7eedb00f1c6c713c795cbdb283f6f2216db925ae5e737a22c6a97f
-  languageName: node
-  linkType: hard
-
-"flv.js@npm:^1.6.2":
-  version: 1.6.2
-  resolution: "flv.js@npm:1.6.2"
-  dependencies:
-    es6-promise: ^4.2.8
-    webworkify-webpack: ^2.1.5
-  checksum: 349b8e9670f7fd1b8d7a0660d3fc1e42af49544e2666a254563e96afdf75a111df6849eb19b12dd9bad8567d178ef696eaded44dabe16b6bb2d346060e40696d
   languageName: node
   linkType: hard
 
@@ -9647,13 +9629,6 @@ __metadata:
   version: 3.0.1
   resolution: "webidl-conversions@npm:3.0.1"
   checksum: c92a0a6ab95314bde9c32e1d0a6dfac83b578f8fa5f21e675bc2706ed6981bc26b7eb7e6a1fab158e5ce4adf9caa4a0aee49a52505d4d13c7be545f15021b17c
-  languageName: node
-  linkType: hard
-
-"webworkify-webpack@npm:^2.1.5":
-  version: 2.1.5
-  resolution: "webworkify-webpack@npm:2.1.5"
-  checksum: c506ac632d8e72fbfc96e6bd9e6764268e8d08dec40706189786cfb01fac6191fb919ad9eca4d420bd8f52d0f152a939ed545da09bcac792934eb2c150a8006f
   languageName: node
   linkType: hard
 

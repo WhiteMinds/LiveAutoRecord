@@ -5,14 +5,11 @@
 </template>
 
 <script setup lang="ts">
-import flvjs from 'flv.js'
 import DPlayer from 'dplayer'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { assert } from '../../utils'
 import { LARServerService } from '../../services/LARServerService'
-
-provideFLVSupportToDPlayer()
 
 const container = ref<HTMLDivElement>()
 
@@ -59,9 +56,4 @@ onMounted(async () => {
   // TODO: 不知道为啥没效果，之后调查看看。
   dp.play()
 })
-
-function provideFLVSupportToDPlayer() {
-  // 看起来 DPlayer 是从 window 上拿这个对象的，不知道有没有其他方式，暂时先这样实现了。
-  ;(window as any).flvjs = flvjs
-}
 </script>
