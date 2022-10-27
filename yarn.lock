@@ -12,32 +12,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.0"
+"@autorecord/bilibili-recorder@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.2"
   dependencies:
     "@autorecord/manager": ^0.0.16
     axios: ^0.27.2
-    blive-message-listener: ^0.3.0
+    blive-message-listener: ^0.3.1
     ramda: ^0.28.0
-  checksum: a9f5af47ca953a802a794f718d85fcc90cfe188c671e21b0b141077d0e4d031d9b8b141835b3469cd3358f99d1e9b7c8a27e1369206b49967950101aa710895d
+  checksum: 2b269bacd447397bbdec72358f9f62dbe77decf11c2ba62319215d16d00f8eada005b1dc4f67f7d6242d4f754d49e0f824a8a2a134a07604c599ac4f9d8aa75e
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.11":
-  version: 1.0.11
-  resolution: "@autorecord/douyu-recorder@npm:1.0.11"
+"@autorecord/douyu-recorder@npm:^1.0.14":
+  version: 1.0.14
+  resolution: "@autorecord/douyu-recorder@npm:1.0.14"
   dependencies:
     "@autorecord/manager": ^0.0.16
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
+    mitt: ^3.0.0
     query-string: ^7.1.1
     ramda: ^0.28.0
     uuid: ^8.3.2
     vm2: ^3.9.10
     ws: ^8.9.0
-  checksum: f6c502ce3d0f195233b733a08a3fc06581f730591257714bdf45deac8bfdefe6448f61b057a883e187568a37c9a91d67448da52f1469c89fc4eb1f737ebc3e1f
+  checksum: 5b70eadf29fc773cfaa3415c978095872365466cad50cdb5e526194412e3be2cbc4e6e6ffb87b2162198b3680b814102df491a7dd435e764ec5fe320bcf5abbb
   languageName: node
   linkType: hard
 
@@ -56,8 +57,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.0
-    "@autorecord/douyu-recorder": ^1.0.11
+    "@autorecord/bilibili-recorder": ^1.0.2
+    "@autorecord/douyu-recorder": ^1.0.14
     "@autorecord/manager": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
@@ -2669,12 +2670,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"blive-message-listener@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "blive-message-listener@npm:0.3.0"
+"blive-message-listener@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "blive-message-listener@npm:0.3.1"
   dependencies:
     tiny-bilibili-ws: ^0.0.5
-  checksum: 3729cd1d219db68c0c681d6b3eb7beeac889a265ed1bc34dc679a86513703327c84e10457dcabd597d5e3aa11765c49b5edfcb8884c2ebb8c2c2180d07c04dd2
+  checksum: c8d470a877a67a20d6984f033072ed603eb2a00158143d3b0bd9d140b86b57915b5f3748ba7e2c05a290753a7ac7b12bde9774e1fc9ff7dc8996f6fb25f34755
   languageName: node
   linkType: hard
 

@@ -1,7 +1,6 @@
 <template>
-  <div class="bg-[#EFF3F4] min-h-full p-4">
-    <!-- Player -->
-    <div ref="container"></div>
+  <div class="bg-[#EFF3F4] h-full p-4">
+    <div ref="container" class="max-h-full max-w-full"></div>
   </div>
 </template>
 
@@ -19,7 +18,9 @@ const container = ref<HTMLDivElement>()
 
 const route = useRoute()
 const id = String(route.query.id) || 'd785eb23-7018-41f7-a03e-1f65fa7b3913'
-const videoURL = 'http://localhost:8085/api' + `/records/${id}/video`
+// 浏览器会缓存 fmp4 的 duration，需要加个 query 来 bypass 缓存
+const videoURL =
+  'http://localhost:8085/api' + `/records/${id}/video?_=${Date.now()}`
 
 onMounted(async () => {
   assert(container.value)
@@ -28,7 +29,7 @@ onMounted(async () => {
     autoplay: true,
     video: {
       url: videoURL,
-      type: 'flv',
+      type: 'mp4',
     },
     danmaku: {
       // 下面通过 apiBackend 去 hack 实现，所以这里字段随便填了。
