@@ -12,21 +12,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.2"
+"@autorecord/bilibili-recorder@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.3"
   dependencies:
     "@autorecord/manager": ^0.0.16
     axios: ^0.27.2
     blive-message-listener: ^0.3.1
     ramda: ^0.28.0
-  checksum: 2b269bacd447397bbdec72358f9f62dbe77decf11c2ba62319215d16d00f8eada005b1dc4f67f7d6242d4f754d49e0f824a8a2a134a07604c599ac4f9d8aa75e
+  checksum: c32314eac10836405ec32cb8c05e05288bf15f58e058684b31b9d96ddba194ac8fc6ba94dafe0a152db76d97dd73c5b72602b4234049fd6e1bc91fff28dc1e76
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.14":
-  version: 1.0.14
-  resolution: "@autorecord/douyu-recorder@npm:1.0.14"
+"@autorecord/douyu-recorder@npm:^1.0.15":
+  version: 1.0.15
+  resolution: "@autorecord/douyu-recorder@npm:1.0.15"
   dependencies:
     "@autorecord/manager": ^0.0.16
     axios: ^0.27.2
@@ -38,7 +38,7 @@ __metadata:
     uuid: ^8.3.2
     vm2: ^3.9.10
     ws: ^8.9.0
-  checksum: 5b70eadf29fc773cfaa3415c978095872365466cad50cdb5e526194412e3be2cbc4e6e6ffb87b2162198b3680b814102df491a7dd435e764ec5fe320bcf5abbb
+  checksum: 19661a144bbb09b8bd8b72e07fde838ab5a517a990b7849a906bdea027d1eddec19c050194b7112104ea6e8fa396affaec9ece272cfd1d62f82ef4a7c7cdb1c7
   languageName: node
   linkType: hard
 
@@ -57,8 +57,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.2
-    "@autorecord/douyu-recorder": ^1.0.14
+    "@autorecord/bilibili-recorder": ^1.0.3
+    "@autorecord/douyu-recorder": ^1.0.15
     "@autorecord/manager": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
@@ -110,8 +110,10 @@ __metadata:
     autoprefixer: ^10.4.11
     axios: ^0.27.2
     dplayer: ^1.27.0
+    pinia: ^2.0.23
     postcss: ^8.4.16
     ramda: ^0.28.0
+    rxjs: ^7.5.7
     tailwindcss: ^3.1.8
     typescript: ^4.6.4
     vite: ^3.1.0
@@ -2045,6 +2047,13 @@ __metadata:
   version: 6.4.1
   resolution: "@vue/devtools-api@npm:6.4.1"
   checksum: 9c8020ed73e60e01bde7c127338c087ae32948cbb45626681ee6c048c871fbe9a6d5a6f87654ff3fae1fb873c5fc3cd05f56ff2585640fb618f634b62cf17b5c
+  languageName: node
+  linkType: hard
+
+"@vue/devtools-api@npm:^6.4.4":
+  version: 6.4.5
+  resolution: "@vue/devtools-api@npm:6.4.5"
+  checksum: 40c5adc8788cb283972ce09ba7ce105fa894f4decec9168829cc8e6211462763402442e6c31be76f9da62b0e74ae724971b924571367b4ac89b94dc6894e2d07
   languageName: node
   linkType: hard
 
@@ -7582,6 +7591,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinia@npm:^2.0.23":
+  version: 2.0.23
+  resolution: "pinia@npm:2.0.23"
+  dependencies:
+    "@vue/devtools-api": ^6.4.4
+    vue-demi: "*"
+  peerDependencies:
+    "@vue/composition-api": ^1.4.0
+    typescript: ">=4.4.4"
+    vue: ^2.6.14 || ^3.2.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+    typescript:
+      optional: true
+  checksum: 004c76d80bc1127a25b26f92616f1243c570c6be90b04be83aa95108274036b64ed0678e537f3213c8b8f3dd7bcffb52e768e7445a1fd9378cb1db15ada92f83
+  languageName: node
+  linkType: hard
+
 "pkg-dir@npm:^4.2.0":
   version: 4.2.0
   resolution: "pkg-dir@npm:4.2.0"
@@ -8250,7 +8278,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.5.6":
+"rxjs@npm:^7.5.6, rxjs@npm:^7.5.7":
   version: 7.5.7
   resolution: "rxjs@npm:7.5.7"
   dependencies:
@@ -9568,6 +9596,22 @@ __metadata:
   bin:
     vm2: bin/vm2
   checksum: aab39e6e4b59146d24abacd79f490e854a6e058a8b23d93d2be5aca7720778e2605d2cc028ccc4a5f50d3d91b0c38be9a6247a80d2da1a6de09425cc437770b4
+  languageName: node
+  linkType: hard
+
+"vue-demi@npm:*":
+  version: 0.13.11
+  resolution: "vue-demi@npm:0.13.11"
+  peerDependencies:
+    "@vue/composition-api": ^1.0.0-rc.1
+    vue: ^3.0.0-0 || ^2.6.0
+  peerDependenciesMeta:
+    "@vue/composition-api":
+      optional: true
+  bin:
+    vue-demi-fix: bin/vue-demi-fix.js
+    vue-demi-switch: bin/vue-demi-switch.js
+  checksum: 0fbe9bf8ab7fe498ffa2bbd0cfc8f6f43a6bbaa5eda3e20ef1b70dca7c8b0ddb216a7ff2f632b694fe0735805638975abb441c621ec0bd2e6d4656353f316c15
   languageName: node
   linkType: hard
 

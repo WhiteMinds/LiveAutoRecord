@@ -2,6 +2,7 @@ import { ErrorRequestHandler, Router } from 'express'
 import { router as recorderRoutes } from './recorder'
 import { router as recordRoutes } from './record'
 import { router as managerRoutes } from './manager'
+import { router as eventRoutes } from './event'
 // import { respond } from './utils'
 
 const router = Router()
@@ -9,7 +10,7 @@ const router = Router()
 router.use(recorderRoutes)
 router.use(recordRoutes)
 router.use(managerRoutes)
-// router.use('/game', gameRoutes)
+router.use(eventRoutes)
 
 const handle: ErrorRequestHandler = (err: unknown, req, res, next) => {
   console.error(err)

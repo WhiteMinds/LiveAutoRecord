@@ -44,7 +44,10 @@ export interface RecorderManager
     error: unknown
     RecordStart: { recorder: Recorder; recordHandle: RecordHandle }
     RecordStop: { recorder: Recorder; recordHandle: RecordHandle }
-    RecorderUpdated: { recorder: Recorder; keys: (keyof Recorder)[] }
+    RecorderUpdated: {
+      recorder: Recorder
+      keys: ((string & {}) | keyof Recorder)[]
+    }
     RecorderAdded: Recorder
     RecorderRemoved: Recorder
   }> {

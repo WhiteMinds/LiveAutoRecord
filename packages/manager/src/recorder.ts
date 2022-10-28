@@ -44,7 +44,7 @@ export interface Recorder
   extends Emitter<{
       RecordStart: RecordHandle
       RecordStop: RecordHandle
-      Updated: (keyof Recorder)[]
+      Updated: ((string & {}) | keyof Recorder)[]
       Message: Message
     }>,
     RecorderCreateOpts {

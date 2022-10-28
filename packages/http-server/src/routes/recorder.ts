@@ -3,7 +3,11 @@ import { Router } from 'express'
 import { recorderManager, saveRecordersConfig } from '../manager'
 import { omit, pick } from '../utils'
 import { API, ClientRecorder } from './api_types'
-import { createPagedResultGetter, getNumberFromQuery } from './utils'
+import {
+  createPagedResultGetter,
+  getNumberFromQuery,
+  recorderToClient,
+} from './utils'
 
 const router = Router()
 
@@ -158,21 +162,5 @@ router.route('/recorders/:id/stop_record').post(async (req, res) => {
   const { id } = req.params
   res.json({ payload: await stopRecord({ id }) })
 })
-
-function recorderToClient(recorder: Recorder): ClientRecorder {
-  return {
-    // TODO: 用 pick 更加稳健一些，这里省事先 omit 了
-    ...omit(
-      recorder,
-      'all',
-      'getChannelURL',
-      'checkLiveStatusAndRecord',
-      'recordHandle',
-      'toJSON'
-    ),
-    channelURL: recorder.getChannelURL(),
-    recordHandle: recorder.recordHandle && omit(recorder.recordHandle, 'stop'),
-  }
-}
 
 export { router }

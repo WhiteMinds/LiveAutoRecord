@@ -1,10 +1,13 @@
 import axios from 'axios'
 import type { API } from '@autorecord/http-server'
 import { omit } from '../../utils'
+import { getServerMessages } from './server_messages'
+
+// TODO: 暂时用固定值
+const baseURL = 'http://localhost:8085/api'
 
 const requester = axios.create({
-  // TODO: 暂时用固定值
-  baseURL: 'http://localhost:8085/api',
+  baseURL,
 })
 
 // 这里是 web 与外部系统（http-server）对接的地方，整体上对应的是 server 的路由部分（而不是 API 的实现部分）。
@@ -116,6 +119,10 @@ async function getRecordExtraData(
   return resp.data.payload
 }
 
+async function getRecordVideoURL(args: { id: string }): Promise<string> {
+  return `${baseURL}/records/${args.id}/video`
+}
+
 export const LARServerService = {
   getRecorders,
   getRecorder,
@@ -128,4 +135,7 @@ export const LARServerService = {
   updateManager,
   getRecords,
   getRecordExtraData,
+  getRecordVideoURL,
+
+  getServerMessages,
 }

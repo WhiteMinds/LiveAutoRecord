@@ -10,15 +10,19 @@
     <p>备注：{{ recorder.remarks }}</p>
     <p>状态：{{ stateText }}</p>
     <div class="flex flex-wrap gap-2 mt-3">
-      <Button v-if="recorder.state === 'idle'" @click="startRecord">
-        刷新
+      <Button
+        v-if="recorder.state === 'idle'"
+        @click="startRecord"
+        :disabled="requesting"
+      >
+        刷新{{ requesting ? '中' : '' }}
       </Button>
       <Button
         v-else
         @click="stopRecord"
-        :disabled="recorder.state === 'stopping-record'"
+        :disabled="requesting || recorder.state === 'stopping-record'"
       >
-        终止
+        终止{{ requesting ? '中' : '' }}
       </Button>
 
       <router-link
@@ -38,13 +42,12 @@
 
 <script setup lang="ts">
 import type { ClientRecorder } from '@autorecord/http-server'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import Button from '../../components/Button/index.vue'
 import { RouteNames } from '../../router'
-import { LARServerService } from '../../services/LARServerService'
+import { RecorderService } from '../../services/RecorderService'
 
 const props = defineProps<{ modelValue: ClientRecorder }>()
-const emit = defineEmits(['update:modelValue'])
 
 // TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
 const providers = [
@@ -52,33 +55,34 @@ const providers = [
   { id: 'Bilibili', name: 'Bilibili' },
 ]
 
-const recorder = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
-})
+const recorder = props.modelValue
+const requesting = ref(false)
 
 const providerName = computed(
-  () =>
-    providers.find((p) => p.id === recorder.value.providerId)?.name ?? '未知'
+  () => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知'
 )
 
 const stateText = computed(() =>
-  recorder.value.state === 'recording'
-    ? `正在录制 ${recorder.value.usedSource} / ${recorder.value.usedStream}`
-    : recorder.value.state
+  recorder.state === 'recording'
+    ? `正在录制 ${recorder.usedSource} / ${recorder.usedStream}`
+    : recorder.state
 )
 
 const startRecord = async () => {
-  const res = await LARServerService.startRecord({
-    id: recorder.value.id,
-  })
-  recorder.value = res
+  requesting.value = true
+  try {
+    await RecorderService.startRecord(recorder.id)
+  } finally {
+    requesting.value = false
+  }
 }
 
 const stopRecord = async () => {
-  const res = await LARServerService.stopRecord({
-    id: recorder.value.id,
-  })
-  recorder.value = res
+  requesting.value = true
+  try {
+    await RecorderService.stopRecord(recorder.id)
+  } finally {
+    requesting.value = false
+  }
 }
 </script>

@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import type { ClientRecorder } from '@autorecord/http-server'
-import { LARServerService } from '../../services/LARServerService'
+import { RecorderService } from '../../services/RecorderService'
 import RecorderCard from './RecorderCard.vue'
 import Button from '../../components/Button/index.vue'
 // TODO: 这个引用会造成 HMR 时循环引用报错，暂时不处理，之后可以把 names 和 routes 拆开
@@ -56,9 +56,7 @@ import { RouteNames } from '../../router'
 const recorders = ref<ClientRecorder[]>([])
 
 onMounted(async () => {
-  // TODO: 虽然 API 设计了分页，但考虑到要结合实时性的复杂度，目前先全量取。
-  // TODO: 这些数据应该可以全局缓存而不是每次重新请求。
-  const res = await LARServerService.getRecorders({ page: 1, pageSize: 9999 })
-  recorders.value = res.items
+  const items = await RecorderService.getReactiveRecorders()
+  recorders.value = items
 })
 </script>

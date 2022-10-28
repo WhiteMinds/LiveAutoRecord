@@ -1,7 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import * as R from 'ramda'
-import { debounce, throttle } from 'lodash'
+import {
+  debounce,
+  DebouncedFunc,
+  DebounceSettings,
+  memoize,
+  throttle,
+} from 'lodash'
 
 export function assert(assertion: unknown, msg?: string): asserts assertion {
   if (!assertion) {
@@ -138,4 +144,23 @@ export function asyncThrottle(
   }, time)
 
   return throttled
+}
+
+export function memoizeDebounce<T extends (...args: any) => any>(
+  func: T,
+  wait = 0,
+  opts: DebounceSettings & { resolver?: (...args: Parameters<T>) => any } = {}
+): // 简单点就不实现返回 debounced fn 的控制函数了
+(...args: Parameters<T>) => ReturnType<T> | undefined {
+  const { resolver, ...debounceOpts } = opts
+
+  const mem = memoize<(...args: Parameters<T>) => DebouncedFunc<T>>(
+    (...args) => debounce(func, wait, debounceOpts),
+    resolver
+  )
+
+  return function (this: unknown, ...args: Parameters<T>) {
+    const debounced = mem.apply(this, args)
+    return debounced.apply(this, args)
+  }
 }

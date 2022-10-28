@@ -14,18 +14,19 @@ import { LARServerService } from '../../services/LARServerService'
 const container = ref<HTMLDivElement>()
 
 const route = useRoute()
-const id = String(route.query.id) || 'd785eb23-7018-41f7-a03e-1f65fa7b3913'
-// 浏览器会缓存 fmp4 的 duration，需要加个 query 来 bypass 缓存
-const videoURL =
-  'http://localhost:8085/api' + `/records/${id}/video?_=${Date.now()}`
+const id = typeof route.query.id === 'string' ? route.query.id : null
 
 onMounted(async () => {
+  if (id === null) return
   assert(container.value)
+  const videoURL = await LARServerService.getRecordVideoURL({ id })
+  // 浏览器会缓存 fmp4 的 duration，需要加个 query 来 bypass 缓存
+  const videoURLWithBypassCache = `${videoURL}?_=${Date.now()}`
   const dp = new DPlayer({
     container: container.value,
     autoplay: true,
     video: {
-      url: videoURL,
+      url: videoURLWithBypassCache,
       type: 'mp4',
     },
     danmaku: {

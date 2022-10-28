@@ -2,7 +2,6 @@ import {
   Recorder,
   RecorderCreateOpts,
   RecorderManagerCreateOpts,
-  RecorderProvider,
   RecordExtraData,
   RecordHandle,
 } from '@autorecord/manager'
@@ -123,3 +122,20 @@ export namespace API {
     export type Resp = RecordExtraData
   }
 }
+
+export interface UpdateRecorder {
+  event: 'update_recorder'
+  recorder: ClientRecorder
+}
+
+export interface AddRecorder {
+  event: 'add_recorder'
+  recorder: ClientRecorder
+}
+
+export interface RemoveRecorder {
+  event: 'remove_recorder'
+  id: ClientRecorder['id']
+}
+
+export type SSEMessage = UpdateRecorder | AddRecorder | RemoveRecorder

@@ -78,8 +78,8 @@ import type { API, ClientRecorder } from '@autorecord/http-server'
 import { computed, onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { RouteNames } from '../../router'
-import { LARServerService } from '../../services/LARServerService'
 import Button from '../../components/Button/index.vue'
+import { RecorderService } from '../../services/RecorderService'
 
 // TODO: manager 现在引入了 ffmpeg-static，不适合直接被 web 引入，需要重构调整，
 // 这里先直接手动定义一个一样的。
@@ -115,16 +115,16 @@ const providerName = computed(
 onMounted(async () => {
   if (isCreating) return
 
-  const res = await LARServerService.getRecorder({ id: recorderId })
+  const res = await RecorderService.getReactiveRecorder(recorderId)
   Object.assign(recorder, res)
   loading.value = false
 })
 
 const applyOrAddRecorder = async () => {
   if (isCreating) {
-    await LARServerService.addRecorder(recorder)
+    await RecorderService.addRecorder(recorder)
   } else {
-    await LARServerService.updateRecorder({
+    await RecorderService.updateRecorder({
       ...recorder,
       id: recorderId,
     })
@@ -134,9 +134,7 @@ const applyOrAddRecorder = async () => {
 }
 
 const removeRecorder = async () => {
-  await LARServerService.removeRecorder({
-    id: recorderId,
-  })
+  await RecorderService.removeRecorder(recorderId)
   router.back()
   // TODO: 应该更新下列表页的内容，或者基于推送、本地缓存等
 }

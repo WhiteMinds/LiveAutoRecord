@@ -1,4 +1,7 @@
+import { Recorder } from '@autorecord/manager'
 import { Request } from 'express'
+import { omit } from '../utils'
+import { ClientRecorder } from './api_types'
 
 type PagedResultGetter<T = unknown> = (
   page: number,
@@ -64,4 +67,20 @@ export function getNumberFromQuery(
   if (opts.min != null && value < opts.min) return opts.min
   if (opts.max != null && value > opts.max) return opts.max
   return value
+}
+
+export function recorderToClient(recorder: Recorder): ClientRecorder {
+  return {
+    // TODO: 用 pick 更加稳健一些，这里省事先 omit 了
+    ...omit(
+      recorder,
+      'all',
+      'getChannelURL',
+      'checkLiveStatusAndRecord',
+      'recordHandle',
+      'toJSON'
+    ),
+    channelURL: recorder.getChannelURL(),
+    recordHandle: recorder.recordHandle && omit(recorder.recordHandle, 'stop'),
+  }
 }
