@@ -12,23 +12,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.3"
+"@autorecord/bilibili-recorder@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.4"
   dependencies:
-    "@autorecord/manager": ^0.0.16
+    "@autorecord/manager": ^0.0.17
     axios: ^0.27.2
     blive-message-listener: ^0.3.1
     ramda: ^0.28.0
-  checksum: c32314eac10836405ec32cb8c05e05288bf15f58e058684b31b9d96ddba194ac8fc6ba94dafe0a152db76d97dd73c5b72602b4234049fd6e1bc91fff28dc1e76
+  checksum: f218ed924187cef7c0449db671d8c744ccec987b524d36b9562f14ca880caea62891e629f3fee281586cee8e3c2bd83a96b749e01cfd81091d6ebcf72a8911bb
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.15":
-  version: 1.0.15
-  resolution: "@autorecord/douyu-recorder@npm:1.0.15"
+"@autorecord/douyu-recorder@npm:^1.0.16":
+  version: 1.0.16
+  resolution: "@autorecord/douyu-recorder@npm:1.0.16"
   dependencies:
-    "@autorecord/manager": ^0.0.16
+    "@autorecord/manager": ^0.0.17
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
     crypto-js: ^4.1.1
@@ -38,7 +38,7 @@ __metadata:
     uuid: ^8.3.2
     vm2: ^3.9.10
     ws: ^8.9.0
-  checksum: 19661a144bbb09b8bd8b72e07fde838ab5a517a990b7849a906bdea027d1eddec19c050194b7112104ea6e8fa396affaec9ece272cfd1d62f82ef4a7c7cdb1c7
+  checksum: 2d93f960579299663444ef5173beac552964829c8f9f305fad4e22143b6024e68e4c89d38adf79e331f614c8536f10858bfd48548e2a08fcc3f5e1b031fd343c
   languageName: node
   linkType: hard
 
@@ -57,8 +57,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.3
-    "@autorecord/douyu-recorder": ^1.0.15
+    "@autorecord/bilibili-recorder": ^1.0.4
+    "@autorecord/douyu-recorder": ^1.0.16
     "@autorecord/manager": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.13
@@ -78,7 +78,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/manager@^0.0.16, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
+"@autorecord/manager@^0.0.17, @autorecord/manager@workspace:^, @autorecord/manager@workspace:packages/manager":
   version: 0.0.0-use.local
   resolution: "@autorecord/manager@workspace:packages/manager"
   dependencies:
