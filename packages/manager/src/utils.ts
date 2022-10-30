@@ -1,5 +1,7 @@
 import { DebouncedFunc, throttle } from 'lodash'
 
+export type AnyObject = Record<string, any>
+export type UnknownObject = Record<string, unknown>
 export type PickRequired<T, K extends keyof T> = T & Pick<Required<T>, K>
 
 export function asyncThrottle(

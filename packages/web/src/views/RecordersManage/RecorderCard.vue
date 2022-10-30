@@ -47,7 +47,7 @@ import Button from '../../components/Button/index.vue'
 import { RouteNames } from '../../router'
 import { RecorderService } from '../../services/RecorderService'
 
-const props = defineProps<{ modelValue: ClientRecorder }>()
+const { recorder } = defineProps<{ recorder: ClientRecorder }>()
 
 // TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
 const providers = [
@@ -55,7 +55,6 @@ const providers = [
   { id: 'Bilibili', name: 'Bilibili' },
 ]
 
-const recorder = props.modelValue
 const requesting = ref(false)
 
 const providerName = computed(

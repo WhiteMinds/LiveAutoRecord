@@ -1,10 +1,10 @@
 import { Emitter } from 'mitt'
 import { ChannelId, Message, Quality } from './common'
 import { RecorderProvider } from './manager'
-import { PickRequired } from './utils'
+import { AnyObject, PickRequired, UnknownObject } from './utils'
 
-export interface RecorderCreateOpts {
-  providerId: RecorderProvider['id']
+export interface RecorderCreateOpts<E extends AnyObject = UnknownObject> {
+  providerId: RecorderProvider<E>['id']
   channelId: ChannelId
   // 预期上它应该是一个系统内的唯一 id，用于操作时的目标指定
   id?: string
@@ -20,11 +20,14 @@ export interface RecorderCreateOpts {
   streamPriorities: string[]
   // 该项为用户配置，不同源（CDN）的优先级，如果设置了此项，将优先根据此决定使用哪个源，除非所有的指定源无效
   sourcePriorities: string[]
-  // 可持久化的额外字段，让 provider 开发者可以实现更多的 customize
-  extra?: string
+  // 可持久化的额外字段，让 provider、manager 开发者可以有更多 customize 的空间
+  extra?: Partial<E>
 }
 
-export type SerializedRecorder = PickRequired<RecorderCreateOpts, 'id'>
+export type SerializedRecorder<E extends AnyObject> = PickRequired<
+  RecorderCreateOpts<E>,
+  'id'
+>
 
 export type RecorderState = 'idle' | 'recording' | 'stopping-record'
 
@@ -40,15 +43,16 @@ export interface RecordHandle {
   stop: (this: RecordHandle) => Promise<void>
 }
 
-export interface Recorder
+export interface Recorder<E extends AnyObject = UnknownObject>
   extends Emitter<{
       RecordStart: RecordHandle
       RecordStop: RecordHandle
       Updated: ((string & {}) | keyof Recorder)[]
       Message: Message
     }>,
-    RecorderCreateOpts {
+    RecorderCreateOpts<E> {
   id: string
+  extra: Partial<E>
   // 该项由 recorder 自身控制，决定有哪些可用的视频流
   availableStreams: string[]
   // 该项由 recorder 自身控制，决定有哪些可用的源（CDN）
@@ -59,11 +63,11 @@ export interface Recorder
   // TODO: 随机的一条近期弹幕 / 评论，这或许应该放在 manager 层做，上面再加个频率统计之类的
   // recently comment: { time, text, ... }
 
-  getChannelURL: (this: Recorder) => string
+  getChannelURL: (this: Recorder<E>) => string
 
   // TODO: 这个接口以后可能会拆成两个，因为要考虑有些网站可能会提供批量检查直播状态的接口，比如斗鱼
   checkLiveStatusAndRecord: (
-    this: Recorder,
+    this: Recorder<E>,
     opts: {
       getSavePath(data: { owner: string; title: string }): string
     }
@@ -72,5 +76,5 @@ export interface Recorder
   recordHandle?: RecordHandle
 
   // 提取需要序列化存储的数据到扁平的 json 数据结构
-  toJSON: (this: Recorder) => SerializedRecorder
+  toJSON: (this: Recorder<E>) => SerializedRecorder<E>
 }

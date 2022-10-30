@@ -4,6 +4,7 @@ import R from 'ramda'
 import { v4 as uuid } from 'uuid'
 import { RecorderProvider } from './manager'
 import { SerializedRecorder, Recorder, RecordHandle } from './recorder'
+import { AnyObject } from './utils'
 
 ffmpeg.setFfmpegPath(ffmpegPath)
 
@@ -16,17 +17,17 @@ export * from './record_extra_data_controller'
  * 提供一些 utils
  */
 
-export function defaultFromJSON(
-  provider: RecorderProvider,
-  json: SerializedRecorder
-): Recorder {
+export function defaultFromJSON<E extends AnyObject>(
+  provider: RecorderProvider<E>,
+  json: SerializedRecorder<E>
+): Recorder<E> {
   return provider.createRecorder(R.omit(['providerId'], json))
 }
 
-export function defaultToJSON(
-  provider: RecorderProvider,
-  recorder: Recorder
-): SerializedRecorder {
+export function defaultToJSON<E extends AnyObject>(
+  provider: RecorderProvider<E>,
+  recorder: Recorder<E>
+): SerializedRecorder<E> {
   return {
     providerId: provider.id,
     ...R.pick(
@@ -56,7 +57,9 @@ export function genRecordUUID(): RecordHandle['id'] {
 
 export const createFFMPEGBuilder = ffmpeg
 
-export function getDataFolderPath(provider: RecorderProvider): string {
+export function getDataFolderPath<E extends AnyObject>(
+  provider: RecorderProvider<E>
+): string {
   // TODO: 改成 AppData 之类的目录
   return './' + provider.id
 }

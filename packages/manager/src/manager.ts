@@ -9,8 +9,9 @@ import {
   SerializedRecorder,
   RecordHandle,
 } from './recorder'
+import { AnyObject, UnknownObject } from './utils'
 
-export interface RecorderProvider {
+export interface RecorderProvider<E extends AnyObject> {
   // Provider 的唯一 id，最好只由英文 + 数字组成
   // TODO: 可以加个检查 id 合法性的逻辑
   id: string
@@ -18,10 +19,10 @@ export interface RecorderProvider {
   siteURL: string
 
   // 用基础的域名、路径等方式快速决定一个 URL 是否能匹配此 provider
-  matchURL: (this: RecorderProvider, channelURL: string) => boolean
+  matchURL: (this: RecorderProvider<E>, channelURL: string) => boolean
   // 从一个与当前 provider 匹配的 URL 中解析与获取对应频道的一些信息
   resolveChannelInfoFromURL: (
-    this: RecorderProvider,
+    this: RecorderProvider<E>,
     channelURL: string
   ) => Promise<{
     id: ChannelId
@@ -29,64 +30,80 @@ export interface RecorderProvider {
     owner: string
   } | null>
   createRecorder: (
-    this: RecorderProvider,
-    opts: Omit<RecorderCreateOpts, 'providerId'>
-  ) => Recorder
+    this: RecorderProvider<E>,
+    opts: Omit<RecorderCreateOpts<E>, 'providerId'>
+  ) => Recorder<E>
 
-  fromJSON: <T extends SerializedRecorder>(
-    this: RecorderProvider,
+  fromJSON: <T extends SerializedRecorder<E>>(
+    this: RecorderProvider<E>,
     json: T
-  ) => Recorder
+  ) => Recorder<E>
 }
 
-export interface RecorderManager
-  extends Emitter<{
+export interface RecorderManager<
+  ME extends UnknownObject,
+  P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
+  PE extends AnyObject = GetProviderExtra<P>,
+  E extends AnyObject = ME & PE
+> extends Emitter<{
     error: unknown
-    RecordStart: { recorder: Recorder; recordHandle: RecordHandle }
-    RecordStop: { recorder: Recorder; recordHandle: RecordHandle }
+    RecordStart: { recorder: Recorder<E>; recordHandle: RecordHandle }
+    RecordStop: { recorder: Recorder<E>; recordHandle: RecordHandle }
     RecorderUpdated: {
-      recorder: Recorder
-      keys: ((string & {}) | keyof Recorder)[]
+      recorder: Recorder<E>
+      keys: ((string & {}) | keyof Recorder<E>)[]
     }
-    RecorderAdded: Recorder
-    RecorderRemoved: Recorder
+    RecorderAdded: Recorder<E>
+    RecorderRemoved: Recorder<E>
   }> {
-  providers: RecorderProvider[]
-  loadRecorderProvider: (
-    this: RecorderManager,
-    provider: RecorderProvider
-  ) => void
-  unloadRecorderProvider: (
-    this: RecorderManager,
-    providerId: RecorderProvider['id']
-  ) => void
+  providers: P[]
   // TODO: 这个或许可以去掉或者改改，感觉不是很有必要
   getChannelURLMatchedRecorderProviders: (
-    this: RecorderManager,
+    this: RecorderManager<ME, P, PE, E>,
     channelURL: string
-  ) => RecorderProvider[]
+  ) => P[]
 
-  recorders: Recorder[]
-  addRecorder: (this: RecorderManager, opts: RecorderCreateOpts) => Recorder
-  removeRecorder: (this: RecorderManager, recorder: Recorder) => void
+  recorders: Recorder<E>[]
+  addRecorder: (
+    this: RecorderManager<ME, P, PE, E>,
+    opts: RecorderCreateOpts<E>
+  ) => Recorder<E>
+  removeRecorder: (
+    this: RecorderManager<ME, P, PE, E>,
+    recorder: Recorder<E>
+  ) => void
 
   autoCheckLiveStatusAndRecord: boolean
   isCheckLoopRunning: boolean
-  startCheckLoop: (this: RecorderManager) => void
-  stopCheckLoop: (this: RecorderManager) => void
+  startCheckLoop: (this: RecorderManager<ME, P, PE, E>) => void
+  stopCheckLoop: (this: RecorderManager<ME, P, PE, E>) => void
 
   savePathRule: string
 }
 
-export type RecorderManagerCreateOpts = Partial<
-  Pick<RecorderManager, 'savePathRule' | 'autoCheckLiveStatusAndRecord'>
->
+export type RecorderManagerCreateOpts<
+  ME extends AnyObject = UnknownObject,
+  P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
+  PE extends AnyObject = GetProviderExtra<P>,
+  E extends AnyObject = ME & PE
+> = Partial<
+  Pick<
+    RecorderManager<ME, P, PE, E>,
+    'savePathRule' | 'autoCheckLiveStatusAndRecord'
+  >
+> & {
+  providers: P[]
+}
 
-export function createRecorderManager(
-  opts: RecorderManagerCreateOpts = {}
-): RecorderManager {
-  const providerMap: Record<RecorderProvider['id'], RecorderProvider> = {}
-  const recorders: Recorder[] = []
+export function createRecorderManager<
+  ME extends AnyObject = UnknownObject,
+  P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
+  PE extends AnyObject = GetProviderExtra<P>,
+  E extends AnyObject = ME & PE
+>(
+  opts: RecorderManagerCreateOpts<ME, P, PE, E>
+): RecorderManager<ME, P, PE, E> {
+  const recorders: Recorder<E>[] = []
 
   let checkLoopTimer: NodeJS.Timeout | undefined
   const checkLoopInterval: number = 1e3
@@ -117,28 +134,25 @@ export function createRecorderManager(
     await Promise.all(threads)
   }
 
-  const manager: RecorderManager = {
+  const manager: RecorderManager<ME, P, PE, E> = {
     ...mitt(),
 
-    providers: [],
-    loadRecorderProvider(provider) {
-      providerMap[provider.id] = provider
-      this.providers = Object.values(providerMap)
-    },
-    unloadRecorderProvider(id) {
-      delete providerMap[id]
-      this.providers = Object.values(providerMap)
-    },
+    providers: opts.providers,
     getChannelURLMatchedRecorderProviders(channelURL) {
       return this.providers.filter((p) => p.matchURL(channelURL))
     },
 
     recorders,
     addRecorder(opts) {
-      const provider = providerMap[opts.providerId]
-      if (provider == null) throw new Error('')
+      const provider = this.providers.find((p) => p.id === opts.providerId)
+      if (provider == null)
+        throw new Error('Cant find provider ' + opts.providerId)
 
-      const recorder = provider.createRecorder(R.omit(['providerId'], opts))
+      // TODO: 因为泛型函数内部是不持有具体泛型的，这里被迫用了 as，没什么好的思路处理，除非
+      // provider.createRecorder 能返回 Recorder<PE> 才能进一步优化。
+      const recorder = provider.createRecorder(
+        R.omit(['providerId'], opts)
+      ) as Recorder<E>
       this.recorders.push(recorder)
 
       recorder.on('RecordStart', (recordHandle) =>
@@ -201,9 +215,14 @@ export function createRecorderManager(
   return manager
 }
 
-export function genSavePathFromRule(
-  manager: RecorderManager,
-  recorder: Recorder,
+export function genSavePathFromRule<
+  ME extends AnyObject,
+  P extends RecorderProvider<AnyObject>,
+  PE extends AnyObject,
+  E extends AnyObject
+>(
+  manager: RecorderManager<ME, P, PE, E>,
+  recorder: Recorder<E>,
   extData: {
     owner: string
     title: string
@@ -229,3 +248,7 @@ export function genSavePathFromRule(
 
   return format(manager.savePathRule, params)
 }
+
+export type GetProviderExtra<P> = P extends RecorderProvider<infer E>
+  ? E
+  : never

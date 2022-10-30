@@ -9,12 +9,15 @@ import { insertRecord, updateRecordStopTime } from './db'
 const recordersConfigPath = path.join(paths.config, 'recorders.json')
 const managerConfigPath = path.join(paths.config, 'manager.json')
 
-export const recorderManager = createRecorderManager()
+export interface RecorderExtra {
+  createTimestamp: number
+}
+
+export const recorderManager = createRecorderManager<RecorderExtra>({
+  providers: [providerForDouYu, providerForBilibili],
+})
 
 export async function initRecorderManager(): Promise<void> {
-  recorderManager.loadRecorderProvider(providerForDouYu)
-  recorderManager.loadRecorderProvider(providerForBilibili)
-
   const managerConfig = await readJSONFile<ManagerConfig>(managerConfigPath, {
     savePathRule: path.join(
       paths.data,
@@ -23,10 +26,10 @@ export async function initRecorderManager(): Promise<void> {
   })
   recorderManager.savePathRule = managerConfig.savePathRule
 
-  const serializedRecorders = await readJSONFile<SerializedRecorder[]>(
-    recordersConfigPath,
-    []
-  )
+  // TODO: 目前持久化的实现方式是不支持多实例同时运行的，考虑在程序运行期间把数据文件持续占用防止意外操作
+  const serializedRecorders = await readJSONFile<
+    SerializedRecorder<RecorderExtra>[]
+  >(recordersConfigPath, [])
   for (let i = 0; i < serializedRecorders.length; i++) {
     const serialized = serializedRecorders[i]
     recorderManager.addRecorder(serialized)

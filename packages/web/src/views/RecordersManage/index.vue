@@ -2,7 +2,16 @@
   <div class="relative">
     <div class="h-screen overflow-auto bg-[#EFF3F4]">
       <div class="sticky left-0 top-0 p-4 bg-inherit shadow flex">
-        <div class="flex-auto">sort / filter</div>
+        <div class="flex-auto">
+          排序：
+          <select v-model="sortModeId">
+            <option v-for="sortMode in sortModes" :value="sortMode.id">
+              {{ sortMode.name }}
+            </option>
+          </select>
+          过滤：
+          <input v-model="filterText" />
+        </div>
 
         <div class="flex gap-4">
           <router-link :to="{ name: RouteNames.NewRecorder }">
@@ -19,8 +28,9 @@
 
       <div class="flex flex-wrap gap-4 p-4">
         <RecorderCard
-          v-for="(r, i) in recorders"
-          v-model="recorders[i]"
+          v-for="recorder in displayingRecorders"
+          :key="recorder.id"
+          :recorder="recorder"
           class="flex-shrink-0 flex-grow basis-48"
         />
       </div>
@@ -52,8 +62,76 @@ import RecorderCard from './RecorderCard.vue'
 import Button from '../../components/Button/index.vue'
 // TODO: 这个引用会造成 HMR 时循环引用报错，暂时不处理，之后可以把 names 和 routes 拆开
 import { RouteNames } from '../../router'
+import { computed } from '@vue/reactivity'
+import { assert } from '../../utils'
 
 const recorders = ref<ClientRecorder[]>([])
+
+const sortModes: {
+  id: string
+  name: string
+  resolver: (recorder: ClientRecorder) => string | number | null
+}[] = [
+  {
+    id: 'create',
+    name: '添加时间',
+    resolver: (recorder) => recorder.extra.createTimestamp ?? 0,
+  },
+  {
+    id: 'provider',
+    name: '平台',
+    resolver: (recorder) => recorder.providerId,
+  },
+  {
+    id: 'channel',
+    name: '频道',
+    resolver: (recorder) => recorder.channelId,
+  },
+]
+const sortModeId = ref<string>(sortModes[0].id)
+const sortMode = computed(() =>
+  sortModes.find((mode) => mode.id === sortModeId.value)
+)
+const filterText = ref<string>('')
+
+const displayingRecorders = computed(() => {
+  const fields: (keyof ClientRecorder)[] = ['remarks', 'channelId']
+  const result = recorders.value.filter((recorder) =>
+    fields.some((field) =>
+      recorder[field]?.toString().includes(filterText.value)
+    )
+  )
+
+  assert(sortMode.value)
+  const resolver = sortMode.value.resolver
+  result.sort((a, b) => {
+    const valA = resolver(a)
+    const valB = resolver(b)
+
+    // 空值与非空值同时存在，则非空值排序靠前，如果都为空则顺序不变
+    if (valA == null || valB == null) {
+      if (valA != null) return 1
+      if (valB != null) return -1
+      return 0
+    }
+
+    // 不同类型的值同时存在，则 number 类型的排序靠前
+    if (typeof valA === 'number' && typeof valB === 'string') return -1
+    if (typeof valA === 'string' && typeof valB === 'number') return 1
+
+    // 正常排序
+    if (typeof valA === 'string' && typeof valB === 'string') {
+      return valA.localeCompare(valB)
+    }
+    if (typeof valA === 'number' && typeof valB === 'number') {
+      return valA - valB
+    }
+
+    return 0
+  })
+
+  return result
+})
 
 onMounted(async () => {
   const items = await RecorderService.getReactiveRecorders()

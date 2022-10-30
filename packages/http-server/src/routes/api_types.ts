@@ -6,6 +6,7 @@ import {
   RecordHandle,
 } from '@autorecord/manager'
 import { RecordModel } from '../db'
+import { RecorderExtra } from '../manager'
 
 export interface PagedArgs {
   page: number
@@ -17,7 +18,7 @@ export interface PagedResp extends PagedArgs {
 }
 
 export type ClientRecorder = Omit<
-  Recorder,
+  Recorder<RecorderExtra>,
   // TODO: 可以改成排除所有方法 & EmitterProps
   | 'all'
   | 'getChannelURL'
@@ -95,13 +96,13 @@ export namespace API {
   export namespace getManager {
     export interface Args {}
 
-    export type Resp = RecorderManagerCreateOpts
+    export type Resp = Omit<RecorderManagerCreateOpts, 'providers'>
   }
 
   export namespace updateManager {
-    export type Args = RecorderManagerCreateOpts
+    export type Args = Omit<RecorderManagerCreateOpts, 'providers'>
 
-    export type Resp = RecorderManagerCreateOpts
+    export type Resp = Omit<RecorderManagerCreateOpts, 'providers'>
   }
 
   export namespace getRecords {
