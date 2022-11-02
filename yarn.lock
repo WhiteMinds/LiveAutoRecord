@@ -73,6 +73,7 @@ __metadata:
     nodemon: ^2.0.20
     ramda: ^0.28.0
     steno: ^1.0.0
+    subtitle: ^4.2.1
     ts-node: ^10.9.1
     typescript: ^4.8.3
   languageName: unknown
@@ -1744,6 +1745,15 @@ __metadata:
   version: 0.7.31
   resolution: "@types/ms@npm:0.7.31"
   checksum: daadd354aedde024cce6f5aa873fefe7b71b22cd0e28632a69e8b677aeb48ae8caa1c60e5919bb781df040d116b01cb4316335167a3fc0ef6a63fa3614c0f6da
+  languageName: node
+  linkType: hard
+
+"@types/multipipe@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/multipipe@npm:3.0.0"
+  dependencies:
+    "@types/node": "*"
+  checksum: 633cbf626bb6962cfecf3a3c61dcd69c2fd75a2d8e51b182d0b4336572a7b40a81947e413e946c61ca78abffc76a2d73b0843a25d84f61cd8bcbd97e56feca62
   languageName: node
   linkType: hard
 
@@ -4124,6 +4134,15 @@ __metadata:
     promise-polyfill: 8.2.3
     rxjs: ^7.5.6
   checksum: 3066c64fd4efa63395daa1358407de2124799c572db1878869e2b4a544d33d6273631f55b3821f9277a949489fa4355bda4a3dcdcfbceb91225bcaaf4d38cdc8
+  languageName: node
+  linkType: hard
+
+"duplexer2@npm:^0.1.2":
+  version: 0.1.4
+  resolution: "duplexer2@npm:0.1.4"
+  dependencies:
+    readable-stream: ^2.0.2
+  checksum: 744961f03c7f54313f90555ac20284a3fb7bf22fdff6538f041a86c22499560eb6eac9d30ab5768054137cb40e6b18b40f621094e0261d7d8c35a37b7a5ad241
   languageName: node
   linkType: hard
 
@@ -6732,6 +6751,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"multipipe@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "multipipe@npm:4.0.0"
+  dependencies:
+    duplexer2: ^0.1.2
+    object-assign: ^4.1.0
+  checksum: 5a494ec2ce5bfdb389882ca595e3c4a33cae6c90dad879db2e3aa9a94484d8b164b0fb7b58ccf7593ae7e8c6213fd3f53a736b2c98e4f14c5ed1d38debc33f98
+  languageName: node
+  linkType: hard
+
 "mute-stream@npm:0.0.8, mute-stream@npm:~0.0.4":
   version: 0.0.8
   resolution: "mute-stream@npm:0.0.8"
@@ -7113,7 +7142,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4":
+"object-assign@npm:^4, object-assign@npm:^4.1.0":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
@@ -8053,7 +8082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:~2.3.6":
+"readable-stream@npm:^2.0.2, readable-stream@npm:~2.3.6":
   version: 2.3.7
   resolution: "readable-stream@npm:2.3.7"
   dependencies:
@@ -8647,7 +8676,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"split2@npm:^3.0.0":
+"split2@npm:^3.0.0, split2@npm:^3.2.2":
   version: 3.2.2
   resolution: "split2@npm:3.2.2"
   dependencies:
@@ -8815,6 +8844,18 @@ __metadata:
   bin:
     sl-log-transformer: bin/sl-log-transformer.js
   checksum: abf9a4ac143118f26c3a0771b204b02f5cf4fa80384ae158f25e02bfbff761038accc44a7f65869ccd5a5995a7f2c16b1466b83149644ba6cecd3072a8927297
+  languageName: node
+  linkType: hard
+
+"subtitle@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "subtitle@npm:4.2.1"
+  dependencies:
+    "@types/multipipe": ^3.0.0
+    multipipe: ^4.0.0
+    split2: ^3.2.2
+    strip-bom: ^4.0.0
+  checksum: 0aa6ff70bd039345e9cd810d547f0536dccf12092a1fbda0c34060a875a0793de97de9e54af8855877247677b345a9b8f62b1671289c52402cd170c449ba363b
   languageName: node
   linkType: hard
 

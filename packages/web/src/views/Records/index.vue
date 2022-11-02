@@ -1,11 +1,18 @@
 <template>
   <div>
     录像历史：
-    <div v-for="record in records">
-      {{ record.savePath }}
-      <router-link :to="{ name: RouteNames.Player, query: { id: record.id } }">
-        <button>play</button>
-      </router-link>
+    <div v-for="record in records" class="flex">
+      <div class="flex-auto truncate" :title="record.savePath">
+        {{ record.savePath }}
+      </div>
+      <div class="flex-shrink-0 px-2 space-x-2">
+        <router-link
+          :to="{ name: RouteNames.Player, query: { id: record.id } }"
+        >
+          <button>play</button>
+        </router-link>
+        <button @click="genSRT(record.id)">生成 srt 字幕</button>
+      </div>
     </div>
   </div>
 </template>
@@ -34,4 +41,9 @@ onMounted(async () => {
   console.log(res)
   records.value = res.items
 })
+
+const genSRT = async (id: string) => {
+  const file = await LARServerService.createRecordSRT({ id })
+  console.log('gen SRT successful', file)
+}
 </script>

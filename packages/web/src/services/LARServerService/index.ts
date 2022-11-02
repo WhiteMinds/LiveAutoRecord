@@ -119,6 +119,15 @@ async function getRecordExtraData(
   return resp.data.payload
 }
 
+async function createRecordSRT(
+  args: API.createRecordSRT.Args
+): Promise<API.createRecordSRT.Resp> {
+  const resp = await requester.post<{ payload: API.createRecordSRT.Resp }>(
+    `/records/${args.id}/srt`
+  )
+  return resp.data.payload
+}
+
 async function getRecordVideoURL(args: { id: string }): Promise<string> {
   return `${baseURL}/records/${args.id}/video`
 }
@@ -135,6 +144,7 @@ export const LARServerService = {
   updateManager,
   getRecords,
   getRecordExtraData,
+  createRecordSRT,
   getRecordVideoURL,
 
   getServerMessages,

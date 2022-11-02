@@ -122,6 +122,14 @@ export namespace API {
 
     export type Resp = RecordExtraData
   }
+
+  export namespace createRecordSRT {
+    export interface Args {
+      id: RecordModel['id']
+    }
+
+    export type Resp = string
+  }
 }
 
 export interface UpdateRecorder {

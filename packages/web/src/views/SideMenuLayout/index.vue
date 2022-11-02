@@ -15,12 +15,13 @@
         </template>
         播放器
       </MenuItem>
-      <MenuItem :route-name="RouteNames.RecordProcessing">
+      <!-- TODO: 原本预期上有一个录播处理的功能来做一些剪辑、弹幕合成之类的操作，但是比较复杂，先放着 -->
+      <!-- <MenuItem :route-name="RouteNames.RecordProcessing">
         <template #icon="{ svgProps }">
           <IconVideo v-bind="svgProps" />
         </template>
         录播处理
-      </MenuItem>
+      </MenuItem> -->
       <MenuItem :route-name="RouteNames.Settings">
         <template #icon="{ svgProps }">
           <IconSettings v-bind="svgProps" />

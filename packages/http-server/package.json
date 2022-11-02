@@ -26,7 +26,8 @@
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "ramda": "^0.28.0",
-    "steno": "^1.0.0"
+    "steno": "^1.0.0",
+    "subtitle": "^4.2.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
