@@ -1,0 +1,20 @@
+{
+  "name": "@autorecord/shared",
+  "version": "0.0.1",
+  "description": "internal utils shared across @autorecord packages",
+  "main": "./lib/index.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
+  "author": "WhiteMind",
+  "license": "LGPL",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
+}

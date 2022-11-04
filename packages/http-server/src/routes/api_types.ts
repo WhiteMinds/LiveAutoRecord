@@ -5,6 +5,7 @@ import {
   RecordExtraData,
   RecordHandle,
 } from '@autorecord/manager'
+import { Settings } from '@autorecord/shared'
 import { RecordModel } from '../db'
 import { RecorderExtra } from '../manager'
 
@@ -130,6 +131,18 @@ export namespace API {
 
     export type Resp = string
   }
+
+  export namespace getSettings {
+    export interface Args {}
+
+    export type Resp = Settings
+  }
+
+  export namespace setSettings {
+    export type Args = Settings
+
+    export type Resp = Settings
+  }
 }
 
 export interface UpdateRecorder {
@@ -147,4 +160,19 @@ export interface RemoveRecorder {
   id: ClientRecorder['id']
 }
 
-export type SSEMessage = UpdateRecorder | AddRecorder | RemoveRecorder
+export interface RecordStart {
+  event: 'record_start'
+  recorder: ClientRecorder
+}
+
+export interface SettingsChange {
+  event: 'settings_change'
+  settings: Settings
+}
+
+export type SSEMessage =
+  | UpdateRecorder
+  | AddRecorder
+  | RemoveRecorder
+  | RecordStart
+  | SettingsChange

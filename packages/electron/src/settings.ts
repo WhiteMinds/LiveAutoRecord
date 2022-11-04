@@ -1,0 +1,24 @@
+import path from 'path'
+import { paths } from './env'
+import { readJSONFileSync, writeJSONFileSync } from './utils'
+
+export interface Settings {
+  notExitOnAllWindowsClosed: boolean
+  noticeOnRecordStart: boolean
+}
+
+const settingsConfigPath = path.join(paths.config, 'settings.json')
+
+const settings = readJSONFileSync<Settings>(settingsConfigPath, {
+  notExitOnAllWindowsClosed: true,
+  noticeOnRecordStart: true,
+})
+
+export function getSettings(): Settings {
+  return settings
+}
+
+export function setSettings(newSettings: Settings): Settings {
+  writeJSONFileSync(settingsConfigPath, newSettings)
+  return newSettings
+}

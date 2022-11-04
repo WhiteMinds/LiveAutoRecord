@@ -51,7 +51,9 @@
   "license": "LGPL",
   "dependencies": {
     "@autorecord/http-server": "workspace:^",
-    "concurrently": "^7.4.0"
+    "@autorecord/shared": "workspace:^",
+    "concurrently": "^7.4.0",
+    "env-paths": "^2.0.0"
   },
   "devDependencies": {
     "electron": "^20.1.1",

@@ -132,6 +132,25 @@ async function getRecordVideoURL(args: { id: string }): Promise<string> {
   return `${baseURL}/records/${args.id}/video`
 }
 
+async function getSettings(
+  args: API.getSettings.Args
+): Promise<API.getSettings.Resp> {
+  const resp = await requester.get<{ payload: API.getSettings.Resp }>(
+    '/settings'
+  )
+  return resp.data.payload
+}
+
+async function setSettings(
+  args: API.setSettings.Args
+): Promise<API.setSettings.Resp> {
+  const resp = await requester.put<{ payload: API.setSettings.Resp }>(
+    '/settings',
+    args
+  )
+  return resp.data.payload
+}
+
 export const LARServerService = {
   getRecorders,
   getRecorder,
@@ -146,6 +165,8 @@ export const LARServerService = {
   getRecordExtraData,
   createRecordSRT,
   getRecordVideoURL,
+  getSettings,
+  setSettings,
 
   getServerMessages,
 }

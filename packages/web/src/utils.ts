@@ -25,6 +25,12 @@ export function valuesToMapWithKVEqual<Values extends string>(
   return Object.assign({}, ...kvList)
 }
 
+export function isPromiseLike<T>(obj: unknown): obj is PromiseLike<T> {
+  return (
+    !!obj && typeof obj === 'object' && typeof (obj as any).then === 'function'
+  )
+}
+
 export function assert(assertion: unknown, msg?: string): asserts assertion {
   if (!assertion) {
     throw new Error(msg)

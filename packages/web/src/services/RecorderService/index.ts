@@ -93,7 +93,6 @@ async function stopRecord(id: ClientRecorder['id']): Promise<ClientRecorder> {
 }
 
 function startUpdateRecordersOnServerMessage() {
-  const store = useStore()
   const sub = LARServerService.getServerMessages()
     .pipe(
       tap((msg) => {
@@ -106,9 +105,6 @@ function startUpdateRecordersOnServerMessage() {
           case 'remove_recorder':
             removeRecorderCache(msg.id)
             break
-
-          default:
-            console.warn('unknown msg', msg)
         }
       })
     )
