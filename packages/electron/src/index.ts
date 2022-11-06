@@ -17,7 +17,7 @@ function createWindow() {
     height: 600,
     webPreferences: {
       // https://github.com/Yukun-Guo/vite-vue3-electron-ts-template#3-setup-electron#src/electron/preload/preload.ts
-      // preload: join(__dirname, '../preload/preload.js'),
+      preload: join(__dirname, 'preload.js'),
     },
   })
 

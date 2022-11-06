@@ -9,6 +9,8 @@ export async function init() {
   RecordService.noticeOnRecordStart = settings.noticeOnRecordStart
 
   const tryNoticeOnRecordStartMsg = tap<SSEMessage>((msg) => {
+    // TODO: 后面看下优化后的通知效果，如果客户端下表现不太好，可以根据 isClientMode
+    // 在客户端模式下由 electron main 发送通知。
     if (!RecordService.noticeOnRecordStart) return
     if (msg.event !== 'record_start') return
     // 只有一个 tab 能发出通知，不然会重复发
