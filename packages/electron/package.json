@@ -1,34 +1,40 @@
 {
   "name": "@autorecord/electron",
-  "version": "0.0.1",
+  "version": "4.0.0",
   "description": "Integrate two packets http-server and web, packaged as the client",
-  "main": "./dist/index.js",
+  "main": "./dist/main/index.js",
   "private": true,
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "app:dev": "tsc && concurrently \"cd ../http-server && yarn watch\" \"cd ../web && yarn dev\" \" electron .\" \"tsc -w\"",
-    "app:build": "npm run vite:build && tsc && electron-builder",
-    "app:preview": "npm run vite:build && tsc && electron ."
+    "app:dev": "electron-vite dev",
+    "app:build": "electron-vite build && electron-builder",
+    "app:preview": "electron-vite build && electron ."
   },
   "build": {
-    "appId": "YourAppID",
+    "productName": "LAR 直播自动录制",
+    "appId": "moe.teeio.lar",
     "asar": true,
     "directories": {
       "buildResources": "assets",
-      "output": "release/${version}"
+      "output": "build/${version}"
     },
     "files": [
       "dist"
     ],
     "mac": {
+      "icon": "build/icons/icon.icns",
       "artifactName": "${productName}_${version}.${ext}",
       "target": [
         "dmg"
       ]
     },
+    "linux": {
+      "icon": "build/icons"
+    },
     "win": {
+      "icon": "build/icons/icon.ico",
       "target": [
         {
           "target": "nsis",
@@ -49,6 +55,9 @@
   "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
   "author": "WhiteMind",
   "license": "LGPL",
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
   "dependencies": {
     "@autorecord/http-server": "workspace:^",
     "@autorecord/shared": "workspace:^",
@@ -57,6 +66,7 @@
   },
   "devDependencies": {
     "electron": "^20.1.1",
-    "electron-builder": "^23.3.3"
+    "electron-builder": "^23.3.3",
+    "electron-vite": "^1.0.14"
   }
 }

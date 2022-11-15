@@ -3,7 +3,7 @@
     应用设置页面
 
     <template v-if="settings">
-      <div>
+      <div v-if="isClient">
         关闭时进入托盘：
         <input type="checkbox" v-model="settings.notExitOnAllWindowsClosed" />
       </div>
@@ -28,8 +28,10 @@ import { onMounted, ref } from 'vue'
 import { LARServerService } from '../../services/LARServerService'
 import { RecordService } from '../../services/RecordService'
 import Button from '../../components/Button/index.vue'
+import { ClientService } from '../../services/ClientService'
 
 const settings = ref<API.getSettings.Resp>()
+const isClient = ClientService.isClientMode()
 
 onMounted(async () => {
   const res = await LARServerService.getSettings({})
