@@ -8,16 +8,15 @@
     "build": "tsc",
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "app:dev": "electron-vite dev",
+    "app:dev": "concurrently \"cd ../http-server && yarn watch\" \"electron-vite dev\"",
     "app:build": "electron-vite build && electron-builder",
     "app:preview": "electron-vite build && electron ."
   },
   "build": {
     "productName": "LAR 直播自动录制",
     "appId": "moe.teeio.lar",
-    "asar": true,
     "directories": {
-      "buildResources": "assets",
+      "buildResources": "build/icons",
       "output": "build/${version}"
     },
     "files": [
@@ -62,7 +61,8 @@
     "@autorecord/http-server": "workspace:^",
     "@autorecord/shared": "workspace:^",
     "concurrently": "^7.4.0",
-    "env-paths": "^2.0.0"
+    "env-paths": "^2.0.0",
+    "ffmpeg-static": "^5.0.2"
   },
   "devDependencies": {
     "electron": "^20.1.1",

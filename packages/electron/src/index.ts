@@ -1,6 +1,7 @@
 import { join } from 'path'
 import { app, BrowserWindow, Menu, Tray } from 'electron'
 import { startServer } from '@autorecord/http-server'
+import ffmpegPathFromModule from 'ffmpeg-static'
 import { getSettings, setSettings } from './settings'
 import trayPNG from './assets/tray.png'
 import trayICO from './assets/tray.ico'
@@ -8,6 +9,12 @@ import trayICO from './assets/tray.ico'
 startServer({
   getSettings: async () => getSettings(),
   setSettings: async (newSettings) => setSettings(newSettings),
+  // electron 在 asar 模式下对于一些文件相关的 api 有限制，而 fluent-ffmpeg 使用的 spawn
+  // 则在限制范围中，所以需要解包后的路径（解包是由 electron-builder 内部 hard code 实现的）。
+  // https://www.electronjs.org/fr/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive
+  // https://github.com/electron-userland/electron-builder/blob/6f630927ca949d8bdcde06e4eafaa63ce3636d5a/packages/app-builder-lib/src/asar/unpackDetector.ts#L83
+  // TODO: 更好的方案应该是在这里手动解包，可以确保路径一定正确，这里先简单实现顶着了。
+  ffmpegPath: ffmpegPathFromModule.replace('.asar', '.asar.unpacked'),
 })
 
 function createWindow() {

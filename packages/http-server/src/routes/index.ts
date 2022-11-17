@@ -5,6 +5,7 @@ import { router as managerRoutes } from './manager'
 import { router as eventRoutes } from './event'
 import { createRouter as createSettingRouter } from './setting'
 import { ServerOpts } from '../types'
+import { logger } from '../logger'
 // import { respond } from './utils'
 
 export function createRouter(serverOpts: ServerOpts) {
@@ -18,7 +19,7 @@ export function createRouter(serverOpts: ServerOpts) {
   router.use(settingRoutes)
 
   const handle: ErrorRequestHandler = (err: unknown, req, res, next) => {
-    console.error(err)
+    logger.error(err)
     if (err instanceof Error) {
       // respond(res, { error: err.message }).status(500)
       return

@@ -7,5 +7,8 @@
   "devDependencies": {
     "lerna": "^5.6.2"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "resolutions": {
+    "winston@^3.8.2": "patch:winston@npm%3A3.8.2#./.yarn/patches/winston-npm-3.8.2-2035e9cac4.patch"
+  }
 }

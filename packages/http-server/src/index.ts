@@ -6,10 +6,12 @@ import cors from 'cors'
 import { initRecorderManager } from './manager'
 import { createRouter } from './routes'
 import { initDB } from './db'
+import { setFFMPEGPath } from '@autorecord/manager'
 import { Settings } from '@autorecord/shared'
 import { paths } from './env'
 import { PickPartial, readJSONFile, writeJSONFile } from './utils'
 import { ServerOpts } from './types'
+import { logger } from './logger'
 
 export * from './routes/api_types'
 
@@ -17,17 +19,21 @@ export async function startServer(
   opts: PickPartial<ServerOpts, 'getSettings' | 'setSettings'> = {}
 ) {
   const serverOpts: ServerOpts = {
+    ...opts,
     getSettings: opts.getSettings ?? defaultGetSettings,
     setSettings: opts.setSettings ?? defaultSetSettings,
   }
 
-  console.log('initializing db')
+  logger.info('initializing db')
   await initDB()
 
-  console.log('initializing recorder manager')
+  logger.info('initializing recorder manager')
+  if (opts.ffmpegPath != null) {
+    setFFMPEGPath(opts.ffmpegPath)
+  }
   await initRecorderManager()
 
-  console.log('HTTP server starting')
+  logger.info('HTTP server starting')
   const app = express()
   app.use(express.json({ limit: '32mb' }))
   app.use(express.urlencoded({ extended: true }))
@@ -43,7 +49,7 @@ export async function startServer(
 
   const port = process.env.PORT ?? 8085
   app.listen(port, () => {
-    console.log(`HTTP server started, listening at http://localhost:${port}`)
+    logger.info(`HTTP server started, listening at http://localhost:${port}`)
   })
 }
 

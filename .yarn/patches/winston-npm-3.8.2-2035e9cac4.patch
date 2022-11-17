@@ -1,0 +1,26 @@
+diff --git a/dist/winston.js b/dist/winston.js
+index 688a98a230146269c8a6203ec05180c0cccc9b0d..c9d7aae3e67d2d61be6adfa81f0188bdb22c2382 100644
+--- a/dist/winston.js
++++ b/dist/winston.js
+@@ -146,7 +146,7 @@ Object.defineProperty(exports, 'exceptions', {
+  * @type {Object}
+  */
+ 
+-Object.defineProperty(exports, 'default', {
++Object.defineProperty(exports, 'defaultTransports', {
+   get: function get() {
+     return {
+       exceptionHandlers: defaultLogger.exceptionHandlers,
+diff --git a/lib/winston.js b/lib/winston.js
+index e62046e01cf1526df73da34b9a34cbd9031d1e1c..d490dd8151dacb189e0bedf15aef1588bfdbb844 100644
+--- a/lib/winston.js
++++ b/lib/winston.js
+@@ -150,7 +150,7 @@ Object.defineProperty(exports, 'exceptions', {
+  * The default transports and exceptionHandlers for the default winston logger.
+  * @type {Object}
+  */
+-Object.defineProperty(exports, 'default', {
++Object.defineProperty(exports, 'defaultTransports', {
+   get() {
+     return {
+       exceptionHandlers: defaultLogger.exceptionHandlers,
