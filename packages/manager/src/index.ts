@@ -1,12 +1,10 @@
 import ffmpeg from 'fluent-ffmpeg'
-import ffmpegPath from 'ffmpeg-static'
+import ffmpegPathFromModule from 'ffmpeg-static'
 import R from 'ramda'
 import { v4 as uuid } from 'uuid'
 import { RecorderProvider } from './manager'
 import { SerializedRecorder, Recorder, RecordHandle } from './recorder'
 import { AnyObject } from './utils'
-
-ffmpeg.setFfmpegPath(ffmpegPath)
 
 export * from './common'
 export * from './recorder'
@@ -55,7 +53,15 @@ export function genRecordUUID(): RecordHandle['id'] {
   return uuid()
 }
 
-export const createFFMPEGBuilder = ffmpeg
+let ffmpegPath = ffmpegPathFromModule
+export function setFFMPEGPath(newPath: string) {
+  ffmpegPath = newPath
+}
+
+export const createFFMPEGBuilder = (...args: Parameters<typeof ffmpeg>) => {
+  ffmpeg.setFfmpegPath(ffmpegPath)
+  return ffmpeg(...args)
+}
 
 export function getDataFolderPath<E extends AnyObject>(
   provider: RecorderProvider<E>
