@@ -1,84 +1,78 @@
 <template>
-  <div class="p-4 bg-[#EFF3F4]">
-    <template v-if="isCreating">正在添加新录制频道</template>
-    <template v-else>正在编辑录制频道 {{ recorderId }}</template>
-    <p>loading:{{ loading }}</p>
+  <div class="bg-[#EFF3F4]">
+    <v-card class="mx-auto my-4 max-w-xl">
+      <v-card-title>
+        <template v-if="isCreating">正在添加新录制频道</template>
+        <template v-else>正在编辑录制频道 {{ recorderId }}</template>
+      </v-card-title>
 
-    <div v-if="!isCreating">平台：{{ providerName }}</div>
-    <div v-else>
-      平台：
-      <select v-model="recorder.providerId">
-        <option v-for="provider in providers" :value="provider.id">
-          {{ provider.name }}
-        </option>
-      </select>
-    </div>
+      <!-- <p>loading:{{ loading }}</p> -->
 
-    <div>
-      频道：
-      <template v-if="isCreating">
-        <input v-model="recorder.channelId" />
-      </template>
-      <template v-else>{{ recorder.channelId }}</template>
-    </div>
+      <v-card-item>
+        <v-form>
+          <v-select
+            label="平台"
+            v-model="recorder.providerId"
+            :items="providers"
+            item-title="name"
+            item-value="id"
+            required
+            :disabled="!isCreating"
+          />
 
-    <div>
-      备注：
-      <input v-model="recorder.remarks" />
-    </div>
+          <v-text-field
+            label="频道"
+            v-model="recorder.channelId"
+            required
+            :disabled="!isCreating"
+          />
 
-    <p v-if="recorder.state === 'recording'">
-      正在录制 {{ recorder.usedSource }} / {{ recorder.usedStream }}
-    </p>
+          <v-text-field label="备注" v-model="recorder.remarks" />
 
-    <div>
-      录制画质：
-      <select v-model="recorder.quality">
-        <option v-for="quality in Qualities" :value="quality">
-          {{ quality }}
-        </option>
-      </select>
-    </div>
+          <v-select
+            label="录制画质"
+            v-model="recorder.quality"
+            :items="Qualities"
+            required
+          />
 
-    <div>
-      视频流优先级（设置后忽略画质设置）：
-      <select multiple v-model="recorder.streamPriorities">
-        <option v-for="stream in recorder.availableStreams" :value="stream">
-          {{ stream }}
-        </option>
-      </select>
-    </div>
+          <v-select
+            label="视频流优先级（设置后忽略画质设置）"
+            multiple
+            v-model="recorder.streamPriorities"
+            :items="recorder.availableStreams"
+          />
 
-    <div>
-      视频源优先级：
-      <select multiple v-model="recorder.sourcePriorities">
-        <option v-for="source in recorder.availableSources" :value="source">
-          {{ source }}
-        </option>
-      </select>
-    </div>
+          <v-select
+            label="视频源优先级"
+            multiple
+            v-model="recorder.sourcePriorities"
+            :items="recorder.availableSources"
+          />
 
-    <div>
-      禁用自动录制：
-      <input type="checkbox" v-model="recorder.disableAutoCheck" />
-    </div>
+          <v-checkbox
+            label="禁用自动录制"
+            v-model="recorder.disableAutoCheck"
+          />
+        </v-form>
+      </v-card-item>
 
-    <div>
-      <Button @click="applyOrAddRecorder">
-        {{ isCreating ? '添加' : '应用' }}
-      </Button>
-      <Button v-if="!isCreating" @click="removeRecorder">删除</Button>
-      <Button @click="$router.back">取消</Button>
-    </div>
+      <v-card-actions class="border-t justify-end">
+        <v-btn @click="applyOrAddRecorder">
+          {{ isCreating ? '添加' : '应用' }}
+        </v-btn>
+        <v-btn v-if="!isCreating" @click="removeRecorder">删除</v-btn>
+        <v-btn @click="$router.back">取消</v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { API, ClientRecorder } from '@autorecord/http-server'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { RouteNames } from '../../router'
-import Button from '../../components/Button/index.vue'
 import { RecorderService } from '../../services/RecorderService'
 
 // TODO: manager 现在引入了 ffmpeg-static，不适合直接被 web 引入，需要重构调整，
@@ -107,10 +101,6 @@ const recorder = reactive<
   streamPriorities: [],
   sourcePriorities: [],
 })
-
-const providerName = computed(
-  () => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知'
-)
 
 onMounted(async () => {
   if (isCreating) return

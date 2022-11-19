@@ -1,24 +1,31 @@
 <template>
   <div class="bg-[#EFF3F4] min-h-full p-4">
-    应用设置页面
+    <v-card title="应用设置" class="mx-auto my-4 max-w-xl">
+      <v-card-item>
+        <div v-if="!settings" class="text-center p-4">
+          <v-progress-circular indeterminate color="primary" />
+        </div>
 
-    <template v-if="settings">
-      <div v-if="isClient">
-        关闭时进入托盘：
-        <input type="checkbox" v-model="settings.notExitOnAllWindowsClosed" />
-      </div>
+        <v-form v-else>
+          <v-checkbox
+            v-if="isClient"
+            label="关闭时进入托盘"
+            v-model="settings.notExitOnAllWindowsClosed"
+          />
 
-      <div>
-        <!-- TODO: 从产品逻辑上应该放在自动录播的设置里，不过这里为了降低开发的复杂度，先按模块设计来了 -->
-        录播开始时发出通知：
-        <input type="checkbox" v-model="settings.noticeOnRecordStart" />
-      </div>
+          <!-- TODO: 从产品逻辑上应该放在自动录播的设置里，不过这里为了降低开发的复杂度，先按模块设计来了 -->
+          <v-checkbox
+            label="录播开始时发出通知"
+            v-model="settings.noticeOnRecordStart"
+          />
+        </v-form>
+      </v-card-item>
 
-      <div>
-        <Button @click="apply">应用</Button>
-        <Button @click="$router.back">取消</Button>
-      </div>
-    </template>
+      <v-card-actions class="border-t justify-end">
+        <v-btn @click="apply">应用</v-btn>
+        <v-btn @click="$router.back">取消</v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 

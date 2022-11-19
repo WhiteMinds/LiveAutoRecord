@@ -3,6 +3,14 @@
     <div
       class="flex-shrink-0 w-48 min-h-screen p-2 space-y-2 bg-[#EFF3F4] border-r border-r-[#E3E5E6]"
     >
+      <!-- <v-card>
+        <v-card-item>
+          <div class="flex items-center space-x-2 py-1">
+            <IconRecorder v-bind="{ width: 24, height: 24 }" />
+            <span>自动录播</span>
+          </div>
+        </v-card-item>
+      </v-card> -->
       <MenuItem :route-name="RouteNames.RecordersManage">
         <template #icon="{ svgProps }">
           <IconRecorder v-bind="svgProps" />

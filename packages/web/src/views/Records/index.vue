@@ -1,26 +1,70 @@
 <template>
-  <div>
-    录像历史：
-    <div v-for="record in records" class="flex">
-      <div class="flex-auto truncate" :title="record.savePath">
-        {{ record.savePath }}
-      </div>
-      <div class="flex-shrink-0 px-2 space-x-2">
-        <router-link
-          :to="{ name: RouteNames.Player, query: { id: record.id } }"
-        >
-          <button>play</button>
-        </router-link>
-        <button @click="genSRT(record.id)">生成 srt 字幕</button>
-      </div>
+  <v-card title="录像历史" class="m-4">
+    <div v-if="loading" class="text-center p-4">
+      <v-progress-circular indeterminate color="primary" />
     </div>
-  </div>
+
+    <!--
+      TODO: 3.0.1 的 vuetify 还不支持 data-table，所以要手动实现 sort 的功能，
+      不过为了省事，还是先等等它的开发进度看看。
+      https://github.com/vuetifyjs/vuetify/issues/13479
+    -->
+    <v-table v-else>
+      <thead>
+        <tr>
+          <th class="text-left">录制开始时间</th>
+          <th class="text-left">录制终止时间</th>
+          <th class="text-left">录制时长</th>
+          <th class="text-left">路径</th>
+          <th class="text-left w-64 pl-7">操作</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="record in records" :key="record.id">
+          <td>
+            {{ format(record.startTimestamp, 'yyyy/MM/dd HH:ss') }}
+          </td>
+          <td>
+            {{
+              record.stopTimestamp
+                ? format(record.stopTimestamp, 'yyyy/MM/dd HH:ss')
+                : '/'
+            }}
+          </td>
+          <td>
+            {{ record.stopTimestamp ? formatInterval(record) : '/' }}
+          </td>
+          <td>{{ record.savePath }}</td>
+          <td>
+            <div class="flex gap-0">
+              <router-link
+                :to="{ name: RouteNames.Player, query: { id: record.id } }"
+                tabindex="-1"
+              >
+                <v-btn size="small" variant="text">播放</v-btn>
+              </router-link>
+              <v-btn
+                @click="genSRT(record)"
+                size="small"
+                variant="text"
+                :loading="record.generatingSRT"
+              >
+                生成 srt 字幕
+              </v-btn>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </v-table>
+  </v-card>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ClientRecord } from '@autorecord/http-server'
+import { format, formatDuration, intervalToDuration } from 'date-fns'
 import { RouteNames } from '../../router'
 import { LARServerService } from '../../services/LARServerService'
 
@@ -30,7 +74,10 @@ const recorderId =
   route.name === RouteNames.RecorderRecords
     ? String(route.params.id)
     : undefined
-const records = ref<ClientRecord[]>([])
+
+type Record = ClientRecord & { generatingSRT?: boolean }
+const records = ref<Record[]>([])
+const loading = ref(true)
 
 onMounted(async () => {
   const res = await LARServerService.getRecords({
@@ -38,12 +85,28 @@ onMounted(async () => {
     page: 1,
     pageSize: 9999,
   })
-  console.log(res)
-  records.value = res.items
+  loading.value = false
+  records.value = [...res.items].reverse()
 })
 
-const genSRT = async (id: string) => {
-  const file = await LARServerService.createRecordSRT({ id })
-  console.log('gen SRT successful', file)
+const genSRT = async (record: Record) => {
+  if (record.generatingSRT) return
+  record.generatingSRT = true
+  try {
+    const file = await LARServerService.createRecordSRT({ id: record.id })
+    // TODO: 通知
+  } finally {
+    record.generatingSRT = false
+  }
+}
+
+function formatInterval(record: ClientRecord) {
+  return formatDuration(
+    intervalToDuration({
+      start: record.startTimestamp,
+      // formatDuration 无法处理小于 1s 的情况
+      end: Math.max(record.startTimestamp + 1000, record.stopTimestamp ?? 0),
+    })
+  )
 }
 </script>

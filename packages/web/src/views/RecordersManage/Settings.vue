@@ -1,25 +1,26 @@
 <template>
-  <template v-if="!manager">
-    <p>loading</p>
-  </template>
+  <div class="p-4 bg-[#EFF3F4]">
+    <v-card title="录播全局设置" class="mx-auto my-4 max-w-2xl">
+      <v-card-item>
+        <div v-if="!manager" class="text-center p-4">
+          <v-progress-circular indeterminate color="primary" />
+        </div>
 
-  <div v-else class="p-4 bg-[#EFF3F4]">
-    <p>录播全局设置</p>
+        <v-form v-else>
+          <v-text-field label="保存路径规则" v-model="manager.savePathRule" />
 
-    <div>
-      保存路径规则：
-      <input v-model="manager.savePathRule" />
-    </div>
+          <v-checkbox
+            label="自动检查并录制"
+            v-model="manager.autoCheckLiveStatusAndRecord"
+          />
+        </v-form>
+      </v-card-item>
 
-    <div>
-      自动检查并录制：
-      <input type="checkbox" v-model="manager.autoCheckLiveStatusAndRecord" />
-    </div>
-
-    <div>
-      <Button @click="apply">应用</Button>
-      <Button @click="$router.back">取消</Button>
-    </div>
+      <v-card-actions class="border-t justify-end">
+        <v-btn @click="apply">应用</v-btn>
+        <v-btn @click="$router.back">取消</v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 

@@ -1,49 +1,61 @@
 <template>
-  <div class="bg-white shadow rounded p-4">
-    <p>平台：{{ providerName }}</p>
-    <p>
-      频道：
-      <a :href="recorder.channelURL" target="_blank">
-        {{ recorder.channelId }}
-      </a>
-    </p>
-    <p>备注：{{ recorder.remarks }}</p>
-    <p>状态：{{ stateText }}</p>
-    <div class="flex flex-wrap gap-2 mt-3">
-      <Button
+  <v-card>
+    <v-card-title>
+      {{ recorder.remarks || `${providerName} ${recorder.channelId}` }}
+    </v-card-title>
+
+    <v-card-text>
+      <div>平台：{{ providerName }}</div>
+      <div>
+        频道：
+        <a :href="recorder.channelURL" target="_blank" class="hover:underline">
+          {{ recorder.channelId }}
+        </a>
+      </div>
+      <div>备注：{{ recorder.remarks }}</div>
+      <div>状态：{{ stateText }}</div>
+    </v-card-text>
+
+    <v-card-actions class="border-t justify-end">
+      <v-btn
         v-if="recorder.state === 'idle'"
         @click="startRecord"
-        :disabled="requesting"
+        :loading="requesting"
+        size="small"
       >
-        刷新{{ requesting ? '中' : '' }}
-      </Button>
-      <Button
+        刷新
+      </v-btn>
+      <v-btn
         v-else
         @click="stopRecord"
-        :disabled="requesting || recorder.state === 'stopping-record'"
+        :loading="requesting"
+        :disabled="recorder.state === 'stopping-record'"
+        size="small"
       >
-        终止{{ requesting ? '中' : '' }}
-      </Button>
+        终止
+      </v-btn>
 
       <router-link
         :to="{ name: RouteNames.RecorderRecords, params: { id: recorder.id } }"
+        tabindex="-1"
       >
-        <Button>历史</Button>
+        <v-btn size="small">历史</v-btn>
       </router-link>
+
       <router-link
         :to="{ name: RouteNames.RecorderEdit, params: { id: recorder.id } }"
+        tabindex="-1"
       >
-        <Button>设置</Button>
+        <v-btn size="small">设置</v-btn>
       </router-link>
       <!-- TODO: 删除做到右上角 hover 时的 x -->
-    </div>
-  </div>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script setup lang="ts">
 import type { ClientRecorder } from '@autorecord/http-server'
 import { computed, ref } from 'vue'
-import Button from '../../components/Button/index.vue'
 import { RouteNames } from '../../router'
 import { RecorderService } from '../../services/RecorderService'
 
@@ -63,7 +75,9 @@ const providerName = computed(
 
 const stateText = computed(() =>
   recorder.state === 'recording'
-    ? `正在录制 ${recorder.usedSource} / ${recorder.usedStream}`
+    ? recorder.usedSource
+      ? `正在录制 ${recorder.usedSource} / ${recorder.usedStream}`
+      : '正在录制'
     : recorder.state
 )
 

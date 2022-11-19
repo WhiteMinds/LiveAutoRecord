@@ -132,11 +132,13 @@ __metadata:
   dependencies:
     "@autorecord/http-server": "workspace:^"
     "@headlessui/vue": ^1.7.2
+    "@mdi/font": ^7.0.96
     "@types/dplayer": ^1.25.2
     "@types/ramda": ^0.28.15
     "@vitejs/plugin-vue": ^3.1.0
     autoprefixer: ^10.4.11
     axios: ^0.27.2
+    date-fns: ^2.29.3
     dplayer: ^1.27.0
     pinia: ^2.0.23
     postcss: ^8.4.16
@@ -150,6 +152,7 @@ __metadata:
     vue: ^3.2.37
     vue-router: ^4.0.0
     vue-tsc: ^0.40.4
+    vuetify: ^3.0.1
   languageName: unknown
   linkType: soft
 
@@ -1451,6 +1454,13 @@ __metadata:
     lodash: ^4.17.15
     tmp-promise: ^3.0.2
   checksum: 12527e42c2865504eb2a91cc419e52dd7a68c1eda1138c0713a1520a5413ef9dabfa9d21b7908d211998b75c60035d1d5ae87c00fe8ff5be8fa8449525235dd5
+  languageName: node
+  linkType: hard
+
+"@mdi/font@npm:^7.0.96":
+  version: 7.0.96
+  resolution: "@mdi/font@npm:7.0.96"
+  checksum: 3bc71dc45e784af98fc41ff58eedd77b7ec93fdd5ad2ea599914efd7eff0412db97e4d1766ae3abb55d90a39e5e6dbc550ffe36c72fa504d5b2b021b5aa16f8e
   languageName: node
   linkType: hard
 
@@ -4078,7 +4088,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.29.1":
+"date-fns@npm:^2.29.1, date-fns@npm:^2.29.3":
   version: 2.29.3
   resolution: "date-fns@npm:2.29.3"
   checksum: e01cf5b62af04e05dfff921bb9c9933310ed0e1ae9a81eb8653452e64dc841acf7f6e01e1a5ae5644d0337e9a7f936175fd2cb6819dc122fdd9c5e86c56be484
@@ -10433,6 +10443,25 @@ __metadata:
     "@vue/server-renderer": 3.2.38
     "@vue/shared": 3.2.38
   checksum: 9b82cb893018d6fae601823bdf1523a600c90f38bb690f92a2f2ec56d536beb2a86bf3bc0c0e6252ca0daddb86f46ead38dfbb546078f4c18281eb7bc5b7366e
+  languageName: node
+  linkType: hard
+
+"vuetify@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "vuetify@npm:3.0.1"
+  peerDependencies:
+    vite-plugin-vuetify: ^1.0.0-alpha.12
+    vue: ^3.2.0
+    vue-i18n: ^9.0.0
+    webpack-plugin-vuetify: ^2.0.0-alpha.11
+  peerDependenciesMeta:
+    vite-plugin-vuetify:
+      optional: true
+    vue-i18n:
+      optional: true
+    webpack-plugin-vuetify:
+      optional: true
+  checksum: 520fddba9200b27419a6f7dda697cef47547e2fa9b00564f76103e830e136063ed4e60e664832ce2b63e9cda81e5c65d23da11bbb0dc095626e0c2607cb1ccb6
   languageName: node
   linkType: hard
 

@@ -1,5 +1,7 @@
 import * as R from 'ramda'
 
+export type PickRequired<T, K extends keyof T> = T & Pick<Required<T>, K>
+
 export function pick<T extends Record<string, any>, U extends keyof T>(
   object: T,
   ...props: U[]

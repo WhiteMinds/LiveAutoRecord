@@ -10,14 +10,17 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.2",
+    "@mdi/font": "^7.0.96",
     "axios": "^0.27.2",
+    "date-fns": "^2.29.3",
     "dplayer": "^1.27.0",
     "pinia": "^2.0.23",
     "ramda": "^0.28.0",
     "rxjs": "^7.5.7",
     "uuid": "^9.0.0",
     "vue": "^3.2.37",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vuetify": "^3.0.1"
   },
   "devDependencies": {
     "@autorecord/http-server": "workspace:^",

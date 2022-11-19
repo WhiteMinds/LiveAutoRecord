@@ -2,27 +2,71 @@
   <div class="relative">
     <div class="h-screen overflow-auto bg-[#EFF3F4]">
       <div class="sticky left-0 top-0 p-4 bg-inherit shadow flex">
-        <div class="flex-auto">
-          排序：
-          <select v-model="sortModeId">
-            <option v-for="sortMode in sortModes" :value="sortMode.id">
-              {{ sortMode.name }}
-            </option>
-          </select>
-          过滤：
-          <input v-model="filterText" />
-        </div>
+        <div class="flex flex-auto gap-4">
+          <v-select
+            label="排序"
+            class="basis-64 shrink-0 grow-0"
+            v-model="sortMode"
+            :items="sortModes"
+            item-title="name"
+            :item-value="(item) => item"
+            hide-details="auto"
+          />
 
-        <div class="flex gap-4">
-          <router-link :to="{ name: RouteNames.NewRecorder }">
-            <Button class="bg-gray-200">+ 新增</Button>
-          </router-link>
-          <router-link :to="{ name: RouteNames.Records }">
-            <Button class="bg-gray-200">录制历史</Button>
-          </router-link>
-          <router-link :to="{ name: RouteNames.RecordersSetting }">
-            <Button class="bg-gray-200">录制设置</Button>
-          </router-link>
+          <v-text-field
+            label="过滤"
+            class="flex-auto"
+            v-model="filterText"
+            hide-details="auto"
+          />
+
+          <div class="flex gap-2 items-center">
+            <router-link
+              class="h-full"
+              :to="{ name: RouteNames.NewRecorder }"
+              tabindex="-1"
+            >
+              <v-btn
+                class="!h-full"
+                stacked
+                prepend-icon="mdi-plus"
+                :rounded="0"
+                size="small"
+              >
+                添加频道
+              </v-btn>
+            </router-link>
+            <router-link
+              class="h-full"
+              :to="{ name: RouteNames.Records }"
+              tabindex="-1"
+            >
+              <v-btn
+                class="!h-full"
+                stacked
+                prepend-icon="mdi-history"
+                :rounded="0"
+                size="small"
+              >
+                录制历史
+              </v-btn>
+            </router-link>
+            <router-link
+              class="h-full"
+              :to="{ name: RouteNames.RecordersSetting }"
+              tabindex="-1"
+            >
+              <v-btn
+                class="!h-full"
+                stacked
+                prepend-icon="mdi-cog"
+                :rounded="0"
+                size="small"
+              >
+                录制设置
+              </v-btn>
+            </router-link>
+          </div>
         </div>
       </div>
 
@@ -88,10 +132,8 @@ const sortModes: {
     resolver: (recorder) => recorder.channelId,
   },
 ]
-const sortModeId = ref<string>(sortModes[0].id)
-const sortMode = computed(() =>
-  sortModes.find((mode) => mode.id === sortModeId.value)
-)
+// const sortModeId = ref<string>(sortModes[0].id)
+const sortMode = ref(sortModes[0])
 const filterText = ref<string>('')
 
 const displayingRecorders = computed(() => {
@@ -102,6 +144,7 @@ const displayingRecorders = computed(() => {
     )
   )
 
+  console.log(sortMode.value)
   assert(sortMode.value)
   const resolver = sortMode.value.resolver
   result.sort((a, b) => {
