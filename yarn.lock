@@ -22,22 +22,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.5":
-  version: 1.0.5
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.5"
+"@autorecord/bilibili-recorder@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.6"
   dependencies:
     axios: ^0.27.2
     blive-message-listener: ^0.3.1
     ramda: ^0.28.0
   peerDependencies:
     "@autorecord/manager": ^0.0.18
-  checksum: c0fa1fff3c4019f0e08a46b02bea10edf7ade8446266699f5a6f386e4e8cb76ff8944aba2d3e18314465b24b608cb568b129a3ecfc0f2b616a979c7eec968e95
+  checksum: 5742631e5e25b16b61ce1489ae8d05cc3490b844ca45fa7b2d28973586f232d207122b780ba78e13a499c7a4cdf0997da75d91b9cee09a57ae794248a78ab0d9
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.17":
-  version: 1.0.17
-  resolution: "@autorecord/douyu-recorder@npm:1.0.17"
+"@autorecord/douyu-recorder@npm:^1.0.18":
+  version: 1.0.18
+  resolution: "@autorecord/douyu-recorder@npm:1.0.18"
   dependencies:
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
@@ -50,7 +50,7 @@ __metadata:
     ws: ^8.9.0
   peerDependencies:
     "@autorecord/manager": ^0.0.18
-  checksum: 59a7c94eacdc351f2c050f66e9e570a063176a3bfc8ca38f31a4d08765930e21a050833df5fa6bb2e79ab2244ec4cd694c12b38149e7564a8d0be24c0c9bb9c1
+  checksum: 46901c95249843257498386aa5ff1d543f7db4548223f41b1278936e42f104f3bdb3baf8f7eef48749dcbca11fac718c1912e7670b8b99a92bd60ed5ec813d33
   languageName: node
   linkType: hard
 
@@ -73,8 +73,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.5
-    "@autorecord/douyu-recorder": ^1.0.17
+    "@autorecord/bilibili-recorder": ^1.0.6
+    "@autorecord/douyu-recorder": ^1.0.18
     "@autorecord/manager": "workspace:^"
     "@autorecord/shared": "workspace:^"
     "@types/cors": ^2.8.12
@@ -131,7 +131,6 @@ __metadata:
   resolution: "@autorecord/web@workspace:packages/web"
   dependencies:
     "@autorecord/http-server": "workspace:^"
-    "@headlessui/vue": ^1.7.2
     "@mdi/font": ^7.0.96
     "@types/dplayer": ^1.25.2
     "@types/ramda": ^0.28.15
@@ -544,15 +543,6 @@ __metadata:
   version: 1.1.3
   resolution: "@gar/promisify@npm:1.1.3"
   checksum: 4059f790e2d07bf3c3ff3e0fec0daa8144fe35c1f6e0111c9921bd32106adaa97a4ab096ad7dab1e28ee6a9060083c4d1a4ada42a7f5f3f7a96b8812e2b757c1
-  languageName: node
-  linkType: hard
-
-"@headlessui/vue@npm:^1.7.2":
-  version: 1.7.2
-  resolution: "@headlessui/vue@npm:1.7.2"
-  peerDependencies:
-    vue: ^3.2.0
-  checksum: c1eed9ff4ed5127dcc24ecb0b229c3150111194475704784ae36e28804b27ba197aeec389aa1747c26bd1f8e3e93de0c7a8e167060e80cd2f9cb5ab469584adf
   languageName: node
   linkType: hard
 

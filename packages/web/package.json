@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@headlessui/vue": "^1.7.2",
     "@mdi/font": "^7.0.96",
     "axios": "^0.27.2",
     "date-fns": "^2.29.3",

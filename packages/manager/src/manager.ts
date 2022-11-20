@@ -109,6 +109,7 @@ export function createRecorderManager<
   const checkLoopInterval: number = 1e3
 
   const multiThreadCheck = async () => {
+    // TODO: 先用写死的数量，后面改成可以设置的
     const maxThreadCount = 3
     // 这里暂时不打算用 state == recording 来过滤，provider 必须内部自己处理录制过程中的 check，
     // 这样可以防止一些意外调用 checkLiveStatusAndRecord 时出现重复录制。
