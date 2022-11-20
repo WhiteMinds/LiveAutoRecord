@@ -32,23 +32,34 @@
 
         <v-select
           label="录制画质"
+          class="mb-4"
           v-model="recorder.quality"
           :items="Qualities"
           required
+          persistent-hint
+          hint="根据设定的画质，自动选择合适的视频流"
         />
 
         <v-select
-          label="视频流优先级（设置后忽略画质设置）"
+          label="视频流优先级"
+          class="mb-4"
           multiple
           v-model="recorder.streamPriorities"
           :items="recorder.availableStreams"
+          clearable
+          persistent-hint
+          hint="录制时将按前后顺序尝试选择指定流，成功时将忽略画质设置"
         />
 
         <v-select
           label="视频源优先级"
+          class="mb-4"
           multiple
           v-model="recorder.sourcePriorities"
           :items="recorder.availableSources"
+          clearable
+          persistent-hint
+          hint="录制时将按前后顺序尝试选择指定源"
         />
 
         <v-checkbox label="禁用自动录制" v-model="recorder.disableAutoCheck" />

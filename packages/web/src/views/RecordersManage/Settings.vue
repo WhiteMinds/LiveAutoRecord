@@ -8,7 +8,75 @@
       </div>
 
       <v-form v-else>
-        <v-text-field label="保存路径规则" v-model="manager.savePathRule" />
+        <v-text-field
+          label="保存路径规则"
+          v-model="manager.savePathRule"
+          append-inner-icon="mdi-help-circle"
+          @click:append-inner="
+            savePathRuleAlertVisible = !savePathRuleAlertVisible
+          "
+        />
+        <v-alert v-model="savePathRuleAlertVisible" closable>
+          <v-alert-title>如何在保存路径中使用变量？</v-alert-title>
+          <p class="text-subtitle-1 m-2">
+            使用 `{}` 包裹住变量名即可，如 `/path/{platform}`
+          </p>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-left">变量名</th>
+                <th class="text-left">变量值</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>platform</td>
+                <td>录制的平台名，如 `Bilibili`</td>
+              </tr>
+              <tr>
+                <td>channelId</td>
+                <td>录制的频道 id，如 `196`</td>
+              </tr>
+              <tr>
+                <td>title</td>
+                <td>频道的标题，如 `晚上好呀~`</td>
+              </tr>
+              <tr>
+                <td>owner</td>
+                <td>频道主的名称，如 `小缘`</td>
+              </tr>
+              <tr>
+                <td>sec</td>
+                <td>录制开始时的秒数，如 `59`</td>
+              </tr>
+              <tr>
+                <td>year</td>
+                <td>录制开始时的年份，如 `2020`</td>
+              </tr>
+              <tr>
+                <td>month</td>
+                <td>录制开始时的月份，如 `01`</td>
+              </tr>
+              <tr>
+                <td>date</td>
+                <td>录制开始时的日子，如 `15`</td>
+              </tr>
+              <tr>
+                <td>hour</td>
+                <td>录制开始时的钟头，如 `23`</td>
+              </tr>
+              <tr>
+                <td>min</td>
+                <td>录制开始时的分钟，如 `30`</td>
+              </tr>
+              <tr>
+                <td>sec</td>
+                <td>录制开始时的秒数，如 `59`</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-alert>
 
         <v-checkbox
           label="自动检查并录制"
@@ -58,6 +126,7 @@ const isClient = ClientService.isClientMode()
 const router = useRouter()
 const manager = ref<API.getManager.Resp>()
 const settings = ref<API.getSettings.Resp>()
+const savePathRuleAlertVisible = ref(false)
 
 onMounted(async () => {
   manager.value = await LARServerService.getManager({})
