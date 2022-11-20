@@ -1,7 +1,5 @@
-<script setup lang="ts">
-import SideMenuLayout from './views/SideMenuLayout/index.vue'
-</script>
-
 <template>
-  <SideMenuLayout />
+  <div class="bg-[#EFF3F4] min-h-full">
+    <router-view />
+  </div>
 </template>

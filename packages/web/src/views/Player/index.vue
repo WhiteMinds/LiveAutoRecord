@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#EFF3F4] h-full p-4">
+  <div class="h-full p-4">
     <div ref="container" class="max-h-full max-w-full"></div>
   </div>
 </template>

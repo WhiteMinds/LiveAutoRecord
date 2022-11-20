@@ -1,6 +1,6 @@
 <template>
   <div class="relative">
-    <div class="h-screen overflow-auto bg-[#EFF3F4]">
+    <div class="h-screen overflow-auto">
       <div class="sticky left-0 top-0 p-4 bg-inherit shadow flex">
         <div class="flex flex-auto gap-4">
           <v-select
@@ -132,7 +132,6 @@ const sortModes: {
     resolver: (recorder) => recorder.channelId,
   },
 ]
-// const sortModeId = ref<string>(sortModes[0].id)
 const sortMode = ref(sortModes[0])
 const filterText = ref<string>('')
 
@@ -144,7 +143,6 @@ const displayingRecorders = computed(() => {
     )
   )
 
-  console.log(sortMode.value)
   assert(sortMode.value)
   const resolver = sortMode.value.resolver
   result.sort((a, b) => {

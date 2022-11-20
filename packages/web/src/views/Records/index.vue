@@ -40,6 +40,7 @@
             <div class="flex gap-0">
               <router-link
                 :to="{ name: RouteNames.Player, query: { id: record.id } }"
+                target="_blank"
                 tabindex="-1"
               >
                 <v-btn size="small" variant="text">播放</v-btn>
