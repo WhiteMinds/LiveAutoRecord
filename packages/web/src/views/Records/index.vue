@@ -1,5 +1,15 @@
 <template>
-  <v-card title="录像历史" class="m-4">
+  <v-card class="m-4">
+    <v-card-title class="flex items-center">
+      <v-icon
+        icon="mdi-arrow-left"
+        size="24"
+        class="mr-2"
+        @click="$router.back"
+      />
+      录像历史
+    </v-card-title>
+
     <div v-if="loading" class="text-center p-4">
       <v-progress-circular indeterminate color="primary" />
     </div>
@@ -12,9 +22,9 @@
     <v-table v-else>
       <thead>
         <tr>
-          <th class="text-left">录制开始时间</th>
-          <th class="text-left">录制终止时间</th>
-          <th class="text-left">录制时长</th>
+          <th class="text-left w-40">录制开始时间</th>
+          <th class="text-left w-40">录制终止时间</th>
+          <th class="text-left w-36">录制时长</th>
           <th class="text-left">路径</th>
           <th class="text-left w-64 pl-7">操作</th>
         </tr>
@@ -66,6 +76,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { ClientRecord } from '@autorecord/http-server'
 import { format, formatDuration, intervalToDuration } from 'date-fns'
+import { zhCN } from 'date-fns/locale'
 import { RouteNames } from '../../router'
 import { LARServerService } from '../../services/LARServerService'
 
@@ -102,12 +113,18 @@ const genSRT = async (record: Record) => {
 }
 
 function formatInterval(record: ClientRecord) {
-  return formatDuration(
-    intervalToDuration({
-      start: record.startTimestamp,
-      // formatDuration 无法处理小于 1s 的情况
-      end: Math.max(record.startTimestamp + 1000, record.stopTimestamp ?? 0),
-    })
-  )
+  const stopTimestamp = record.stopTimestamp ?? record.startTimestamp
+  const time = stopTimestamp - record.startTimestamp
+
+  const duration = intervalToDuration({
+    start: record.startTimestamp,
+    // formatDuration 无法处理小于 1s 的情况
+    end: Math.max(record.startTimestamp + 1000, record.stopTimestamp ?? 0),
+  })
+  if (time >= 60e3) {
+    duration.seconds = 0
+  }
+
+  return formatDuration(duration, { locale: zhCN })
 }
 </script>

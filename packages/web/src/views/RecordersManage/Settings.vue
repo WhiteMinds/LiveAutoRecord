@@ -99,12 +99,43 @@
           v-model="settings.notExitOnAllWindowsClosed"
         />
 
-        <!-- TODO: 从产品逻辑上应该放在自动录播的设置里，不过这里为了降低开发的复杂度，先按模块设计来了 -->
         <v-checkbox
           label="录播开始时发出通知"
           v-model="settings.noticeOnRecordStart"
         />
       </v-form>
+    </v-card-item>
+
+    <v-card-title>关于本软件</v-card-title>
+
+    <v-card-item>
+      <v-table>
+        <tbody>
+          <tr>
+            <td>开源地址</td>
+            <td>
+              <a
+                href="https://github.com/WhiteMinds/LiveAutoRecord"
+                target="_blank"
+              >
+                https://github.com/WhiteMinds/LiveAutoRecord
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>作者</td>
+            <td>
+              <a href="https://space.bilibili.com/23505769" target="_blank">
+                WhiteMind
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>邮箱</td>
+            <td>whitemind@qq.com</td>
+          </tr>
+        </tbody>
+      </v-table>
     </v-card-item>
 
     <v-card-actions class="border-t justify-end">
