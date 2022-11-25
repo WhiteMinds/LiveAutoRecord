@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import {
+  createRouter as vueCreateRouter,
+  createWebHistory,
+  RouteRecordRaw,
+} from 'vue-router'
 import { valuesToMapWithKVEqual } from '../utils'
 import RecordersManage from '../views/RecordersManage/index.vue'
 import RecorderEdit from '../views/RecordersManage/RecorderEdit.vue'
@@ -17,52 +21,56 @@ export const RouteNames = valuesToMapWithKVEqual([
   'Player',
 ])
 
-const routes: RouteRecordRaw[] = [
-  {
-    name: RouteNames.Root,
-    path: '/',
-    redirect: { name: RouteNames.RecordersManage },
-  },
-  {
-    name: RouteNames.RecordersManage,
-    path: '/recorders-manage',
-    component: RecordersManage,
-    children: [
-      {
-        name: RouteNames.RecordersSetting,
-        path: 'settings',
-        component: RecordersManageSettings,
-      },
-      {
-        name: RouteNames.Records,
-        path: 'history',
-        component: Records,
-      },
-      {
-        name: RouteNames.NewRecorder,
-        path: 'new',
-        component: RecorderEdit,
-      },
-      {
-        name: RouteNames.RecorderEdit,
-        path: ':id',
-        component: RecorderEdit,
-      },
-      {
-        name: RouteNames.RecorderRecords,
-        path: ':id/history',
-        component: Records,
-      },
-    ],
-  },
-  {
-    name: RouteNames.Player,
-    path: '/player',
-    component: Player,
-  },
-]
+// 为了避免 HMR 时的 vue 文件与 router 出现循环引用的问题，这里不直接在 moduleEnv 中
+// 创建 router，而是导出一个 factor。
+export function createRouter() {
+  const routes: RouteRecordRaw[] = [
+    {
+      name: RouteNames.Root,
+      path: '/',
+      redirect: { name: RouteNames.RecordersManage },
+    },
+    {
+      name: RouteNames.RecordersManage,
+      path: '/recorders-manage',
+      component: RecordersManage,
+      children: [
+        {
+          name: RouteNames.RecordersSetting,
+          path: 'settings',
+          component: RecordersManageSettings,
+        },
+        {
+          name: RouteNames.Records,
+          path: 'history',
+          component: Records,
+        },
+        {
+          name: RouteNames.NewRecorder,
+          path: 'new',
+          component: RecorderEdit,
+        },
+        {
+          name: RouteNames.RecorderEdit,
+          path: ':id',
+          component: RecorderEdit,
+        },
+        {
+          name: RouteNames.RecorderRecords,
+          path: ':id/history',
+          component: Records,
+        },
+      ],
+    },
+    {
+      name: RouteNames.Player,
+      path: '/player',
+      component: Player,
+    },
+  ]
 
-export const router = createRouter({
-  history: createWebHistory(),
-  routes,
-})
+  return vueCreateRouter({
+    history: createWebHistory(),
+    routes,
+  })
+}

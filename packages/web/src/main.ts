@@ -4,7 +4,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import App from './App.vue'
-import { router } from './router'
+import { createRouter } from './router'
 import { initStore } from './store'
 import { RecordService } from './services/RecordService'
 // 这个必须放在下面，权重才能比 vuetify 高
@@ -21,5 +21,5 @@ const vuetify = createVuetify({
 const app = createApp(App)
 initStore(app)
 app.use(vuetify)
-app.use(router)
+app.use(createRouter())
 app.mount('#app')

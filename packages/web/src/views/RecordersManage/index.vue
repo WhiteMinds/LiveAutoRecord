@@ -99,13 +99,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { ClientRecorder } from '@autorecord/http-server'
 import { RecorderService } from '../../services/RecorderService'
 import RecorderCard from './RecorderCard.vue'
-// TODO: 这个引用会造成 HMR 时循环引用报错，暂时不处理，之后可以把 names 和 routes 拆开
 import { RouteNames } from '../../router'
-import { computed } from '@vue/reactivity'
 import { assert } from '../../utils'
 
 const recorders = ref<ClientRecorder[]>([])
