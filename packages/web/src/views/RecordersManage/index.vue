@@ -90,7 +90,7 @@
           route.matched[route.matched.length - 2].name ===
             RouteNames.RecordersManage
         "
-        class="absolute inset-0 h-screen overflow-auto bg-[#EFF3F4]"
+        class="absolute inset-0 h-screen overflow-auto bg-[#F0F0F0]"
       >
         <component :is="Component" />
       </div>

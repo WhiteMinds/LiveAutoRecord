@@ -14,6 +14,10 @@
   border-color: currentColor; /* 2 */
 }
 
+html {
+  overflow-y: auto;
+}
+
 a {
   color: inherit;
   text-decoration: inherit;

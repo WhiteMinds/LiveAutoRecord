@@ -100,6 +100,7 @@ function showWindow() {
     createWindow()
   } else {
     const window = windows[0]
+    // 似乎新版本的 electron 在 show 时会自动 restore，不过这里保险起见先冗余着了。
     if (window.isMinimized()) window.restore()
     window.show()
   }
