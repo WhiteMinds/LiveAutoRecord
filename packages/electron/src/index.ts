@@ -26,7 +26,6 @@ function createWindow() {
       preload: join(__dirname, '../preload/preload.js'),
     },
   })
-  createTray()
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']!)
@@ -40,6 +39,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  createTray()
   createWindow()
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
@@ -62,16 +62,27 @@ app.on('window-all-closed', () => {
 
 function createTray() {
   const tray = new Tray(getTrayImagePath())
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' },
-  ])
-  tray.setToolTip('This is my application.')
-  tray.setContextMenu(contextMenu)
+
+  if (process.platform === 'win32') {
+    const contextMenu = Menu.buildFromTemplate([
+      { label: '显示', type: 'normal', click: showWindow },
+      { label: '退出', type: 'normal', click: () => app.quit() },
+    ])
+    tray.setContextMenu(contextMenu)
+  }
+
+  tray.on('click', showWindow)
 
   return tray
+}
+
+function showWindow() {
+  const windows = BrowserWindow.getAllWindows()
+  if (windows.length === 0) {
+    createWindow()
+  } else {
+    windows[0].show()
+  }
 }
 
 function getTrayImagePath() {
