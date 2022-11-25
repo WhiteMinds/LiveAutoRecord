@@ -26,6 +26,7 @@ function createWindow() {
       preload: join(__dirname, '../preload/preload.js'),
     },
   })
+  mainWindow.setMenu(null)
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']!)
