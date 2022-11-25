@@ -1,5 +1,6 @@
 import {
   createRouter as vueCreateRouter,
+  createWebHashHistory,
   createWebHistory,
   RouteRecordRaw,
 } from 'vue-router'
@@ -9,6 +10,7 @@ import RecorderEdit from '../views/RecordersManage/RecorderEdit.vue'
 import Player from '../views/Player/index.vue'
 import RecordersManageSettings from '../views/RecordersManage/Settings.vue'
 import Records from '../views/Records/index.vue'
+import { ClientService } from '../services/ClientService'
 
 export const RouteNames = valuesToMapWithKVEqual([
   'Root',
@@ -70,7 +72,9 @@ export function createRouter() {
   ]
 
   return vueCreateRouter({
-    history: createWebHistory(),
+    history: ClientService.isClientMode()
+      ? createWebHashHistory()
+      : createWebHistory(),
     routes,
   })
 }
