@@ -59,14 +59,19 @@ function initApp() {
     ffmpegPath: ffmpegPathFromModule.replace('.asar', '.asar.unpacked'),
   })
 
-  createTray()
-  createWindow()
+  app.on('browser-window-created', (e, window) => {
+    // 隐藏 windows 系统下的窗口菜单栏
+    window.removeMenu()
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  createTray()
+  createWindow()
 }
 
 function createWindow() {
@@ -82,8 +87,6 @@ function createWindow() {
       preload: preloadPath,
     },
   })
-  // 隐藏 windows 系统下的窗口菜单栏
-  window.setMenu(null)
 
   let origin: string
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
