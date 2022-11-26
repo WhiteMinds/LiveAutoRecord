@@ -1,10 +1,19 @@
 import { join } from 'path'
-import { app, BrowserWindow, Menu, Tray } from 'electron'
+import {
+  app,
+  screen,
+  BrowserWindow,
+  Menu,
+  Tray,
+  BrowserWindowConstructorOptions,
+} from 'electron'
 import { startServer } from '@autorecord/http-server'
 import ffmpegPathFromModule from 'ffmpeg-static'
 import { getSettings, setSettings } from './settings'
 import trayPNG from './assets/tray.png'
 import trayICO from './assets/tray.ico'
+import iconPNG from './assets/icon.png'
+import iconICO from './assets/icon.ico'
 
 initSingleInstanceLock()
 
@@ -60,22 +69,45 @@ function initApp() {
 }
 
 function createWindow() {
-  const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+  const display = screen.getPrimaryDisplay()
+
+  const preloadPath = join(__dirname, '../preload/preload.js')
+  const window = new BrowserWindow({
+    icon: getIconImagePath(),
+    width: Math.min(1024, display.workAreaSize.width),
+    height: Math.min(768, display.workAreaSize.height),
     webPreferences: {
       // https://github.com/Yukun-Guo/vite-vue3-electron-ts-template#3-setup-electron#src/electron/preload/preload.ts
-      preload: join(__dirname, '../preload/preload.js'),
+      preload: preloadPath,
     },
   })
-  mainWindow.setMenu(null)
+  // 隐藏 windows 系统下的窗口菜单栏
+  window.setMenu(null)
 
+  let origin: string
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']!)
-    mainWindow.webContents.openDevTools()
+    const rendererURL = process.env['ELECTRON_RENDERER_URL']
+    window.loadURL(rendererURL)
+    origin = new URL(rendererURL).origin
+    window.webContents.openDevTools()
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    const rendererPath = join(__dirname, '../renderer/index.html')
+    window.loadFile(rendererPath)
+    origin = new URL(rendererPath).origin
   }
+
+  // 让同域的子窗口也自动加载 preload
+  window.webContents.setWindowOpenHandler((details) => {
+    const options: BrowserWindowConstructorOptions = {}
+
+    if (new URL(details.url).origin === origin) {
+      options.webPreferences = {
+        preload: preloadPath,
+      }
+    }
+
+    return { action: 'allow', overrideBrowserWindowOptions: options }
+  })
 }
 
 function createTray() {
@@ -114,5 +146,16 @@ function getTrayImagePath() {
     case 'linux':
     default:
       return join(__dirname, trayPNG)
+  }
+}
+
+function getIconImagePath() {
+  switch (process.platform) {
+    case 'win32':
+      return join(__dirname, iconICO)
+    case 'darwin':
+    case 'linux':
+    default:
+      return join(__dirname, iconPNG)
   }
 }
