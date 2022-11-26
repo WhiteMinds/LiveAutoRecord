@@ -104,7 +104,7 @@ __metadata:
   dependencies:
     "@types/ffmpeg-static": ^3.0.1
     "@types/fluent-ffmpeg": ^2.1.20
-    "@types/lodash": ^4.14.186
+    "@types/lodash": ^4.14.185
     "@types/ramda": ^0.28.15
     "@types/string-template": ^1.0.2
     "@types/uuid": ^8.3.4
@@ -116,6 +116,8 @@ __metadata:
     string-template: ^1.0.0
     typescript: ^4.8.3
     uuid: ^9.0.0
+  peerDependencies:
+    "@types/lodash": ^4.14.185
   languageName: unknown
   linkType: soft
 
@@ -2017,13 +2019,6 @@ __metadata:
   version: 4.14.185
   resolution: "@types/lodash@npm:4.14.185"
   checksum: f81d13da5ecab110ca9c5c7cc2bedc3c9802a6acf668576aecd1b8f4b134ed81d06c15f1e600fb08f05975098280a0d97d30cddfc2cb39ec1c6b56e971ca53b3
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:^4.14.186":
-  version: 4.14.186
-  resolution: "@types/lodash@npm:4.14.186"
-  checksum: ee0c1368a8100bb6efb88335107473a41928fc307ff1ef4ff1278868ccddba9c04c68c36d1ffe3a0392ef4a956e1955f7de3203ec09df4f1655dd1b88485c549
   languageName: node
   linkType: hard
 
