@@ -10,6 +10,7 @@ export interface RecordExtraData {
   meta: {
     title?: string
     recordStartTimestamp: number
+    recordStopTimestamp?: number
     // TODO: 要再加个 video width / height，给之后可能会做的 ass 使用
   }
   /** 这个数组预期上是一个根据 timestamp 排序的有序数组，方便做一些时间段查询 */
