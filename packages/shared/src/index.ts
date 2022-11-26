@@ -8,4 +8,6 @@ export interface Settings {
 }
 
 /** electron render 给 web 暴露的 API */
-export interface ClientAPI {}
+export interface ClientAPI {
+  isMacOS: () => boolean
+}

@@ -1,4 +1,6 @@
 import { isPromiseLike } from '../../utils'
+import { ClientService } from '../ClientService'
+import iconPNG from './icon.png'
 
 async function requestNotifyPermission(): Promise<boolean> {
   if (!('Notification' in window)) return false
@@ -27,7 +29,11 @@ async function notify(opts: {
 
   const { title, ...notifyOpts } = opts
 
-  const notification = new Notification(title, notifyOpts)
+  const notification = new Notification(title, {
+    // macOS 的客户端通知会自动加上 appICON，这里为除此之外的情况提供默认 icon。
+    icon: ClientService.getClientAPI()?.isMacOS() ? undefined : iconPNG,
+    ...notifyOpts,
+  })
 
   const ctl = {
     close() {

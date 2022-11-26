@@ -1,13 +1,5 @@
 import { join } from 'path'
-import {
-  app,
-  screen,
-  shell,
-  BrowserWindow,
-  Menu,
-  Tray,
-  BrowserWindowConstructorOptions,
-} from 'electron'
+import { app, screen, shell, BrowserWindow, Menu, Tray } from 'electron'
 import { startServer } from '@autorecord/http-server'
 import ffmpegPathFromModule from 'ffmpeg-static'
 import { getSettings, setSettings } from './settings'
@@ -15,6 +7,7 @@ import trayPNG from './assets/tray.png'
 import trayICO from './assets/tray.ico'
 import iconPNG from './assets/icon.png'
 import iconICO from './assets/icon.ico'
+import packageJSON from '../package.json'
 
 initSingleInstanceLock()
 
@@ -48,6 +41,9 @@ function initSingleInstanceLock() {
 }
 
 function initApp() {
+  // windows 下的通知会展示 AppUserModelID
+  app.setAppUserModelId(packageJSON.build.productName)
+
   startServer({
     getSettings: async () => getSettings(),
     setSettings: async (newSettings) => setSettings(newSettings),
