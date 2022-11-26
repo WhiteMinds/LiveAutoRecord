@@ -2,6 +2,7 @@ import { join } from 'path'
 import {
   app,
   screen,
+  shell,
   BrowserWindow,
   Menu,
   Tray,
@@ -96,17 +97,25 @@ function createWindow() {
     origin = new URL(rendererPath).origin
   }
 
-  // 让同域的子窗口也自动加载 preload
   window.webContents.setWindowOpenHandler((details) => {
-    const options: BrowserWindowConstructorOptions = {}
+    // 生产环境下，origin 会是 `file://`，所以这个判断不一定精准，但大部分时候够用了。
+    const isAppPage = new URL(details.url).origin === origin
 
-    if (new URL(details.url).origin === origin) {
-      options.webPreferences = {
-        preload: preloadPath,
-      }
+    // 非内部的页面，转交给系统浏览器
+    if (!isAppPage) {
+      shell.openExternal(details.url)
+      return { action: 'deny' }
     }
 
-    return { action: 'allow', overrideBrowserWindowOptions: options }
+    return {
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        icon: getIconImagePath(),
+        webPreferences: {
+          preload: preloadPath,
+        },
+      },
+    }
   })
 }
 

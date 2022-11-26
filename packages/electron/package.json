@@ -9,7 +9,7 @@
     "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "app:dev": "concurrently \"cd ../http-server && yarn watch\" \"electron-vite dev\"",
-    "app:build": "electron-vite build && electron-builder",
+    "app:build": "cd ../http-server && yarn build && ../electron && electron-vite build && electron-builder",
     "app:preview": "electron-vite build && electron ."
   },
   "build": {
