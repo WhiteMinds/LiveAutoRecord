@@ -22,22 +22,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.6"
+"@autorecord/bilibili-recorder@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.7"
   dependencies:
     axios: ^0.27.2
     blive-message-listener: ^0.3.1
+    mitt: ^3.0.0
     ramda: ^0.28.0
   peerDependencies:
-    "@autorecord/manager": ^0.0.18
-  checksum: 5742631e5e25b16b61ce1489ae8d05cc3490b844ca45fa7b2d28973586f232d207122b780ba78e13a499c7a4cdf0997da75d91b9cee09a57ae794248a78ab0d9
+    "@autorecord/manager": "*"
+  checksum: 5b11b40b8d8f47653e55754b39bae698c8313726afb0468be15a70faec25e336de9fc339b22f926b4db3733e91e2a031b10c33ed0eb4e9f5cb83118498d6aa39
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.0.18":
-  version: 1.0.18
-  resolution: "@autorecord/douyu-recorder@npm:1.0.18"
+"@autorecord/douyu-recorder@npm:^1.0.19":
+  version: 1.0.19
+  resolution: "@autorecord/douyu-recorder@npm:1.0.19"
   dependencies:
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
@@ -49,8 +50,8 @@ __metadata:
     vm2: ^3.9.10
     ws: ^8.9.0
   peerDependencies:
-    "@autorecord/manager": ^0.0.18
-  checksum: 46901c95249843257498386aa5ff1d543f7db4548223f41b1278936e42f104f3bdb3baf8f7eef48749dcbca11fac718c1912e7670b8b99a92bd60ed5ec813d33
+    "@autorecord/manager": "*"
+  checksum: e257cbf6c56aa3f67a402f346cb3bb4b44a5a615de9a8addfbaf548cae381e2a85668b473a009a5b64743cd3c9ff3a088764e822152cf9ecb5da24292fac7710
   languageName: node
   linkType: hard
 
@@ -73,8 +74,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.6
-    "@autorecord/douyu-recorder": ^1.0.18
+    "@autorecord/bilibili-recorder": ^1.0.7
+    "@autorecord/douyu-recorder": ^1.0.19
     "@autorecord/manager": "workspace:^"
     "@autorecord/shared": "workspace:^"
     "@types/cors": ^2.8.12
