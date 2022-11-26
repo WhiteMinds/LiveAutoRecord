@@ -1,4 +1,4 @@
-import { isPromiseLike } from '../../utils'
+import { isMacOS, isPromiseLike } from '../../utils'
 import { ClientService } from '../ClientService'
 import iconPNG from './icon.png'
 
@@ -31,7 +31,7 @@ async function notify(opts: {
 
   const notification = new Notification(title, {
     // macOS 的客户端通知会自动加上 appICON，这里为除此之外的情况提供默认 icon。
-    icon: ClientService.getClientAPI()?.isMacOS() ? undefined : iconPNG,
+    icon: ClientService.isClientMode() && isMacOS() ? undefined : iconPNG,
     ...notifyOpts,
   })
 

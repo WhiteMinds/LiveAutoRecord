@@ -1,4 +1,5 @@
 import * as R from 'ramda'
+import Bowser from 'bowser'
 
 export type PickRequired<T, K extends keyof T> = T & Pick<Required<T>, K>
 
@@ -61,4 +62,9 @@ export function singleton<Fn extends (...args: any) => Promise<any>>(
     latestPromise = promise
     return promise
   } as Fn
+}
+
+export function isMacOS() {
+  const browser = Bowser.getParser(navigator.userAgent)
+  return browser.getOSName() === 'macOS'
 }

@@ -11,6 +11,7 @@
   "dependencies": {
     "@mdi/font": "^7.0.96",
     "axios": "^0.27.2",
+    "bowser": "^2.11.0",
     "date-fns": "^2.29.3",
     "dplayer": "^1.27.0",
     "pinia": "^2.0.23",

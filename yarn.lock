@@ -137,6 +137,7 @@ __metadata:
     "@vitejs/plugin-vue": ^3.1.0
     autoprefixer: ^10.4.11
     axios: ^0.27.2
+    bowser: ^2.11.0
     date-fns: ^2.29.3
     dplayer: ^1.27.0
     pinia: ^2.0.23
@@ -3065,6 +3066,13 @@ __metadata:
   version: 3.2.0
   resolution: "boolean@npm:3.2.0"
   checksum: fb29535b8bf710ef45279677a86d14f5185d604557204abd2ca5fa3fb2a5c80e04d695c8dbf13ab269991977a79bb6c04b048220a6b2a3849853faa94f4a7d77
+  languageName: node
+  linkType: hard
+
+"bowser@npm:^2.11.0":
+  version: 2.11.0
+  resolution: "bowser@npm:2.11.0"
+  checksum: 29c3f01f22e703fa6644fc3b684307442df4240b6e10f6cfe1b61c6ca5721073189ca97cdeedb376081148c8518e33b1d818a57f781d70b0b70e1f31fb48814f
   languageName: node
   linkType: hard
 
