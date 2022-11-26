@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { recorderManager } from '../manager'
-import { pick } from '../utils'
+import { assertStringType, pick } from '../utils'
 import { API } from './api_types'
 
 const router = Router()
@@ -32,6 +32,23 @@ function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
   return pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord')
 }
 
+async function resolveChannel(
+  args: API.resolveChannel.Args
+): Promise<API.resolveChannel.Resp> {
+  for (const provider of recorderManager.providers) {
+    const info = await provider.resolveChannelInfoFromURL(args.channelURL)
+    if (!info) continue
+
+    return {
+      providerId: provider.id,
+      channelId: info.id,
+      owner: info.owner,
+    }
+  }
+
+  return null
+}
+
 router
   .route('/manager')
   .get(async (req, res) => {
@@ -47,5 +64,12 @@ router
 
     res.json({ payload: updateManager(args) })
   })
+
+router.route('/manager/resolve_channel').get(async (req, res) => {
+  const { channelURL } = req.query
+  assertStringType(channelURL)
+
+  res.json({ payload: await resolveChannel({ channelURL }) })
+})
 
 export { router }

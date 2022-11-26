@@ -23,9 +23,19 @@
 
         <v-text-field
           label="频道"
+          class="mb-4"
           v-model="recorder.channelId"
+          @input="onChannelIdInputting"
+          @keydown.enter="onChannelIdInputEnd"
+          @blur="onChannelIdInputEnd"
           required
           :disabled="!isCreating"
+          :loading="parsing"
+          persistent-hint
+          :hint="
+            parseState ??
+            '输入频道的 ID 或完整 URL，检测到 URL 时会自动解析为频道 ID'
+          "
         />
 
         <v-text-field label="备注" v-model="recorder.remarks" />
@@ -67,20 +77,24 @@
     </v-card-item>
 
     <v-card-actions class="border-t justify-end">
-      <v-btn @click="applyOrAddRecorder">
-        {{ isCreating ? '添加' : '应用' }}
+      <v-btn @click="applyOrAddRecorder" :loading="operating || parsing">
+        {{ parsing ? '等待解析' : isCreating ? '添加' : '应用' }}
       </v-btn>
-      <v-btn v-if="!isCreating" @click="removeRecorder">删除</v-btn>
-      <v-btn @click="$router.back">取消</v-btn>
+      <v-btn v-if="!isCreating" @click="removeRecorder" :loading="operating">
+        删除
+      </v-btn>
+      <v-btn @click="$router.back" :disabled="operating">取消</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup lang="ts">
 import type { API, ClientRecorder } from '@autorecord/http-server'
+import { debounce } from 'lodash-es'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { RouteNames } from '../../router'
+import { LARServerService } from '../../services/LARServerService'
 import { RecorderService } from '../../services/RecorderService'
 
 // TODO: manager 现在引入了 ffmpeg-static，不适合直接被 web 引入，需要重构调整，
@@ -118,7 +132,47 @@ onMounted(async () => {
   loading.value = false
 })
 
+const parsing = ref(false)
+const parseState = ref<string>()
+const parseChannelURL = async (raw: string) => {
+  raw = raw.trim()
+  const isURL = raw.startsWith('http://') || raw.startsWith('https://')
+  if (!isURL) {
+    parsing.value = false
+    parseState.value = undefined
+    return
+  }
+
+  parseState.value = `正在解析 ${raw}`
+  parsing.value = true
+  // TODO: 切入新的 parse 时，要抛弃掉旧的请求
+  const res = await LARServerService.resolveChannel({ channelURL: raw })
+  parsing.value = false
+  if (!res) {
+    parseState.value = `没有该 URL 能匹配的平台：${raw}`
+    return
+  }
+  parseState.value = `解析完成：${res.providerId} / ${res.channelId} / ${res.owner}`
+
+  recorder.providerId = res.providerId
+  recorder.channelId = res.channelId
+  if (recorder.remarks == null || !recorder.remarks.trim()) {
+    recorder.remarks = res.owner
+  }
+}
+const debouncedParseChannelURL = debounce(parseChannelURL, 500)
+
+const onChannelIdInputting = () => {
+  debouncedParseChannelURL(recorder.channelId)
+}
+const onChannelIdInputEnd = () => {
+  debouncedParseChannelURL.flush()
+}
+
+const operating = ref(false)
+
 const applyOrAddRecorder = async () => {
+  operating.value = true
   if (isCreating) {
     await RecorderService.addRecorder(recorder)
   } else {
@@ -127,13 +181,16 @@ const applyOrAddRecorder = async () => {
       id: recorderId,
     })
   }
+  operating.value = false
+
   router.back()
-  // TODO: 应该更新下列表页的内容，或者基于推送、本地缓存等
 }
 
 const removeRecorder = async () => {
+  operating.value = true
   await RecorderService.removeRecorder(recorderId)
+  operating.value = false
+
   router.back()
-  // TODO: 应该更新下列表页的内容，或者基于推送、本地缓存等
 }
 </script>

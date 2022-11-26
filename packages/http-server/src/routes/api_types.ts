@@ -106,6 +106,18 @@ export namespace API {
     export type Resp = Omit<RecorderManagerCreateOpts, 'providers'>
   }
 
+  export namespace resolveChannel {
+    export interface Args {
+      channelURL: string
+    }
+
+    export type Resp = {
+      providerId: string
+      channelId: string
+      owner: string
+    } | null
+  }
+
   export namespace getRecords {
     export interface Args extends PagedArgs {
       recorderId?: Recorder['id']

@@ -98,6 +98,18 @@ async function updateManager(
   return resp.data.payload
 }
 
+async function resolveChannel(
+  args: API.resolveChannel.Args
+): Promise<API.resolveChannel.Resp> {
+  const resp = await requester.get<{ payload: API.resolveChannel.Resp }>(
+    '/manager/resolve_channel',
+    {
+      params: args,
+    }
+  )
+  return resp.data.payload
+}
+
 async function getRecords(
   args: API.getRecords.Args
 ): Promise<API.getRecords.Resp> {
@@ -161,6 +173,7 @@ export const LARServerService = {
   stopRecord,
   getManager,
   updateManager,
+  resolveChannel,
   getRecords,
   getRecordExtraData,
   createRecordSRT,

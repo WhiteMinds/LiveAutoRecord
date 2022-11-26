@@ -14,6 +14,7 @@
     "bowser": "^2.11.0",
     "date-fns": "^2.29.3",
     "dplayer": "^1.27.0",
+    "lodash-es": "^4.17.21",
     "pinia": "^2.0.23",
     "ramda": "^0.28.0",
     "rxjs": "^7.5.7",
@@ -25,6 +26,7 @@
   "devDependencies": {
     "@autorecord/http-server": "workspace:^",
     "@types/dplayer": "^1.25.2",
+    "@types/lodash-es": "^4.17.6",
     "@types/ramda": "^0.28.15",
     "@vitejs/plugin-vue": "^3.1.0",
     "autoprefixer": "^10.4.11",
