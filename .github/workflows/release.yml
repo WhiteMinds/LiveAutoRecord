@@ -1,0 +1,30 @@
+name: build-release
+
+on:
+  repository_dispatch:
+    types: [trigger-build-release]
+
+jobs:
+  build:
+    name: build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: 16
+        os: [windows-latest, macOS-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: yarn
+      - run: cd ./packages/shared && yarn build
+      - run: cd ./packages/manager && yarn build
+      - run: yarn app:build
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./packages/electron/build/*
+            !./packages/electron/build/icons
