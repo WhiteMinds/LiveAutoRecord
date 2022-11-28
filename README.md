@@ -1,3 +1,6 @@
+[![build-release](https://github.com/WhiteMinds/LiveAutoRecord/actions/workflows/release.yml/badge.svg)](https://github.com/WhiteMinds/LiveAutoRecord/actions/workflows/release.yml)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+
 # Live auto record v4
 
 > 多平台直播自动录制工具
