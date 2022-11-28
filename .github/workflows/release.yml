@@ -1,9 +1,12 @@
 name: build-release
 
-on:
-  push:
-    tags:
-      - v4.*
+# workflow 测试期间先用简单的触发器了
+on: push
+
+# on:
+#   push:
+#     tags:
+#       - v4.*
 
 jobs:
   build:
@@ -11,7 +14,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: 16
         os: [windows-latest, macOS-latest]
 
     steps:
