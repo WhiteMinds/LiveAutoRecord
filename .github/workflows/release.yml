@@ -1,7 +1,7 @@
 name: build-release
 
-# workflow 测试期间先用简单的触发器了
-on: push
+# workflow 测试期间先用手动触发器了
+on: workflow_dispatch
 
 # on:
 #   push:
@@ -10,11 +10,14 @@ on: push
 
 jobs:
   build:
-    name: build on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macOS-latest]
+  # workflow 测试期间先单系统
+  name: build on macOS
+    runs-on: macOS-latest
+    # name: build on ${{ matrix.os }}
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   matrix:
+    #     os: [windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v3
