@@ -1,8 +1,9 @@
 name: build-release
 
 on:
-  repository_dispatch:
-    types: [trigger-build-release]
+  push:
+    tags:
+      - v4.*
 
 jobs:
   build:
