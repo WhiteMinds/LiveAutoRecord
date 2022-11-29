@@ -1,4 +1,4 @@
-import { join } from 'path'
+import { dirname, join } from 'path'
 import { app, screen, shell, BrowserWindow, Menu, Tray } from 'electron'
 import { startServer } from '@autorecord/http-server'
 import ffmpegPathFromModule from 'ffmpeg-static'
@@ -84,21 +84,21 @@ function createWindow() {
     },
   })
 
-  let origin: string
+  let baseURL: string
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     const rendererURL = process.env['ELECTRON_RENDERER_URL']
     window.loadURL(rendererURL)
-    origin = new URL(rendererURL).origin
+    baseURL = rendererURL
     window.webContents.openDevTools()
   } else {
     const rendererPath = join(__dirname, '../renderer/index.html')
     window.loadFile(rendererPath)
-    origin = new URL(rendererPath).origin
+    baseURL = `file://${dirname(rendererPath)}`
   }
 
   window.webContents.setWindowOpenHandler((details) => {
     // 生产环境下，origin 会是 `file://`，所以这个判断不一定精准，但大部分时候够用了。
-    const isAppPage = new URL(details.url).origin === origin
+    const isAppPage = details.url.startsWith(baseURL)
 
     // 非内部的页面，转交给系统浏览器
     if (!isAppPage) {
