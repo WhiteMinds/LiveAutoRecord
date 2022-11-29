@@ -22,9 +22,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.7"
+"@autorecord/bilibili-recorder@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.8"
   dependencies:
     axios: ^0.27.2
     blive-message-listener: ^0.3.1
@@ -32,7 +32,7 @@ __metadata:
     ramda: ^0.28.0
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: 5b11b40b8d8f47653e55754b39bae698c8313726afb0468be15a70faec25e336de9fc339b22f926b4db3733e91e2a031b10c33ed0eb4e9f5cb83118498d6aa39
+  checksum: dc221e56f4dc1dd792db16f9afd044ebb1e89f9649895e4cacb2e6f62964f6405f33ef02f1949dc8b040161738896ea71d5fd08d97fa5fd7fb47aa30813886ac
   languageName: node
   linkType: hard
 
@@ -74,7 +74,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.7
+    "@autorecord/bilibili-recorder": ^1.0.8
     "@autorecord/douyu-recorder": ^1.0.19
     "@autorecord/manager": "workspace:^"
     "@autorecord/shared": "workspace:^"
