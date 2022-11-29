@@ -43,12 +43,18 @@ export interface RecordHandle {
   stop: (this: RecordHandle) => Promise<void>
 }
 
+export interface DebugLog {
+  type: (string & {}) | 'common' | 'ffmpeg'
+  text: string
+}
+
 export interface Recorder<E extends AnyObject = UnknownObject>
   extends Emitter<{
       RecordStart: RecordHandle
       RecordStop: RecordHandle
       Updated: ((string & {}) | keyof Recorder)[]
       Message: Message
+      DebugLog: DebugLog
     }>,
     RecorderCreateOpts<E> {
   id: string

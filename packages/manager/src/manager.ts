@@ -8,6 +8,7 @@ import {
   Recorder,
   SerializedRecorder,
   RecordHandle,
+  DebugLog,
 } from './recorder'
 import { AnyObject, UnknownObject } from './utils'
 
@@ -55,6 +56,7 @@ export interface RecorderManager<
     }
     RecorderAdded: Recorder<E>
     RecorderRemoved: Recorder<E>
+    RecorderDebugLog: DebugLog & { recorder: Recorder<E> }
   }> {
   providers: P[]
   // TODO: 这个或许可以去掉或者改改，感觉不是很有必要
@@ -164,6 +166,9 @@ export function createRecorderManager<
       )
       recorder.on('Updated', (keys) =>
         this.emit('RecorderUpdated', { recorder, keys })
+      )
+      recorder.on('DebugLog', (log) =>
+        this.emit('RecorderDebugLog', { recorder, ...log })
       )
 
       this.emit('RecorderAdded', recorder)

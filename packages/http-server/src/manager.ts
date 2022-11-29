@@ -2,9 +2,10 @@ import path from 'path'
 import { createRecorderManager, SerializedRecorder } from '@autorecord/manager'
 import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
-import { paths } from './env'
+import { isDebugMode, paths } from './env'
 import { asyncDebounce, readJSONFile, writeJSONFile } from './utils'
 import { insertRecord, updateRecordStopTime } from './db'
+import { logger } from './logger'
 
 const recordersConfigPath = path.join(paths.config, 'recorders.json')
 const managerConfigPath = path.join(paths.config, 'manager.json')
@@ -63,6 +64,11 @@ export async function initRecorderManager(): Promise<void> {
     }
 
     recorderManager.on('RecordStop', updateRecordOnceRecordStop)
+  })
+
+  recorderManager.on('RecorderDebugLog', ({ recorder, ...log }) => {
+    if (!isDebugMode) return
+    logger.debug(`[${recorder.id}][${log.type}]: ${log.text}`)
   })
 }
 
