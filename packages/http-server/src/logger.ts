@@ -16,13 +16,15 @@ export const logger = createLogger({
     }),
     new transports.File({ filename: path.join(paths.log, 'combined.log') }),
   ],
-  exitOnError: false,
-  rejectionHandlers: [
-    new transports.File({ filename: path.join(paths.log, 'rejections.log') }),
-  ],
-  exceptionHandlers: [
-    new transports.File({ filename: path.join(paths.log, 'exceptions.log') }),
-  ],
+})
+
+// winston 的 rejectionHandlers / exceptionHandlers 实现有 bug，配置后在遇到
+// unhandledRejection 时会导致 logger 的 stream 永久 pause，所以这里手动写日志。
+process.on('unhandledRejection', (error) => {
+  logger.error('unhandledRejection', error)
+})
+process.on('unhandleExceptions', (error) => {
+  logger.error('unhandleExceptions', error)
 })
 
 if (process.env.NODE_ENV !== 'production') {
