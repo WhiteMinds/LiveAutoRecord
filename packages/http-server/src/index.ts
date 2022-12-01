@@ -1,4 +1,3 @@
-import './prepare'
 import path from 'path'
 import express from 'express'
 import morgan from 'morgan'
@@ -11,18 +10,20 @@ import { Settings } from '@autorecord/shared'
 import { paths } from './env'
 import { PickPartial, readJSONFile, writeJSONFile } from './utils'
 import { ServerOpts } from './types'
-import { logger } from './logger'
+import { createLogger } from './logger'
 
 export * from './routes/api_types'
 
 export async function startServer(
-  opts: PickPartial<ServerOpts, 'getSettings' | 'setSettings'> = {}
+  opts: PickPartial<ServerOpts, 'getSettings' | 'setSettings' | 'logger'> = {}
 ) {
   const serverOpts: ServerOpts = {
     ...opts,
     getSettings: opts.getSettings ?? defaultGetSettings,
     setSettings: opts.setSettings ?? defaultSetSettings,
+    logger: opts.logger ?? console,
   }
+  const { logger } = serverOpts
 
   logger.info('initializing db')
   await initDB()
@@ -31,7 +32,7 @@ export async function startServer(
   if (opts.ffmpegPath != null) {
     setFFMPEGPath(opts.ffmpegPath)
   }
-  await initRecorderManager()
+  await initRecorderManager(serverOpts)
 
   logger.info('HTTP server starting')
   const app = express()
@@ -68,5 +69,15 @@ async function defaultSetSettings(newSettings: Settings) {
 
 const isDirectlyRun = require.main === module
 if (isDirectlyRun) {
-  void startServer()
+  const logger = createLogger()
+  // winston 的 rejectionHandlers / exceptionHandlers 实现有 bug，配置后在遇到
+  // unhandledRejection 时会导致 logger 的 stream 永久 pause，所以这里手动写日志。
+  process.on('unhandledRejection', (error) => {
+    logger.error('unhandledRejection', error)
+  })
+  process.on('unhandleExceptions', (error) => {
+    logger.error('unhandleExceptions', error)
+  })
+
+  void startServer({ logger })
 }

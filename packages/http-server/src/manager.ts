@@ -5,7 +5,7 @@ import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { isDebugMode, paths } from './env'
 import { asyncDebounce, readJSONFile, writeJSONFile } from './utils'
 import { insertRecord, updateRecordStopTime } from './db'
-import { logger } from './logger'
+import { ServerOpts } from './types'
 
 const recordersConfigPath = path.join(paths.config, 'recorders.json')
 const managerConfigPath = path.join(paths.config, 'manager.json')
@@ -18,7 +18,11 @@ export const recorderManager = createRecorderManager<RecorderExtra>({
   providers: [providerForDouYu, providerForBilibili],
 })
 
-export async function initRecorderManager(): Promise<void> {
+export async function initRecorderManager(
+  serverOpts: ServerOpts
+): Promise<void> {
+  const { logger } = serverOpts
+
   const managerConfig = await readJSONFile<ManagerConfig>(managerConfigPath, {
     savePathRule: path.join(
       paths.data,

@@ -67,6 +67,7 @@ __metadata:
     electron-vite: ^1.0.14
     env-paths: ^2.0.0
     ffmpeg-static: ^5.0.2
+    winston: ^3.8.2
   languageName: unknown
   linkType: soft
 

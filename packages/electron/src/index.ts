@@ -1,3 +1,4 @@
+import { logger } from './logger'
 import { dirname, join } from 'path'
 import { app, screen, shell, BrowserWindow, Menu, Tray } from 'electron'
 import { startServer } from '@autorecord/http-server'
@@ -47,6 +48,7 @@ function initApp() {
   startServer({
     getSettings: async () => getSettings(),
     setSettings: async (newSettings) => setSettings(newSettings),
+    logger,
     // electron 在 asar 模式下对于一些文件相关的 api 有限制，而 fluent-ffmpeg 使用的 spawn
     // 则在限制范围中，所以需要解包后的路径（解包是由 electron-builder 内部 hard code 实现的）。
     // https://www.electronjs.org/fr/docs/latest/tutorial/asar-archives#executing-binaries-inside-asar-archive

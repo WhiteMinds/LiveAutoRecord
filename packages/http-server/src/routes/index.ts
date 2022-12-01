@@ -5,10 +5,10 @@ import { router as managerRoutes } from './manager'
 import { router as eventRoutes } from './event'
 import { createRouter as createSettingRouter } from './setting'
 import { ServerOpts } from '../types'
-import { logger } from '../logger'
 // import { respond } from './utils'
 
 export function createRouter(serverOpts: ServerOpts) {
+  const { logger } = serverOpts
   const router = Router()
 
   router.use(recorderRoutes)
