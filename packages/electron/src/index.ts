@@ -118,6 +118,10 @@ function createWindow() {
       },
     }
   })
+
+  window.webContents.on('render-process-gone', (event, details) => {
+    logger.error('render-process-gone: ' + JSON.stringify(details))
+  })
 }
 
 function createTray() {
