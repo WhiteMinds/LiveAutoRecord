@@ -1,7 +1,8 @@
 import path from 'path'
 import mitt, { Emitter } from 'mitt'
 import R from 'ramda'
-import format from 'string-template'
+import formatTemplate from 'string-template'
+import { format as formatDate } from 'date-fns'
 import { ChannelId } from './common'
 import {
   RecorderCreateOpts,
@@ -243,16 +244,16 @@ export function genSavePathFromRule<
   const params = {
     platform: provider?.name ?? 'unknown',
     channelId: recorder.channelId,
-    year: now.getFullYear(),
-    month: now.getMonth() + 1,
-    date: now.getDate(),
-    hour: now.getHours(),
-    min: now.getMinutes(),
-    sec: now.getSeconds(),
+    year: formatDate(now, 'yyyy'),
+    month: formatDate(now, 'MM'),
+    date: formatDate(now, 'dd'),
+    hour: formatDate(now, 'HH'),
+    min: formatDate(now, 'mm'),
+    sec: formatDate(now, 'ss'),
     ...extData,
   }
 
-  return format(manager.savePathRule, params)
+  return formatTemplate(manager.savePathRule, params)
 }
 
 export type GetProviderExtra<P> = P extends RecorderProvider<infer E>

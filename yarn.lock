@@ -109,6 +109,7 @@ __metadata:
     "@types/ramda": ^0.28.15
     "@types/string-template": ^1.0.2
     "@types/uuid": ^8.3.4
+    date-fns: ^2.29.3
     ffmpeg-static: ^5.0.2
     fluent-ffmpeg: ^2.1.2
     lodash: ^4.17.21

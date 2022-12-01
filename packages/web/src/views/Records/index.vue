@@ -33,12 +33,12 @@
       <tbody>
         <tr v-for="record in records" :key="record.id">
           <td>
-            {{ format(record.startTimestamp, 'yyyy/MM/dd HH:ss') }}
+            {{ format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss') }}
           </td>
           <td>
             {{
               record.stopTimestamp
-                ? format(record.stopTimestamp, 'yyyy/MM/dd HH:ss')
+                ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss')
                 : '/'
             }}
           </td>

@@ -18,6 +18,7 @@
   "license": "LGPL",
   "dependencies": {
     "@types/fluent-ffmpeg": "^2.1.20",
+    "date-fns": "^2.29.3",
     "ffmpeg-static": "^5.0.2",
     "fluent-ffmpeg": "^2.1.2",
     "lodash": "^4.17.21",
