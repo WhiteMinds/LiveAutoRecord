@@ -40,20 +40,18 @@ function addRecorder(args: API.addRecorder.Args): API.addRecorder.Resp {
   const recorder = recorderManager.addRecorder(args)
   recorder.extra.createTimestamp = Date.now()
   // TODO: 目前没必要性能优化，直接全量写回。另外可以考虑监听 manager 的事件来自动触发。
-  saveRecordersConfig()
   return recorderToClient(recorder)
 }
 
 function updateRecorder(
   args: API.updateRecorder.Args
 ): API.updateRecorder.Resp {
-  const recorder = recorderManager.recorders.find((item) => item.id === args.id)
+  const { id, ...data } = args
+  const recorder = recorderManager.recorders.find((item) => item.id === id)
   // TODO: 之后再处理
   if (recorder == null) throw new Error('404')
 
-  Object.assign(recorder, omit(args, 'id'))
-  // TODO: recorder emit event?
-  saveRecordersConfig()
+  Object.assign(recorder, data)
   return recorderToClient(recorder)
 }
 
@@ -64,7 +62,6 @@ function removeRecorder(
   if (recorder == null) return null
 
   recorderManager.removeRecorder(recorder)
-  saveRecordersConfig()
   return null
 }
 

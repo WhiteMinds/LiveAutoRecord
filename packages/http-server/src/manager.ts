@@ -74,6 +74,10 @@ export async function initRecorderManager(
     if (!isDebugMode) return
     logger.debug(`[${recorder.id}][${log.type}]: ${log.text}`)
   })
+
+  recorderManager.on('RecorderAdded', saveRecordersConfig)
+  recorderManager.on('RecorderRemoved', saveRecordersConfig)
+  recorderManager.on('RecorderUpdated', saveRecordersConfig)
 }
 
 // TODO: 应该在程序即将退出时立刻触发缓冲的函数
