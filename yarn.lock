@@ -22,17 +22,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.0.10":
-  version: 1.0.10
-  resolution: "@autorecord/bilibili-recorder@npm:1.0.10"
+"@autorecord/bilibili-recorder@npm:^1.0.11":
+  version: 1.0.11
+  resolution: "@autorecord/bilibili-recorder@npm:1.0.11"
   dependencies:
     axios: ^0.27.2
-    blive-message-listener: ^0.3.1
+    blive-message-listener: ^0.4.0
     mitt: ^3.0.0
     ramda: ^0.28.0
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: 32b1a6cec256ab2244ab38162438b94e77cdaf5bc5ed1236314b43928744b7c1389a541a49e8b2de3a22e5454d777f9915f19e747670ed919bf6cdc06134c900
+  checksum: f6d6d25412d645f4ed844486b10b486a80f09dda6f3123ed3cc5e61834665ee305a4af28f2d8da30052beb6a02a8a1a9ef599822c9527b04839a355a428bb046
   languageName: node
   linkType: hard
 
@@ -75,7 +75,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.0.10
+    "@autorecord/bilibili-recorder": ^1.0.11
     "@autorecord/douyu-recorder": ^1.0.21
     "@autorecord/manager": "workspace:^"
     "@autorecord/shared": "workspace:^"
@@ -3027,12 +3027,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"blive-message-listener@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "blive-message-listener@npm:0.3.1"
+"blive-message-listener@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "blive-message-listener@npm:0.4.0"
   dependencies:
     tiny-bilibili-ws: ^0.0.5
-  checksum: c8d470a877a67a20d6984f033072ed603eb2a00158143d3b0bd9d140b86b57915b5f3748ba7e2c05a290753a7ac7b12bde9774e1fc9ff7dc8996f6fb25f34755
+  checksum: efa3f8fce5f82ed142b9a58e1d3d6212fec4e2e770d7560f84a3f25d08d0e86acb469bc747943b2b1b6cc00786d39ea8d09de1c3aab293c3600250973b8fc565
   languageName: node
   linkType: hard
 
