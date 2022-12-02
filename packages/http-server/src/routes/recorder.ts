@@ -1,8 +1,8 @@
-import { genSavePathFromRule, Recorder } from '@autorecord/manager'
+import { genSavePathFromRule } from '@autorecord/manager'
 import { Router } from 'express'
-import { recorderManager, saveRecordersConfig } from '../manager'
-import { omit, pick } from '../utils'
-import { API, ClientRecorder } from './api_types'
+import { recorderManager } from '../manager'
+import { pick } from '../utils'
+import { API } from './api_types'
 import {
   createPagedResultGetter,
   getNumberFromQuery,

@@ -6,14 +6,17 @@
  *
  * 之后记录条数多了性能有问题的话，可以考虑分表、限制表条数上限等方案。
  */
-import { Recorder, RecordHandle } from '@autorecord/manager'
+import { Recorder, RecordHandle, SerializedRecorder } from '@autorecord/manager'
 import path from 'path'
 import { Low, JSONFile } from './lowdb'
 import { paths } from '../env'
 import { assert, asyncThrottle } from '../utils'
+import { RecorderExtra } from '../manager'
 
 export interface DatabaseSchema {
   records: RecordModel[]
+  recorders: RecorderModel[]
+  nextRecorderId: number
 }
 
 export interface RecordModel {
@@ -24,6 +27,8 @@ export interface RecordModel {
   stopTimestamp?: number
 }
 
+export type RecorderModel = SerializedRecorder<RecorderExtra>
+
 const dbPath = path.join(paths.data, 'data.json')
 const adapter = new JSONFile<DatabaseSchema>(dbPath)
 const db = new Low(adapter)
@@ -31,7 +36,14 @@ const db = new Low(adapter)
 export async function initDB() {
   await db.read()
   if (db.data == null) {
-    db.data = { records: [] }
+    db.data = { records: [], recorders: [], nextRecorderId: 1 }
+  }
+
+  // 这里做一些旧版本 schema 升级的处理
+  if (db.data.recorders == null) {
+    // v4.0.0 -> v4.0.1
+    db.data.recorders = []
+    db.data.nextRecorderId = 1
   }
 }
 
@@ -77,7 +89,6 @@ export function getRecords(opts: QueryRecordsOpts = {}): {
 }
 
 export type InsertRecordProps = RecordModel
-
 export function insertRecord(props: InsertRecordProps): void {
   assertDBReady(db)
   const model: RecordModel = props
@@ -94,5 +105,38 @@ export function updateRecordStopTime(
   if (record == null) return
 
   record.stopTimestamp = props.stopTimestamp
+  scheduleSave()
+}
+
+export function getRecorders(): RecorderModel[] {
+  assertDBReady(db)
+
+  return db.data.recorders
+}
+
+export type InsertRecorderProps = RecorderModel
+export function insertRecorder(props: InsertRecorderProps): void {
+  assertDBReady(db)
+  const model: RecorderModel = props
+  db.data.recorders.push(model)
+  scheduleSave()
+}
+
+export function removeRecorder(id: RecorderModel['id']): void {
+  assertDBReady(db)
+  const idx = db.data.recorders.findIndex((recorder) => recorder.id === id)
+  if (idx === -1) return
+
+  db.data.recorders.splice(idx, 1)
+  scheduleSave()
+}
+
+export function updateRecorder(props: RecorderModel): void {
+  assertDBReady(db)
+  const { id, ...data } = props
+  const recorder = db.data.recorders.find((recorder) => recorder.id === id)
+  if (recorder == null) return
+
+  Object.assign(recorder, data)
   scheduleSave()
 }
