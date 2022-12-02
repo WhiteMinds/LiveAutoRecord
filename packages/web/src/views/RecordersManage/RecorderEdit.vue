@@ -1,8 +1,8 @@
 <template>
   <v-card class="mx-auto my-4 max-w-xl">
     <v-card-title>
-      <template v-if="isCreating">正在添加新录制频道</template>
-      <template v-else>正在编辑录制频道 {{ recorderId }}</template>
+      <template v-if="isCreating">正在添加新录制任务</template>
+      <template v-else>正在编辑录制任务 {{ recorderId }}</template>
     </v-card-title>
 
     <v-card-item>

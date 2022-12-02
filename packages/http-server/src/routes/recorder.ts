@@ -1,6 +1,6 @@
 import { genSavePathFromRule } from '@autorecord/manager'
 import { Router } from 'express'
-import { recorderManager } from '../manager'
+import { addRecorderWithAutoIncrementId, recorderManager } from '../manager'
 import { pick } from '../utils'
 import { API } from './api_types'
 import {
@@ -37,7 +37,7 @@ function getRecorder(args: API.getRecorder.Args): API.getRecorder.Resp {
 }
 
 function addRecorder(args: API.addRecorder.Args): API.addRecorder.Resp {
-  const recorder = recorderManager.addRecorder(args)
+  const recorder = addRecorderWithAutoIncrementId(args)
   recorder.extra.createTimestamp = Date.now()
   // TODO: 目前没必要性能优化，直接全量写回。另外可以考虑监听 manager 的事件来自动触发。
   return recorderToClient(recorder)

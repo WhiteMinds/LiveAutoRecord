@@ -57,6 +57,8 @@ export interface Recorder<E extends AnyObject = UnknownObject>
       DebugLog: DebugLog
     }>,
     RecorderCreateOpts<E> {
+  // 这里 id 设计成 string 而不是 string | number，主要是为了方便调用方少做一些类型处理，
+  // 如果确实需要 number 类型的 id，可以先转为 string 的，在查询、存储时转回 number。
   id: string
   extra: Partial<E>
   // 该项由 recorder 自身控制，决定有哪些可用的视频流

@@ -140,3 +140,10 @@ export function updateRecorder(props: RecorderModel): void {
   Object.assign(recorder, data)
   scheduleSave()
 }
+
+export function genRecorderIdInDB() {
+  assertDBReady(db)
+  const id = db.data.nextRecorderId++
+  scheduleSave()
+  return id
+}

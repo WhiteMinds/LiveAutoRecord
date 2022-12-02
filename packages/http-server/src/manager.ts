@@ -1,10 +1,15 @@
 import path from 'path'
-import { createRecorderManager } from '@autorecord/manager'
+import {
+  createRecorderManager,
+  Recorder,
+  RecorderCreateOpts,
+} from '@autorecord/manager'
 import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { isDebugMode, paths } from './env'
 import { readJSONFile } from './utils'
 import {
+  genRecorderIdInDB,
   getRecorders,
   insertRecord,
   insertRecorder,
@@ -23,6 +28,15 @@ export interface RecorderExtra {
 export const recorderManager = createRecorderManager<RecorderExtra>({
   providers: [providerForDouYu, providerForBilibili],
 })
+
+export function addRecorderWithAutoIncrementId(
+  args: RecorderCreateOpts<RecorderExtra>
+): Recorder<RecorderExtra> {
+  return recorderManager.addRecorder({
+    ...args,
+    id: genRecorderIdInDB().toString(),
+  })
+}
 
 export async function initRecorderManager(
   serverOpts: ServerOpts
