@@ -53,6 +53,12 @@ export function omit<
   return R.omit(props, object)
 }
 
+export function ensureFileFolderExists(filePath: string) {
+  const folder = path.dirname(filePath)
+  if (fs.existsSync(folder)) return
+  fs.mkdirSync(folder, { recursive: true })
+}
+
 export async function readJSONFile<T = unknown>(
   filePath: string,
   defaultValue: T
@@ -63,10 +69,14 @@ export async function readJSONFile<T = unknown>(
   return JSON.parse(buffer.toString('utf8')) as T
 }
 
-export function ensureFileFolderExists(filePath: string) {
-  const folder = path.dirname(filePath)
-  if (fs.existsSync(folder)) return
-  fs.mkdirSync(folder, { recursive: true })
+export function readJSONFileSync<T = unknown>(
+  filePath: string,
+  defaultValue: T
+): T {
+  if (!fs.existsSync(filePath)) return defaultValue
+
+  const buffer = fs.readFileSync(filePath)
+  return JSON.parse(buffer.toString('utf8')) as T
 }
 
 export async function writeJSONFile<T = unknown>(
@@ -75,6 +85,14 @@ export async function writeJSONFile<T = unknown>(
 ): Promise<void> {
   ensureFileFolderExists(filePath)
   await fs.promises.writeFile(filePath, JSON.stringify(json))
+}
+
+export function writeJSONFileSync<T = unknown>(
+  filePath: string,
+  json: T
+): void {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+  fs.writeFileSync(filePath, JSON.stringify(json))
 }
 
 /**

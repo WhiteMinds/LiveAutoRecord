@@ -7,7 +7,7 @@ import {
 import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { isDebugMode, paths } from './env'
-import { readJSONFile } from './utils'
+import { pick, readJSONFileSync, writeJSONFileSync } from './utils'
 import {
   genRecorderIdInDB,
   getRecorders,
@@ -43,13 +43,21 @@ export async function initRecorderManager(
 ): Promise<void> {
   const { logger } = serverOpts
 
-  const managerConfig = await readJSONFile<ManagerConfig>(managerConfigPath, {
+  const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, {
     savePathRule: path.join(
       paths.data,
       '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}'
     ),
+    autoCheckLiveStatusAndRecord: true,
   })
-  recorderManager.savePathRule = managerConfig.savePathRule
+  Object.assign(recorderManager, managerConfig)
+
+  recorderManager.on('Updated', () => {
+    writeJSONFileSync<ManagerConfig>(
+      managerConfigPath,
+      pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord')
+    )
+  })
 
   // TODO: 目前持久化的实现方式是不支持多实例同时运行的，考虑在程序运行期间把数据文件持续占用防止意外操作
   const serializedRecorders = getRecorders()
@@ -106,4 +114,5 @@ export async function initRecorderManager(
 
 interface ManagerConfig {
   savePathRule: string
+  autoCheckLiveStatusAndRecord: boolean
 }
