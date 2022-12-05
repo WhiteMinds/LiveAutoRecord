@@ -86,21 +86,24 @@ function createWindow() {
     },
   })
 
-  let baseURL: string
+  let baseURL: URL
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     const rendererURL = process.env['ELECTRON_RENDERER_URL']
     window.loadURL(rendererURL)
-    baseURL = rendererURL
+    baseURL = new URL(rendererURL)
     window.webContents.openDevTools()
   } else {
     const rendererPath = join(__dirname, '../renderer/index.html')
     window.loadFile(rendererPath)
-    baseURL = `file://${dirname(rendererPath)}`
+    baseURL = new URL('file://')
+    // 对于 file 协议，URL 会自动把 pathname 处理成对应系统中合适的路径，
+    // 比如 windows 下的 `C:\path` 将处理为 `/C:/path`。
+    // https://url.spec.whatwg.org/#dom-url-pathname
+    baseURL.pathname = dirname(rendererPath)
   }
 
   window.webContents.setWindowOpenHandler((details) => {
-    // 生产环境下，origin 会是 `file://`，所以这个判断不一定精准，但大部分时候够用了。
-    const isAppPage = details.url.startsWith(baseURL)
+    const isAppPage = details.url.startsWith(baseURL.toString())
 
     // 非内部的页面，转交给系统浏览器
     if (!isAppPage) {
