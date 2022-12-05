@@ -63,11 +63,17 @@ export async function readJSONFile<T = unknown>(
   return JSON.parse(buffer.toString('utf8')) as T
 }
 
+export function ensureFileFolderExists(filePath: string) {
+  const folder = path.dirname(filePath)
+  if (fs.existsSync(folder)) return
+  fs.mkdirSync(folder, { recursive: true })
+}
+
 export async function writeJSONFile<T = unknown>(
   filePath: string,
   json: T
 ): Promise<void> {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true })
+  ensureFileFolderExists(filePath)
   await fs.promises.writeFile(filePath, JSON.stringify(json))
 }
 

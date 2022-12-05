@@ -10,7 +10,7 @@ import { Recorder, RecordHandle, SerializedRecorder } from '@autorecord/manager'
 import path from 'path'
 import { Low, JSONFile } from './lowdb'
 import { paths } from '../env'
-import { assert, asyncThrottle } from '../utils'
+import { assert, asyncThrottle, ensureFileFolderExists } from '../utils'
 import { RecorderExtra } from '../manager'
 
 export interface DatabaseSchema {
@@ -53,7 +53,10 @@ function assertDBReady<T>(db: Low<T>): asserts db is Low<T> & { data: T } {
 
 // TODO: 可能需要一个双文件缓冲写入的机制，防止意外情况写入中断文件损坏，lowdb 好像已经做了？
 // TODO: 测试暂时用 1s
-const scheduleSave = asyncThrottle(() => db.write(), 1e3)
+const scheduleSave = asyncThrottle(() => {
+  ensureFileFolderExists(dbPath)
+  return db.write()
+}, 1e3)
 
 export function getRecord(id: RecordModel['id']): RecordModel | undefined {
   assertDBReady(db)
