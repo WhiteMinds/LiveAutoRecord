@@ -17,8 +17,8 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/bilibili-recorder": "^1.0.11",
-    "@autorecord/douyu-recorder": "^1.0.21",
+    "@autorecord/bilibili-recorder": "^1.0.12",
+    "@autorecord/douyu-recorder": "^1.0.23",
     "@autorecord/manager": "workspace:^",
     "@autorecord/shared": "workspace:^",
     "cors": "^2.8.5",
