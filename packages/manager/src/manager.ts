@@ -42,6 +42,15 @@ export interface RecorderProvider<E extends AnyObject> {
   ) => Recorder<E>
 }
 
+const configurableProps = [
+  'savePathRule',
+  'autoCheckLiveStatusAndRecord',
+] as const
+type ConfigurableProp = typeof configurableProps[number]
+function isConfigurableProp(prop: unknown): prop is ConfigurableProp {
+  return configurableProps.includes(prop as any)
+}
+
 export interface RecorderManager<
   ME extends UnknownObject,
   P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
@@ -58,6 +67,7 @@ export interface RecorderManager<
     RecorderAdded: Recorder<E>
     RecorderRemoved: Recorder<E>
     RecorderDebugLog: DebugLog & { recorder: Recorder<E> }
+    Updated: ConfigurableProp[]
   }> {
   providers: P[]
   // TODO: 这个或许可以去掉或者改改，感觉不是很有必要
@@ -89,12 +99,7 @@ export type RecorderManagerCreateOpts<
   P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
   PE extends AnyObject = GetProviderExtra<P>,
   E extends AnyObject = ME & PE
-> = Partial<
-  Pick<
-    RecorderManager<ME, P, PE, E>,
-    'savePathRule' | 'autoCheckLiveStatusAndRecord'
-  >
-> & {
+> = Partial<Pick<RecorderManager<ME, P, PE, E>, ConfigurableProp>> & {
   providers: P[]
 }
 
@@ -219,7 +224,19 @@ export function createRecorderManager<
       ),
   }
 
-  return manager
+  const managerWithSupportUpdatedEvent = new Proxy(manager, {
+    set(obj, prop, value) {
+      Reflect.set(obj, prop, value)
+
+      if (isConfigurableProp(prop)) {
+        obj.emit('Updated', [prop])
+      }
+
+      return true
+    },
+  })
+
+  return managerWithSupportUpdatedEvent
 }
 
 export function genSavePathFromRule<
