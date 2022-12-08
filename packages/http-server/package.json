@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/http-server",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Expose manager interface through HTTP",
   "main": "./lib/index.js",
   "private": true,
@@ -17,8 +17,8 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/bilibili-recorder": "^1.0.13",
-    "@autorecord/douyu-recorder": "^1.0.24",
+    "@autorecord/bilibili-recorder": "^1.1.0",
+    "@autorecord/douyu-recorder": "^1.1.1",
     "@autorecord/manager": "workspace:^",
     "@autorecord/shared": "workspace:^",
     "cors": "^2.8.5",

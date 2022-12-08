@@ -6,7 +6,12 @@ import { API } from './api_types'
 const router = Router()
 
 function getManager(args: API.getManager.Args): API.getManager.Resp {
-  return pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord')
+  return pick(
+    recorderManager,
+    'savePathRule',
+    'autoCheckLiveStatusAndRecord',
+    'ffmpegOutputArgs'
+  )
 }
 
 function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
@@ -29,7 +34,12 @@ function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
   }
   // TODO: recorderManager emit event?
   // TODO: save config?
-  return pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord')
+  return pick(
+    recorderManager,
+    'savePathRule',
+    'autoCheckLiveStatusAndRecord',
+    'ffmpegOutputArgs'
+  )
 }
 
 async function resolveChannel(
@@ -59,7 +69,8 @@ router
       // TODO: 这里先不做 schema 校验，以后再加
       (req.body ?? {}) as API.updateManager.Args,
       'savePathRule',
-      'autoCheckLiveStatusAndRecord'
+      'autoCheckLiveStatusAndRecord',
+      'ffmpegOutputArgs'
     )
 
     res.json({ payload: updateManager(args) })

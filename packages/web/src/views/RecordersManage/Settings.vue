@@ -78,6 +78,11 @@
           </v-table>
         </v-alert>
 
+        <v-text-field
+          label="FFMPEG 输出参数"
+          v-model="manager.ffmpegOutputArgs"
+        />
+
         <v-checkbox
           label="自动检查并录制"
           v-model="manager.autoCheckLiveStatusAndRecord"

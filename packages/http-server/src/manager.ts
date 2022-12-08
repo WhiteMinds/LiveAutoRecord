@@ -49,13 +49,27 @@ export async function initRecorderManager(
       '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}'
     ),
     autoCheckLiveStatusAndRecord: true,
+    ffmpegOutputArgs: recorderManager.ffmpegOutputArgs,
   })
+
+  // 这里做一些旧版本 schema 升级的处理
+  if (managerConfig.ffmpegOutputArgs == null) {
+    // v0.0.2 -> v1.0.0
+    managerConfig.ffmpegOutputArgs = recorderManager.ffmpegOutputArgs
+    managerConfig.savePathRule += '.mp4'
+  }
+
   Object.assign(recorderManager, managerConfig)
 
   recorderManager.on('Updated', () => {
     writeJSONFileSync<ManagerConfig>(
       managerConfigPath,
-      pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord')
+      pick(
+        recorderManager,
+        'savePathRule',
+        'autoCheckLiveStatusAndRecord',
+        'ffmpegOutputArgs'
+      )
     )
   })
 
@@ -115,4 +129,5 @@ export async function initRecorderManager(
 interface ManagerConfig {
   savePathRule: string
   autoCheckLiveStatusAndRecord: boolean
+  ffmpegOutputArgs: string
 }
