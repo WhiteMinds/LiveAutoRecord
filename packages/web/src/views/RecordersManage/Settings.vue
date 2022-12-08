@@ -105,7 +105,12 @@
         />
 
         <v-checkbox
-          label="录播开始时发出通知"
+          label="录制结束时自动生成 SRT 字幕文件"
+          v-model="settings.autoGenerateSRTOnRecordStop"
+        />
+
+        <v-checkbox
+          label="录制开始时发出通知"
           v-model="settings.noticeOnRecordStart"
         />
       </v-form>

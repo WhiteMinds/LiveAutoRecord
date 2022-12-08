@@ -34,12 +34,7 @@ function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
   }
   // TODO: recorderManager emit event?
   // TODO: save config?
-  return pick(
-    recorderManager,
-    'savePathRule',
-    'autoCheckLiveStatusAndRecord',
-    'ffmpegOutputArgs'
-  )
+  return getManager({})
 }
 
 async function resolveChannel(

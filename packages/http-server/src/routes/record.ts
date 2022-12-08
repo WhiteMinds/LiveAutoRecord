@@ -5,8 +5,7 @@ import { API } from './api_types'
 import { createPagedResultGetter, getNumberFromQuery } from './utils'
 import * as db from '../db'
 import { assertStringType, replaceExtName } from '../utils'
-import { parseSync, stringifySync } from 'subtitle'
-import { RecordExtraData } from '@autorecord/manager'
+import { genSRTFile } from '../manager'
 
 const router = Router()
 
@@ -99,41 +98,5 @@ router.route('/records/:id/srt').post(async (req, res) => {
     payload: path.basename(srtPath),
   })
 })
-
-// ass 看起来只有序列化和反序列化的库（如 ass-compiler），没有支持帮助排列弹幕的库，
-// 要自己实现，成本较高。所以先只简单实现个 srt 的，后面有需要的话再加个 ass 的版本。
-export async function genSRTFile(
-  extraDataPath: string,
-  srtPath: string
-): Promise<void> {
-  // TODO: 这里要不要考虑用 RecordExtraDataController 去操作？
-  const buffer = await fs.promises.readFile(extraDataPath)
-  const recordExtraData = JSON.parse(buffer.toString()) as RecordExtraData
-
-  const parsedSRT = parseSync('')
-
-  recordExtraData.messages.forEach((msg) => {
-    switch (msg.type) {
-      case 'comment':
-        const start = msg.timestamp - recordExtraData.meta.recordStartTimestamp
-        // TODO: 先简单写个固定值
-        const life = 4500
-        parsedSRT.push({
-          type: 'cue',
-          data: {
-            start: start,
-            end: start + life,
-            text: msg.text,
-          },
-        })
-        break
-    }
-  })
-
-  await fs.promises.writeFile(
-    srtPath,
-    stringifySync(parsedSRT, { format: 'SRT' })
-  )
-}
 
 export { router }
