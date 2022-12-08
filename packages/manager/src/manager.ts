@@ -12,6 +12,7 @@ import {
   DebugLog,
 } from './recorder'
 import { AnyObject, UnknownObject } from './utils'
+import { parseArgsStringToArgv } from 'string-argv'
 
 export interface RecorderProvider<E extends AnyObject> {
   // Provider 的唯一 id，最好只由英文 + 数字组成
@@ -40,11 +41,14 @@ export interface RecorderProvider<E extends AnyObject> {
     this: RecorderProvider<E>,
     json: T
   ) => Recorder<E>
+
+  setFFMPEGOutputArgs: (this: RecorderProvider<E>, args: string[]) => void
 }
 
 const configurableProps = [
   'savePathRule',
   'autoCheckLiveStatusAndRecord',
+  'ffmpegOutputArgs',
 ] as const
 type ConfigurableProp = typeof configurableProps[number]
 function isConfigurableProp(prop: unknown): prop is ConfigurableProp {
@@ -92,6 +96,7 @@ export interface RecorderManager<
   stopCheckLoop: (this: RecorderManager<ME, P, PE, E>) => void
 
   savePathRule: string
+  ffmpegOutputArgs: string
 }
 
 export type RecorderManagerCreateOpts<
@@ -142,6 +147,26 @@ export function createRecorderManager<
 
     await Promise.all(threads)
   }
+
+  let _ffmpegOutputArgs =
+    opts.ffmpegOutputArgs ??
+    '-c copy' +
+      /**
+       * FragmentMP4 可以边录边播（浏览器原生支持），具有一定的抗损坏能力，录制中 KILL 只会丢失
+       * 最后一个片段，而 FLV 格式如果录制中 KILL 了需要手动修复下 keyframes。所以默认使用 fmp4 格式。
+       */
+      ' -movflags frag_keyframe' +
+      /**
+       * 浏览器加载 FragmentMP4 会需要先把它所有的 moof boxes 都加载完成后才能播放，
+       * 默认的分段时长很小，会产生大量的 moof，导致加载很慢，所以这里设置一个分段的最小时长。
+       *
+       * TODO: 这个浏览器行为或许是可以优化的，比如试试给 fmp4 在录制完成后设置或者录制过程中实时更新 mvhd.duration。
+       * https://stackoverflow.com/questions/55887980/how-to-use-media-source-extension-mse-low-latency-mode
+       * https://stackoverflow.com/questions/61803136/ffmpeg-fragmented-mp4-takes-long-time-to-start-playing-on-chrome
+       *
+       * TODO: 如果浏览器行为无法优化，并且想进一步优化加载速度，可以考虑录制时使用 fmp4，录制完成后再转一次普通 mp4。
+       */
+      ' -min_frag_duration 60000000'
 
   const manager: RecorderManager<ME, P, PE, E> = {
     ...mitt(),
@@ -222,6 +247,15 @@ export function createRecorderManager<
         __dirname,
         '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}'
       ),
+
+    set ffmpegOutputArgs(val) {
+      _ffmpegOutputArgs = val
+      const args = parseArgsStringToArgv(_ffmpegOutputArgs)
+      manager.providers.forEach((p) => p.setFFMPEGOutputArgs(args))
+    },
+    get ffmpegOutputArgs() {
+      return _ffmpegOutputArgs
+    },
   }
 
   const managerWithSupportUpdatedEvent = new Proxy(manager, {
