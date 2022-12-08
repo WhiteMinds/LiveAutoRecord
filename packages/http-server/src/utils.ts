@@ -191,3 +191,10 @@ export function memoizeDebounce<T extends (...args: any) => any>(
     return debounced.apply(this, args)
   }
 }
+
+export function replaceExtName(filePath: string, newExtName: string) {
+  return path.join(
+    path.dirname(filePath),
+    path.basename(filePath, path.extname(filePath)) + newExtName
+  )
+}

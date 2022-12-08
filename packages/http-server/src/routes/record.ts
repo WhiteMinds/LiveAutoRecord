@@ -4,7 +4,7 @@ import { Router } from 'express'
 import { API } from './api_types'
 import { createPagedResultGetter, getNumberFromQuery } from './utils'
 import * as db from '../db'
-import { assertStringType } from '../utils'
+import { assertStringType, replaceExtName } from '../utils'
 import { parseSync, stringifySync } from 'subtitle'
 import { RecordExtraData } from '@autorecord/manager'
 
@@ -63,10 +63,7 @@ router.route('/records/:id/extra_data').get(async (req, res) => {
     return
   }
 
-  const extraDataPath = path.join(
-    path.dirname(record.savePath),
-    path.basename(record.savePath, path.extname(record.savePath)) + '.json'
-  )
+  const extraDataPath = replaceExtName(record.savePath, '.json')
   if (!fs.existsSync(extraDataPath)) {
     res.json({ payload: null }).status(404)
     return
@@ -87,21 +84,19 @@ router.route('/records/:id/srt').post(async (req, res) => {
     return
   }
 
-  const folder = path.dirname(record.savePath)
-  const name = path.basename(record.savePath, path.extname(record.savePath))
-  const extraDataPath = path.join(folder, name + '.json')
+  const extraDataPath = replaceExtName(record.savePath, '.json')
   if (!fs.existsSync(extraDataPath)) {
     res.json({ payload: null }).status(404)
     return
   }
 
   // 感觉不用做什么优化，这里直接覆盖旧文件
-  const srtPath = path.join(folder, name + '.srt')
+  const srtPath = replaceExtName(record.savePath, '.srt')
   await genSRTFile(extraDataPath, srtPath)
 
   res.json({
     // 考虑到服务端安全，这里就先只返回 filename
-    payload: name + '.srt',
+    payload: path.basename(srtPath),
   })
 })
 
