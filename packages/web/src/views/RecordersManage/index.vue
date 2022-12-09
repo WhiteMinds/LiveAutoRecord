@@ -1,6 +1,9 @@
 <template>
   <div class="relative">
-    <div class="h-screen overflow-auto">
+    <div
+      class="h-screen overflow-auto"
+      :class="{ hidden: currentRouteParentIsRecordersManage }"
+    >
       <div class="sticky left-0 top-0 p-4 bg-inherit shadow flex">
         <div class="flex flex-auto gap-4">
           <v-select
@@ -82,14 +85,10 @@
 
     <!-- 这个嵌套路由的设计是为了在子页支持路由的情况下，从管理页切换到其他子页时保持管理页的状态（直接上 KeepAlive 感觉会比较 dirty） -->
     <!-- TODO: 这样设计有个缺陷，在子页刷新时，父路由也会在后台加载与请求，可以优化 -->
-    <router-view v-slot="{ Component, route }">
+    <router-view v-slot="{ Component }">
       <!-- showViewIfRouteParentIsRecordersManage -->
       <div
-        v-if="
-          route.matched.length >= 2 &&
-          route.matched[route.matched.length - 2].name ===
-            RouteNames.RecordersManage
-        "
+        v-if="currentRouteParentIsRecordersManage"
         class="absolute inset-0 h-screen overflow-auto bg-[#F0F0F0]"
       >
         <component :is="Component" />
@@ -105,6 +104,14 @@ import { RecorderService } from '../../services/RecorderService'
 import RecorderCard from './RecorderCard.vue'
 import { RouteNames } from '../../router'
 import { assert } from '../../utils'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+const currentRouteParentIsRecordersManage = computed(
+  () =>
+    route.matched.length >= 2 &&
+    route.matched[route.matched.length - 2].name === RouteNames.RecordersManage
+)
 
 const recorders = ref<ClientRecorder[]>([])
 
