@@ -54,7 +54,7 @@ export async function initRecorderManager(
   const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, {
     savePathRule: path.join(
       paths.data,
-      '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}'
+      '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'
     ),
     autoCheckLiveStatusAndRecord: true,
     ffmpegOutputArgs: recorderManager.ffmpegOutputArgs,
