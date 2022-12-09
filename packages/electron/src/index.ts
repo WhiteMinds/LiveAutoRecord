@@ -38,7 +38,7 @@ function initSingleInstanceLock() {
   }
 
   // TODO: 这个事件处理或许应该放在 initApp 中？
-  app.on('second-instance', showWindow)
+  app.on('second-instance', showMainWindow)
 }
 
 function initApp() {
@@ -111,15 +111,16 @@ function createWindow() {
       return { action: 'deny' }
     }
 
-    return {
-      action: 'allow',
-      overrideBrowserWindowOptions: {
-        icon: getIconImagePath(),
-        webPreferences: {
-          preload: preloadPath,
-        },
+    // 手动创建新窗口，不然会算作 opener 的 child window，那就会在 opener 关闭时被一起关闭。
+    const window = new BrowserWindow({
+      icon: getIconImagePath(),
+      webPreferences: {
+        preload: preloadPath,
       },
-    }
+    })
+    window.loadURL(details.url)
+
+    return { action: 'deny' }
   })
 
   window.webContents.on('render-process-gone', (event, details) => {
@@ -132,27 +133,34 @@ function createTray() {
 
   if (process.platform === 'win32') {
     const contextMenu = Menu.buildFromTemplate([
-      { label: '显示', type: 'normal', click: showWindow },
+      { label: '显示', type: 'normal', click: showMainWindow },
       { label: '退出', type: 'normal', click: () => app.quit() },
     ])
     tray.setContextMenu(contextMenu)
   }
 
-  tray.on('click', showWindow)
+  tray.on('click', showMainWindow)
 
   return tray
 }
 
-function showWindow() {
-  const windows = BrowserWindow.getAllWindows()
-  if (windows.length === 0) {
+function showMainWindow() {
+  const mainWindows = BrowserWindow.getAllWindows().filter(isMainWindow)
+  if (mainWindows.length === 0) {
     createWindow()
   } else {
-    const window = windows[0]
+    const window = mainWindows[0]
     // 似乎新版本的 electron 在 show 时会自动 restore，不过这里保险起见先冗余着了。
     if (window.isMinimized()) window.restore()
     window.show()
   }
+}
+
+function isMainWindow(window: BrowserWindow) {
+  const url = window.webContents.getURL()
+  // 这里就简单点实现，hard code 下
+  const isPlayerPage = url.match(/\/player\?id=[^&]*$/) != null
+  return !isPlayerPage
 }
 
 function getTrayImagePath() {
