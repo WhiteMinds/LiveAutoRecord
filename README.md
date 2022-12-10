@@ -31,12 +31,13 @@
 
 #### Road Map
 
-- Github actions build & release
-- Recorder Id 改为数字自增
 - 完善弹幕播放器的 UI
 - 完善错误处理
 - 处理一些代码中的 TODO 项
 - 提供文档
+- 增加测试
+- 简化服务端部署流程
+- i18n
 
 #### Build Setup
 
