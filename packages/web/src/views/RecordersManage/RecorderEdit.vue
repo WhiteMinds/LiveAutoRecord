@@ -117,10 +117,9 @@ const loading = ref(!isCreating)
 const recorder = reactive<
   Partial<ClientRecorder> & API.addRecorder.Args & API.updateRecorder.Args
 >({
-  // TODO: 看起来应该把这两个字段整合成 providerInfo / provider？
   providerId: defaultProviderId,
   channelId: '',
-  quality: 'low',
+  quality: 'medium',
   streamPriorities: [],
   sourcePriorities: [],
 })
