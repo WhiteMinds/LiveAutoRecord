@@ -65,6 +65,7 @@ const { recorder } = defineProps<{ recorder: ClientRecorder }>()
 const providers = [
   { id: 'DouYu', name: '斗鱼' },
   { id: 'Bilibili', name: 'Bilibili' },
+  { id: 'HuYa', name: '虎牙' },
 ]
 
 const requesting = ref(false)

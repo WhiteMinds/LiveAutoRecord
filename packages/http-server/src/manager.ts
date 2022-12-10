@@ -8,6 +8,7 @@ import {
 } from '@autorecord/manager'
 import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
+import { provider as providerForHuYa } from '@autorecord/huya-recorder'
 import { isDebugMode, paths } from './env'
 import {
   pick,
@@ -34,7 +35,7 @@ export interface RecorderExtra {
 }
 
 export const recorderManager = createRecorderManager<RecorderExtra>({
-  providers: [providerForDouYu, providerForBilibili],
+  providers: [providerForDouYu, providerForBilibili, providerForHuYa],
 })
 
 export function addRecorderWithAutoIncrementId(

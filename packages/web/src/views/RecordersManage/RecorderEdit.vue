@@ -105,6 +105,7 @@ const Qualities = ['lowest', 'low', 'medium', 'high', 'highest'] as const
 const providers = [
   { id: 'DouYu', name: '斗鱼' },
   { id: 'Bilibili', name: 'Bilibili' },
+  { id: 'HuYa', name: '虎牙' },
 ]
 const defaultProviderId = providers[0].id
 
