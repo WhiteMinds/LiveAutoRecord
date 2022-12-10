@@ -224,8 +224,8 @@ export function createRecorderManager<
     savePathRule:
       opts.savePathRule ??
       path.join(
-        __dirname,
-        '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}'
+        process.cwd(),
+        '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'
       ),
 
     ffmpegOutputArgs:
