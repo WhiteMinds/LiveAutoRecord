@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto my-4 max-w-2xl">
-    <v-card-title>录播全局设置</v-card-title>
+    <v-card-title>录制全局设置</v-card-title>
 
     <v-card-item>
       <div v-if="!manager" class="text-center p-4">
@@ -129,6 +129,17 @@
                 target="_blank"
               >
                 https://github.com/WhiteMinds/LiveAutoRecord
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td>BUG / 意见反馈</td>
+            <td>
+              <a
+                href="https://github.com/WhiteMinds/LiveAutoRecord/issues"
+                target="_blank"
+              >
+                https://github.com/WhiteMinds/LiveAutoRecord/issues
               </a>
             </td>
           </tr>
