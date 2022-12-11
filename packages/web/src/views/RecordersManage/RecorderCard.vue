@@ -13,7 +13,28 @@
         </a>
       </div>
       <div>备注：{{ recorder.remarks }}</div>
-      <div>状态：{{ stateText }}</div>
+      <div>
+        <span>状态：</span>
+        <span
+          :class="
+            ffmpegArgsDialogAvailable
+              ? ['hover:underline cursor-pointer']
+              : null
+          "
+          @click="ffmpegArgsDialogAvailable && (ffmpegArgsDialogVisible = true)"
+        >
+          {{ stateText }}
+        </span>
+
+        <v-dialog v-model="ffmpegArgsDialogVisible" scrollable>
+          <v-card location="center">
+            <v-card-title>FFMPEG 录制参数</v-card-title>
+            <v-card-text class="h-48">
+              {{ recorder.recordHandle?.ffmpegArgs?.join(' ') }}
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
     </v-card-text>
 
     <v-card-actions class="border-t justify-end">
@@ -60,6 +81,10 @@ import { RouteNames } from '../../router'
 import { RecorderService } from '../../services/RecorderService'
 
 const { recorder } = defineProps<{ recorder: ClientRecorder }>()
+const ffmpegArgsDialogVisible = ref(false)
+const ffmpegArgsDialogAvailable = computed(
+  () => recorder.recordHandle?.ffmpegArgs != null
+)
 
 // TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
 const providers = [
