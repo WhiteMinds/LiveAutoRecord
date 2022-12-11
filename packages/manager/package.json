@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/manager",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Batch scheduling recorders",
   "main": "./lib/index.js",
   "publishConfig": {
