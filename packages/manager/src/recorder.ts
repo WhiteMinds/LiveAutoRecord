@@ -37,6 +37,7 @@ export interface RecordHandle {
   stream: string
   source: string
   url: string
+  ffmpegArgs?: string[]
 
   savePath: string
 
