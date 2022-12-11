@@ -1,8 +1,19 @@
 import type { SSEMessage } from '@autorecord/http-server'
+import { DebouncedFunc, throttle } from 'lodash-es'
 import { tap } from 'rxjs'
 import { LARServerService } from '../LARServerService'
 import { NotificationService } from '../NotificationService'
 import { TabService } from '../TabService'
+import fastMemo from 'fast-memoize'
+
+const getThrottledChannelNotifyFn = fastMemo(
+  function createThrottledChannelNotifyFn(
+    // 只是提供给 memoize 作为 cache 的 key，实际逻辑中不会使用。
+    channelId: string
+  ): DebouncedFunc<typeof NotificationService.notify> {
+    return throttle(NotificationService.notify.bind(NotificationService), 30e3)
+  }
+)
 
 export async function init() {
   const settings = await LARServerService.getSettings({})
@@ -16,9 +27,11 @@ export async function init() {
     // 只有一个 tab 能发出通知，不然会重复发
     if (TabService.getSelfRole() !== 'leader') return
 
-    // TODO: 先提示的简单点，后面加点图标之类的
-    NotificationService.notify({
+    // 对每个频道的通知单独节流，防止开播、下播时的流不正常造成反复的录制通知。
+    const notify = getThrottledChannelNotifyFn(msg.recorder.channelId)
+    notify({
       title: `频道 ${msg.recorder.channelId} 开始录制`,
+      body: msg.recorder.remarks,
     })
   })
 
