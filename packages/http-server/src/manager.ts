@@ -21,6 +21,7 @@ import {
   getRecorders,
   insertRecord,
   insertRecorder,
+  removeRecord,
   removeRecorder,
   updateRecorder,
   updateRecordStopTime,
@@ -105,15 +106,41 @@ export async function initRecorderManager(
 
     const updateRecordOnceRecordStop: Parameters<
       typeof recorderManager.on<'RecordStop'>
-    >[1] = ({ recordHandle }) => {
+    >[1] = async ({ recordHandle }) => {
       if (recordHandle.id !== recordId) return
+      recorderManager.off('RecordStop', updateRecordOnceRecordStop)
+
+      const { autoGenerateSRTOnRecordStop, autoRemoveRecordWhenTinySize } =
+        await serverOpts.getSettings()
+      if (
+        autoRemoveRecordWhenTinySize &&
+        (!fs.existsSync(recordHandle.savePath) ||
+          fs.statSync(recordHandle.savePath).size === 0)
+      ) {
+        const extraDataPath = replaceExtName(recordHandle.savePath, '.json')
+        // 直接把错误吞掉，影响不大
+        function noop(): void {}
+        fs.promises.rm(extraDataPath).catch(noop)
+        fs.promises.rm(recordHandle.savePath).catch(noop)
+
+        removeRecord(recordId)
+        return
+      }
 
       updateRecordStopTime({
         id: recordId,
         stopTimestamp: Date.now(),
       })
 
-      recorderManager.off('RecordStop', updateRecordOnceRecordStop)
+      if (autoGenerateSRTOnRecordStop) {
+        const extraDataPath = replaceExtName(recordHandle.savePath, '.json')
+        if (!fs.existsSync(extraDataPath)) return
+
+        await genSRTFile(
+          extraDataPath,
+          replaceExtName(recordHandle.savePath, '.srt')
+        )
+      }
     }
 
     recorderManager.on('RecordStop', updateRecordOnceRecordStop)
@@ -133,16 +160,6 @@ export async function initRecorderManager(
   recorderManager.on('RecorderUpdated', ({ recorder }) =>
     updateRecorder(recorder.toJSON())
   )
-
-  recorderManager.on('RecordStop', async ({ recordHandle: { savePath } }) => {
-    const { autoGenerateSRTOnRecordStop } = await serverOpts.getSettings()
-    if (!autoGenerateSRTOnRecordStop) return
-
-    const extraDataPath = replaceExtName(savePath, '.json')
-    if (!fs.existsSync(extraDataPath)) return
-
-    await genSRTFile(extraDataPath, replaceExtName(savePath, '.srt'))
-  })
 }
 
 // ass 看起来只有序列化和反序列化的库（如 ass-compiler），没有支持帮助排列弹幕的库，

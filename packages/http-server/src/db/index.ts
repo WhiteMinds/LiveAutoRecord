@@ -99,6 +99,15 @@ export function insertRecord(props: InsertRecordProps): void {
   scheduleSave()
 }
 
+export function removeRecord(id: RecordModel['id']): void {
+  assertDBReady(db)
+  const idx = db.data.records.findIndex((record) => record.id === id)
+  if (idx === -1) return
+
+  db.data.records.splice(idx, 1)
+  scheduleSave()
+}
+
 export function updateRecordStopTime(
   props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>
 ): void {

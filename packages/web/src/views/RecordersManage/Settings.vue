@@ -110,6 +110,11 @@
         />
 
         <v-checkbox
+          label="自动移除 0kb 的录制记录"
+          v-model="settings.autoRemoveRecordWhenTinySize"
+        />
+
+        <v-checkbox
           label="录制开始时发出通知"
           v-model="settings.noticeOnRecordStart"
         />

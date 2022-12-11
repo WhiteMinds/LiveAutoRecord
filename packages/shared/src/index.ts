@@ -6,6 +6,7 @@ export interface Settings {
   notExitOnAllWindowsClosed: boolean
   noticeOnRecordStart: boolean
   autoGenerateSRTOnRecordStop?: boolean
+  autoRemoveRecordWhenTinySize?: boolean
 }
 
 /** electron render 给 web 暴露的 API */
