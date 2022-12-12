@@ -108,6 +108,7 @@ const providers = [
   { id: 'DouYu', name: '斗鱼' },
   { id: 'Bilibili', name: 'Bilibili' },
   { id: 'HuYa', name: '虎牙' },
+  { id: 'DouYin', name: '抖音' },
 ]
 const defaultProviderId = providers[0].id
 
