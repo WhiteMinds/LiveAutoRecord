@@ -178,12 +178,18 @@ import { useRouter } from 'vue-router'
 import { LARServerService } from '../../services/LARServerService'
 import { ClientService } from '../../services/ClientService'
 import { RecordService } from '../../services/RecordService'
+import { useEffectInLifecycle } from '../../hooks'
+import { InteractionService } from '../../services/InteractionService'
 
 const isClient = ClientService.isClientMode()
 const router = useRouter()
 const manager = ref<API.getManager.Resp>()
 const settings = ref<API.getSettings.Resp>()
 const savePathRuleAlertVisible = ref(false)
+
+useEffectInLifecycle(() => {
+  return InteractionService.onEscapeWhenBody(() => router.back())
+})
 
 onMounted(async () => {
   manager.value = await LARServerService.getManager({})

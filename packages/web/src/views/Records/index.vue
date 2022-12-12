@@ -73,14 +73,17 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import type { ClientRecord } from '@autorecord/http-server'
 import { format, formatDuration, intervalToDuration } from 'date-fns'
 import { zhCN } from 'date-fns/locale'
 import { RouteNames } from '../../router'
 import { LARServerService } from '../../services/LARServerService'
+import { useEffectInLifecycle } from '../../hooks'
+import { InteractionService } from '../../services/InteractionService'
 
 const route = useRoute()
+const router = useRouter()
 // TODO: 这里写的有点和路由层耦合了，应该把 query -> state 的处理放到路由层去
 const recorderId =
   route.name === RouteNames.RecorderRecords
@@ -90,6 +93,10 @@ const recorderId =
 type Record = ClientRecord & { generatingSRT?: boolean }
 const records = ref<Record[]>([])
 const loading = ref(true)
+
+useEffectInLifecycle(() => {
+  return InteractionService.onEscapeWhenBody(() => router.back())
+})
 
 onMounted(async () => {
   const res = await LARServerService.getRecords({

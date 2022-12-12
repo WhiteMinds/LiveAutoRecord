@@ -93,7 +93,9 @@ import type { API, ClientRecorder } from '@autorecord/http-server'
 import { debounce } from 'lodash-es'
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useEffectInLifecycle } from '../../hooks'
 import { RouteNames } from '../../router'
+import { InteractionService } from '../../services/InteractionService'
 import { LARServerService } from '../../services/LARServerService'
 import { RecorderService } from '../../services/RecorderService'
 
@@ -122,6 +124,10 @@ const recorder = reactive<
   quality: 'medium',
   streamPriorities: [],
   sourcePriorities: [],
+})
+
+useEffectInLifecycle(() => {
+  return InteractionService.onEscapeWhenBody(() => router.back())
 })
 
 onMounted(async () => {
