@@ -1,7 +1,7 @@
 [![build-release](https://github.com/WhiteMinds/LiveAutoRecord/actions/workflows/release.yml/badge.svg)](https://github.com/WhiteMinds/LiveAutoRecord/actions/workflows/release.yml)
 [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
-# Live auto record v4
+# Live Auto Record 4
 
 > 多平台直播自动录制工具
 
@@ -39,7 +39,7 @@
 - 简化服务端部署流程
 - i18n
 
-#### Build Setup
+#### Electron Dev / Build Setup
 
 ```bash
 # install dependencies
@@ -54,6 +54,25 @@ yarn app:dev
 
 # build electron application for production
 yarn app:build
+```
+
+#### Server Dev / Deployment Setup
+
+```bash
+# install dependencies
+yarn
+
+# build client dep packages
+cd packages/shared && yarn build
+cd packages/manager && yarn build
+
+# dev server
+cd packages/http-server && yarn start:dev
+cd packages/web && yarn dev
+
+# deployment for production
+cd packages/http-server && yarn build && yarn start # Or start using another method, such as nodemon
+cd packages/web && yarn build # Start a web service using a tool such as nginx
 ```
 
 ## Screenshot
