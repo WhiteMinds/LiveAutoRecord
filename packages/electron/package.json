@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/electron",
-  "version": "4.2.1",
+  "version": "4.2.2",
   "description": "Integrate two packets http-server and web, packaged as the client",
   "main": "./dist/main/index.js",
   "private": true,
