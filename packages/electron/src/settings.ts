@@ -9,7 +9,7 @@ export interface Settings {
 
 const settingsConfigPath = path.join(paths.config, 'settings.json')
 
-const settings = readJSONFileSync<Settings>(settingsConfigPath, {
+let settings = readJSONFileSync<Settings>(settingsConfigPath, {
   notExitOnAllWindowsClosed: true,
   noticeOnRecordStart: true,
 })
@@ -20,5 +20,6 @@ export function getSettings(): Settings {
 
 export function setSettings(newSettings: Settings): Settings {
   writeJSONFileSync(settingsConfigPath, newSettings)
+  settings = newSettings
   return newSettings
 }
