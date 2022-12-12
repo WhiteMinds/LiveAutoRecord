@@ -15,16 +15,26 @@
       <div>备注：{{ recorder.remarks }}</div>
       <div>
         <span>状态：</span>
-        <span
-          :class="
-            ffmpegArgsDialogAvailable
-              ? ['hover:underline cursor-pointer']
-              : null
-          "
-          @click="ffmpegArgsDialogAvailable && (ffmpegArgsDialogVisible = true)"
+        <v-tooltip
+          text="点击查看录制参数"
+          :disabled="!ffmpegArgsDialogAvailable"
         >
-          {{ stateText }}
-        </span>
+          <template v-slot:activator="{ props }">
+            <span
+              :class="
+                ffmpegArgsDialogAvailable
+                  ? ['hover:underline cursor-pointer']
+                  : null
+              "
+              @click="
+                ffmpegArgsDialogAvailable && (ffmpegArgsDialogVisible = true)
+              "
+              v-bind="props"
+            >
+              {{ stateText }}
+            </span>
+          </template>
+        </v-tooltip>
 
         <v-dialog v-model="ffmpegArgsDialogVisible" scrollable>
           <v-card location="center">
