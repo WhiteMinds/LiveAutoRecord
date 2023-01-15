@@ -48,6 +48,7 @@ export interface RecorderProvider<E extends AnyObject> {
 const configurableProps = [
   'savePathRule',
   'autoCheckLiveStatusAndRecord',
+  'autoCheckInterval',
   'ffmpegOutputArgs',
 ] as const
 type ConfigurableProp = typeof configurableProps[number]
@@ -91,6 +92,7 @@ export interface RecorderManager<
   ) => void
 
   autoCheckLiveStatusAndRecord: boolean
+  autoCheckInterval: number
   isCheckLoopRunning: boolean
   startCheckLoop: (this: RecorderManager<ME, P, PE, E>) => void
   stopCheckLoop: (this: RecorderManager<ME, P, PE, E>) => void
@@ -119,7 +121,6 @@ export function createRecorderManager<
   const recorders: Recorder<E>[] = []
 
   let checkLoopTimer: NodeJS.Timeout | undefined
-  const checkLoopInterval: number = 1e3
 
   const multiThreadCheck = async () => {
     // TODO: 先用写死的数量，后面改成可以设置的
@@ -195,6 +196,7 @@ export function createRecorderManager<
     },
 
     autoCheckLiveStatusAndRecord: opts.autoCheckLiveStatusAndRecord ?? true,
+    autoCheckInterval: opts.autoCheckInterval ?? 1000,
     isCheckLoopRunning: false,
     startCheckLoop() {
       if (this.isCheckLoopRunning) return
@@ -208,7 +210,7 @@ export function createRecorderManager<
           this.emit('error', err)
         } finally {
           if (!this.isCheckLoopRunning) return
-          checkLoopTimer = setTimeout(checkLoop, checkLoopInterval)
+          checkLoopTimer = setTimeout(checkLoop, this.autoCheckInterval)
         }
       }
 
