@@ -87,6 +87,13 @@
           label="自动检查并录制"
           v-model="manager.autoCheckLiveStatusAndRecord"
         />
+
+        <v-text-field
+          v-if="manager.autoCheckLiveStatusAndRecord"
+          label="检查间隔（毫秒）"
+          v-model="manager.autoCheckInterval"
+          type="number"
+        />
       </v-form>
     </v-card-item>
 

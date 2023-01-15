@@ -84,6 +84,7 @@ export async function initRecorderManager(
         recorderManager,
         'savePathRule',
         'autoCheckLiveStatusAndRecord',
+        'autoCheckInterval',
         'ffmpegOutputArgs'
       )
     )

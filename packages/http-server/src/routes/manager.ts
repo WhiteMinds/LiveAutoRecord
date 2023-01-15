@@ -10,6 +10,7 @@ function getManager(args: API.getManager.Args): API.getManager.Resp {
     recorderManager,
     'savePathRule',
     'autoCheckLiveStatusAndRecord',
+    'autoCheckInterval',
     'ffmpegOutputArgs'
   )
 }
@@ -65,6 +66,7 @@ router
       (req.body ?? {}) as API.updateManager.Args,
       'savePathRule',
       'autoCheckLiveStatusAndRecord',
+      'autoCheckInterval',
       'ffmpegOutputArgs'
     )
 
