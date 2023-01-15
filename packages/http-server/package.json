@@ -17,8 +17,8 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@autorecord/bilibili-recorder": "^1.1.3",
-    "@autorecord/douyin-recorder": "^1.0.1",
+    "@autorecord/bilibili-recorder": "^1.1.4",
+    "@autorecord/douyin-recorder": "^1.0.2",
     "@autorecord/douyu-recorder": "^1.1.4",
     "@autorecord/huya-recorder": "^1.0.2",
     "@autorecord/manager": "workspace:^",
