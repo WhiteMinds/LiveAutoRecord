@@ -24,9 +24,13 @@ export function createLogger() {
       new transports.File({
         filename: path.join(paths.log, 'server-error.log'),
         level: 'error',
+        maxsize: 1024 * 1024 * 4,
+        maxFiles: 4,
       }),
       new transports.File({
         filename: path.join(paths.log, 'server-combined.log'),
+        maxsize: 1024 * 1024 * 32,
+        maxFiles: 4,
       }),
     ],
   })
