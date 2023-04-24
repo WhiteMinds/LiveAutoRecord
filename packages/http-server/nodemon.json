@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "ts",
   "ignore": [],
-  "exec": "TS_NODE_FILES=true node -r tsconfig-paths/register -r ts-node/register src/index.ts"
+  "exec": "cross-env TS_NODE_FILES=true node -r tsconfig-paths/register -r ts-node/register src/index.ts"
 }
