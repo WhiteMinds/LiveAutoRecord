@@ -23,6 +23,7 @@ export function asyncThrottle(
     savingPromise = fn().finally(() => {
       savingPromise = null
       if (hasDeferred) {
+        hasDeferred = false
         if (opts.immediateRunWhenEndOfDefer) {
           wrappedWithAllowDefer()
         } else {
