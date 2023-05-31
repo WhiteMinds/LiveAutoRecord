@@ -1,0 +1,51 @@
+name: Package for Test
+
+on: [push]
+
+jobs:
+  build:
+    name: build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macOS-latest]
+    env:
+      # electron-builder 在 CI 机器上会因为 unpack ffmpeg-static 报错，参考了该修复方案：
+      # https://github.com/electron-userland/electron-builder/issues/3179
+      USE_HARD_LINKS: false
+      # 提供给 electron-builder 上传 release assets 时使用。
+      GITHUB_TOKEN: ${{ secrets.repo_contents_token }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: yarn
+      - run: cd ./packages/shared && yarn build
+      - run: cd ./packages/manager && yarn build
+      - run: yarn app:build -p never
+
+      - name: Upload Dmg
+        if: matrix.os == 'macOS-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test Package Dmg
+          path: packages/electron/build/**/*.dmg
+
+      - name: Upload Exe
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-artifact@v3
+        with:
+          name: Test Package Exe
+          path: packages/electron/build/**/*.exe
+
+  comment:
+    needs: [build]
+    name: Append links to the Pull Request
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/commit-comment@v2
+        with:
+          body: |
+            Packaging for test is done in [${{ github.run_id }}](https://github.com/${{github.repository}}/actions/runs/${{github.run_id}})
