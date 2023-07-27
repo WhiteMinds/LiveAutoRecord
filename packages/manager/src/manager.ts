@@ -50,7 +50,7 @@ export interface RecorderManager<
   PE extends AnyObject = GetProviderExtra<P>,
   E extends AnyObject = ME & PE,
 > extends Emitter<{
-    error: unknown
+    error: { source: string; err: unknown }
     RecordStart: { recorder: Recorder<E>; recordHandle: RecordHandle }
     RecordStop: { recorder: Recorder<E>; recordHandle: RecordHandle }
     RecorderUpdated: {
@@ -173,7 +173,7 @@ export function createRecorderManager<
         try {
           await multiThreadCheck()
         } catch (err) {
-          this.emit('error', err)
+          this.emit('error', { source: 'multiThreadCheck', err })
         } finally {
           if (!this.isCheckLoopRunning) return
           checkLoopTimer = setTimeout(checkLoop, this.autoCheckInterval)

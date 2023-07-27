@@ -55,6 +55,11 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
 
   Object.assign(recorderManager, managerConfig)
 
+  recorderManager.on('error', ({ source, err }) => {
+    const errText = err instanceof Error ? err.stack ?? err.message : JSON.stringify(err)
+    logger.error(`[RecorderManager][${source}]: ${errText}`)
+  })
+
   recorderManager.on('Updated', () => {
     writeJSONFileSync<ManagerConfig>(
       managerConfigPath,
