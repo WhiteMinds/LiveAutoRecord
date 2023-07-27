@@ -5,6 +5,7 @@ import { readJSONFileSync, writeJSONFileSync } from './utils'
 export interface Settings {
   notExitOnAllWindowsClosed: boolean
   noticeOnRecordStart: boolean
+  debugMode?: boolean
 }
 
 const settingsConfigPath = path.join(paths.config, 'settings.json')

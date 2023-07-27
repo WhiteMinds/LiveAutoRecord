@@ -4,5 +4,3 @@ import envPaths from 'env-paths'
 export const appName = process.env.AppName ?? 'live-auto-record'
 
 export const paths = envPaths(appName, { suffix: '' })
-
-export const isDebugMode = 'DEBUG_LAR_SERVER' in process.env

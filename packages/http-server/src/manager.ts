@@ -5,7 +5,7 @@ import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { provider as providerForHuYa } from '@autorecord/huya-recorder'
 import { provider as providerForDouYin } from '@autorecord/douyin-recorder'
-import { isDebugMode, paths } from './env'
+import { paths } from './env'
 import { pick, readJSONFileSync, replaceExtName, writeJSONFileSync } from './utils'
 import {
   genRecorderIdInDB,
@@ -125,8 +125,16 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
     recorderManager.on('RecordStop', updateRecordOnceRecordStop)
   })
 
-  recorderManager.on('RecorderDebugLog', ({ recorder, ...log }) => {
-    if (!isDebugMode) return
+  recorderManager.on('RecorderDebugLog', async ({ recorder, ...log }) => {
+    const { debugMode } = await serverOpts.getSettings()
+    if (!debugMode) return
+
+    if (log.type === 'ffmpeg' && recorder.recordHandle) {
+      const logFilePath = replaceExtName(`${recorder.recordHandle.savePath}_${recorder.id}`, '.ffmpeg.log')
+      fs.appendFileSync(logFilePath, log.text + '\n')
+      return
+    }
+
     logger.debug(`[${recorder.id}][${log.type}]: ${log.text}`)
   })
 
