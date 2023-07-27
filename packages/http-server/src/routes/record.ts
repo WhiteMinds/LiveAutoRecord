@@ -9,9 +9,7 @@ import { genSRTFile } from '../manager'
 
 const router = Router()
 
-async function getRecords(
-  args: API.getRecords.Args
-): Promise<API.getRecords.Resp> {
+async function getRecords(args: API.getRecords.Args): Promise<API.getRecords.Resp> {
   const pagedGetter = createPagedResultGetter(async (startIdx, count) => {
     const { items, total } = db.getRecords({
       recorderId: args.recorderId,

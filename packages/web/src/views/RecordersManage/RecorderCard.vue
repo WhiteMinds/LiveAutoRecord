@@ -15,20 +15,11 @@
       <div>备注：{{ recorder.remarks }}</div>
       <div>
         <span>状态：</span>
-        <v-tooltip
-          text="点击查看录制参数"
-          :disabled="!ffmpegArgsDialogAvailable"
-        >
+        <v-tooltip text="点击查看录制参数" :disabled="!ffmpegArgsDialogAvailable">
           <template v-slot:activator="{ props }">
             <span
-              :class="
-                ffmpegArgsDialogAvailable
-                  ? ['hover:underline cursor-pointer']
-                  : null
-              "
-              @click="
-                ffmpegArgsDialogAvailable && (ffmpegArgsDialogVisible = true)
-              "
+              :class="ffmpegArgsDialogAvailable ? ['hover:underline cursor-pointer'] : null"
+              @click="ffmpegArgsDialogAvailable && (ffmpegArgsDialogVisible = true)"
               v-bind="props"
             >
               {{ stateText }}
@@ -48,14 +39,7 @@
     </v-card-text>
 
     <v-card-actions class="border-t justify-end">
-      <v-btn
-        v-if="recorder.state === 'idle'"
-        @click="startRecord"
-        :loading="requesting"
-        size="small"
-      >
-        刷新
-      </v-btn>
+      <v-btn v-if="recorder.state === 'idle'" @click="startRecord" :loading="requesting" size="small">刷新</v-btn>
       <v-btn
         v-else
         @click="stopRecord"
@@ -66,17 +50,11 @@
         终止
       </v-btn>
 
-      <router-link
-        :to="{ name: RouteNames.RecorderRecords, params: { id: recorder.id } }"
-        tabindex="-1"
-      >
+      <router-link :to="{ name: RouteNames.RecorderRecords, params: { id: recorder.id } }" tabindex="-1">
         <v-btn size="small">历史</v-btn>
       </router-link>
 
-      <router-link
-        :to="{ name: RouteNames.RecorderEdit, params: { id: recorder.id } }"
-        tabindex="-1"
-      >
+      <router-link :to="{ name: RouteNames.RecorderEdit, params: { id: recorder.id } }" tabindex="-1">
         <v-btn size="small">设置</v-btn>
       </router-link>
       <!-- TODO: 删除做到右上角 hover 时的 x -->
@@ -92,9 +70,7 @@ import { RecorderService } from '../../services/RecorderService'
 
 const { recorder } = defineProps<{ recorder: ClientRecorder }>()
 const ffmpegArgsDialogVisible = ref(false)
-const ffmpegArgsDialogAvailable = computed(
-  () => recorder.recordHandle?.ffmpegArgs != null
-)
+const ffmpegArgsDialogAvailable = computed(() => recorder.recordHandle?.ffmpegArgs != null)
 
 // TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
 const providers = [
@@ -106,16 +82,14 @@ const providers = [
 
 const requesting = ref(false)
 
-const providerName = computed(
-  () => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知'
-)
+const providerName = computed(() => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知')
 
 const stateText = computed(() =>
   recorder.state === 'recording'
     ? recorder.usedSource
       ? `正在录制 ${recorder.usedSource} / ${recorder.usedStream}`
       : '正在录制'
-    : recorder.state
+    : recorder.state,
 )
 
 const startRecord = async () => {

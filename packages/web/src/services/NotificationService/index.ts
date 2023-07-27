@@ -19,12 +19,7 @@ async function requestNotifyPermission(): Promise<boolean> {
   return permission === 'granted'
 }
 
-async function notify(opts: {
-  title: string
-  body?: string
-  icon?: string
-  image?: string
-}) {
+async function notify(opts: { title: string; body?: string; icon?: string; image?: string }) {
   if (!(await requestNotifyPermission())) return
 
   const { title, ...notifyOpts } = opts

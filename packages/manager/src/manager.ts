@@ -4,13 +4,7 @@ import R from 'ramda'
 import formatTemplate from 'string-template'
 import { format as formatDate } from 'date-fns'
 import { ChannelId } from './common'
-import {
-  RecorderCreateOpts,
-  Recorder,
-  SerializedRecorder,
-  RecordHandle,
-  DebugLog,
-} from './recorder'
+import { RecorderCreateOpts, Recorder, SerializedRecorder, RecordHandle, DebugLog } from './recorder'
 import { AnyObject, UnknownObject } from './utils'
 import { parseArgsStringToArgv } from 'string-argv'
 
@@ -26,21 +20,15 @@ export interface RecorderProvider<E extends AnyObject> {
   // 从一个与当前 provider 匹配的 URL 中解析与获取对应频道的一些信息
   resolveChannelInfoFromURL: (
     this: RecorderProvider<E>,
-    channelURL: string
+    channelURL: string,
   ) => Promise<{
     id: ChannelId
     title: string
     owner: string
   } | null>
-  createRecorder: (
-    this: RecorderProvider<E>,
-    opts: Omit<RecorderCreateOpts<E>, 'providerId'>
-  ) => Recorder<E>
+  createRecorder: (this: RecorderProvider<E>, opts: Omit<RecorderCreateOpts<E>, 'providerId'>) => Recorder<E>
 
-  fromJSON: <T extends SerializedRecorder<E>>(
-    this: RecorderProvider<E>,
-    json: T
-  ) => Recorder<E>
+  fromJSON: <T extends SerializedRecorder<E>>(this: RecorderProvider<E>, json: T) => Recorder<E>
 
   setFFMPEGOutputArgs: (this: RecorderProvider<E>, args: string[]) => void
 }
@@ -51,7 +39,7 @@ const configurableProps = [
   'autoCheckInterval',
   'ffmpegOutputArgs',
 ] as const
-type ConfigurableProp = typeof configurableProps[number]
+type ConfigurableProp = (typeof configurableProps)[number]
 function isConfigurableProp(prop: unknown): prop is ConfigurableProp {
   return configurableProps.includes(prop as any)
 }
@@ -60,7 +48,7 @@ export interface RecorderManager<
   ME extends UnknownObject,
   P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
   PE extends AnyObject = GetProviderExtra<P>,
-  E extends AnyObject = ME & PE
+  E extends AnyObject = ME & PE,
 > extends Emitter<{
     error: unknown
     RecordStart: { recorder: Recorder<E>; recordHandle: RecordHandle }
@@ -76,20 +64,11 @@ export interface RecorderManager<
   }> {
   providers: P[]
   // TODO: 这个或许可以去掉或者改改，感觉不是很有必要
-  getChannelURLMatchedRecorderProviders: (
-    this: RecorderManager<ME, P, PE, E>,
-    channelURL: string
-  ) => P[]
+  getChannelURLMatchedRecorderProviders: (this: RecorderManager<ME, P, PE, E>, channelURL: string) => P[]
 
   recorders: Recorder<E>[]
-  addRecorder: (
-    this: RecorderManager<ME, P, PE, E>,
-    opts: RecorderCreateOpts<E>
-  ) => Recorder<E>
-  removeRecorder: (
-    this: RecorderManager<ME, P, PE, E>,
-    recorder: Recorder<E>
-  ) => void
+  addRecorder: (this: RecorderManager<ME, P, PE, E>, opts: RecorderCreateOpts<E>) => Recorder<E>
+  removeRecorder: (this: RecorderManager<ME, P, PE, E>, recorder: Recorder<E>) => void
 
   autoCheckLiveStatusAndRecord: boolean
   autoCheckInterval: number
@@ -105,7 +84,7 @@ export type RecorderManagerCreateOpts<
   ME extends AnyObject = UnknownObject,
   P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
   PE extends AnyObject = GetProviderExtra<P>,
-  E extends AnyObject = ME & PE
+  E extends AnyObject = ME & PE,
 > = Partial<Pick<RecorderManager<ME, P, PE, E>, ConfigurableProp>> & {
   providers: P[]
 }
@@ -114,10 +93,8 @@ export function createRecorderManager<
   ME extends AnyObject = UnknownObject,
   P extends RecorderProvider<AnyObject> = RecorderProvider<UnknownObject>,
   PE extends AnyObject = GetProviderExtra<P>,
-  E extends AnyObject = ME & PE
->(
-  opts: RecorderManagerCreateOpts<ME, P, PE, E>
-): RecorderManager<ME, P, PE, E> {
+  E extends AnyObject = ME & PE,
+>(opts: RecorderManagerCreateOpts<ME, P, PE, E>): RecorderManager<ME, P, PE, E> {
   const recorders: Recorder<E>[] = []
 
   let checkLoopTimer: NodeJS.Timeout | undefined
@@ -160,28 +137,17 @@ export function createRecorderManager<
     recorders,
     addRecorder(opts) {
       const provider = this.providers.find((p) => p.id === opts.providerId)
-      if (provider == null)
-        throw new Error('Cant find provider ' + opts.providerId)
+      if (provider == null) throw new Error('Cant find provider ' + opts.providerId)
 
       // TODO: 因为泛型函数内部是不持有具体泛型的，这里被迫用了 as，没什么好的思路处理，除非
       // provider.createRecorder 能返回 Recorder<PE> 才能进一步优化。
-      const recorder = provider.createRecorder(
-        R.omit(['providerId'], opts)
-      ) as Recorder<E>
+      const recorder = provider.createRecorder(R.omit(['providerId'], opts)) as Recorder<E>
       this.recorders.push(recorder)
 
-      recorder.on('RecordStart', (recordHandle) =>
-        this.emit('RecordStart', { recorder, recordHandle })
-      )
-      recorder.on('RecordStop', (recordHandle) =>
-        this.emit('RecordStop', { recorder, recordHandle })
-      )
-      recorder.on('Updated', (keys) =>
-        this.emit('RecorderUpdated', { recorder, keys })
-      )
-      recorder.on('DebugLog', (log) =>
-        this.emit('RecorderDebugLog', { recorder, ...log })
-      )
+      recorder.on('RecordStart', (recordHandle) => this.emit('RecordStart', { recorder, recordHandle }))
+      recorder.on('RecordStop', (recordHandle) => this.emit('RecordStop', { recorder, recordHandle }))
+      recorder.on('Updated', (keys) => this.emit('RecorderUpdated', { recorder, keys }))
+      recorder.on('DebugLog', (log) => this.emit('RecorderDebugLog', { recorder, ...log }))
 
       this.emit('RecorderAdded', recorder)
 
@@ -225,10 +191,7 @@ export function createRecorderManager<
 
     savePathRule:
       opts.savePathRule ??
-      path.join(
-        process.cwd(),
-        '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'
-      ),
+      path.join(process.cwd(), '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'),
 
     ffmpegOutputArgs:
       opts.ffmpegOutputArgs ??
@@ -280,19 +243,17 @@ export function genSavePathFromRule<
   ME extends AnyObject,
   P extends RecorderProvider<AnyObject>,
   PE extends AnyObject,
-  E extends AnyObject
+  E extends AnyObject,
 >(
   manager: RecorderManager<ME, P, PE, E>,
   recorder: Recorder<E>,
   extData: {
     owner: string
     title: string
-  }
+  },
 ): string {
   // TODO: 这里随便写的，后面再优化
-  const provider = manager.providers.find(
-    (p) => p.id === recorder.toJSON().providerId
-  )
+  const provider = manager.providers.find((p) => p.id === recorder.toJSON().providerId)
 
   const now = new Date()
   const params = {
@@ -310,6 +271,4 @@ export function genSavePathFromRule<
   return formatTemplate(manager.savePathRule, params)
 }
 
-export type GetProviderExtra<P> = P extends RecorderProvider<infer E>
-  ? E
-  : never
+export type GetProviderExtra<P> = P extends RecorderProvider<infer E> ? E : never

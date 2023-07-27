@@ -3,25 +3,17 @@ import { Router } from 'express'
 import { addRecorderWithAutoIncrementId, recorderManager } from '../manager'
 import { pick } from '../utils'
 import { API } from './api_types'
-import {
-  createPagedResultGetter,
-  getNumberFromQuery,
-  recorderToClient,
-} from './utils'
+import { createPagedResultGetter, getNumberFromQuery, recorderToClient } from './utils'
 
 const router = Router()
 
 // API 的实际实现，这里负责实现对外暴露的接口，并假设 Args 都已经由上一层解析好了
 // TODO: 暂时先一起放这个文件里，后面要拆分放到合适的地方
 
-async function getRecorders(
-  args: API.getRecorders.Args
-): Promise<API.getRecorders.Resp> {
+async function getRecorders(args: API.getRecorders.Args): Promise<API.getRecorders.Resp> {
   const pagedGetter = createPagedResultGetter(async (startIdx, count) => {
     return {
-      items: recorderManager.recorders
-        .slice(startIdx, startIdx + count)
-        .map((item) => recorderToClient(item)),
+      items: recorderManager.recorders.slice(startIdx, startIdx + count).map((item) => recorderToClient(item)),
       total: recorderManager.recorders.length,
     }
   })
@@ -43,9 +35,7 @@ function addRecorder(args: API.addRecorder.Args): API.addRecorder.Resp {
   return recorderToClient(recorder)
 }
 
-function updateRecorder(
-  args: API.updateRecorder.Args
-): API.updateRecorder.Resp {
+function updateRecorder(args: API.updateRecorder.Args): API.updateRecorder.Resp {
   const { id, ...data } = args
   const recorder = recorderManager.recorders.find((item) => item.id === id)
   // TODO: 之后再处理
@@ -55,9 +45,7 @@ function updateRecorder(
   return recorderToClient(recorder)
 }
 
-function removeRecorder(
-  args: API.removeRecorder.Args
-): API.removeRecorder.Resp {
+function removeRecorder(args: API.removeRecorder.Args): API.removeRecorder.Resp {
   const recorder = recorderManager.recorders.find((item) => item.id === args.id)
   if (recorder == null) return null
 
@@ -65,9 +53,7 @@ function removeRecorder(
   return null
 }
 
-async function startRecord(
-  args: API.startRecord.Args
-): Promise<API.startRecord.Resp> {
+async function startRecord(args: API.startRecord.Args): Promise<API.startRecord.Resp> {
   const recorder = recorderManager.recorders.find((item) => item.id === args.id)
   if (recorder == null) throw new Error('404')
 
@@ -82,9 +68,7 @@ async function startRecord(
   return recorderToClient(recorder)
 }
 
-async function stopRecord(
-  args: API.stopRecord.Args
-): Promise<API.stopRecord.Resp> {
+async function stopRecord(args: API.stopRecord.Args): Promise<API.stopRecord.Resp> {
   const recorder = recorderManager.recorders.find((item) => item.id === args.id)
   if (recorder == null) throw new Error('404')
 
@@ -121,7 +105,7 @@ router
       'quality',
       'streamPriorities',
       'sourcePriorities',
-      'extra'
+      'extra',
     )
 
     res.json({ payload: addRecorder(args) })
@@ -142,7 +126,7 @@ router
       'disableAutoCheck',
       'quality',
       'streamPriorities',
-      'sourcePriorities'
+      'sourcePriorities',
     )
 
     res.json({ payload: updateRecorder({ id, ...patch }) })

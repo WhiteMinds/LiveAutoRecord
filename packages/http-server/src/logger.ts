@@ -1,9 +1,5 @@
 import path from 'path'
-import {
-  createLogger as createWinstonLogger,
-  format,
-  transports,
-} from 'winston'
+import { createLogger as createWinstonLogger, format, transports } from 'winston'
 import { paths } from './env'
 
 export function createLogger() {
@@ -15,11 +11,7 @@ export function createLogger() {
       debug: 7,
     },
     level: 'debug',
-    format: format.combine(
-      format.label({ label: 'default' }),
-      format.timestamp(),
-      format.json()
-    ),
+    format: format.combine(format.label({ label: 'default' }), format.timestamp(), format.json()),
     transports: [
       new transports.File({
         filename: path.join(paths.log, 'server-error.log'),
@@ -43,9 +35,9 @@ export function createLogger() {
           format.align(),
           format.printf(({ level, message, label, timestamp }) => {
             return `${timestamp} [${label}] ${level}: ${message}`
-          })
+          }),
         ),
-      })
+      }),
     )
   }
 

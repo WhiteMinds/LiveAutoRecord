@@ -1,22 +1,12 @@
 import fs from 'fs'
 import path from 'path'
-import {
-  createRecorderManager,
-  Recorder,
-  RecorderCreateOpts,
-  RecordExtraData,
-} from '@autorecord/manager'
+import { createRecorderManager, Recorder, RecorderCreateOpts, RecordExtraData } from '@autorecord/manager'
 import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { provider as providerForHuYa } from '@autorecord/huya-recorder'
 import { provider as providerForDouYin } from '@autorecord/douyin-recorder'
 import { isDebugMode, paths } from './env'
-import {
-  pick,
-  readJSONFileSync,
-  replaceExtName,
-  writeJSONFileSync,
-} from './utils'
+import { pick, readJSONFileSync, replaceExtName, writeJSONFileSync } from './utils'
 import {
   genRecorderIdInDB,
   getRecorders,
@@ -37,33 +27,21 @@ export interface RecorderExtra {
 }
 
 export const recorderManager = createRecorderManager<RecorderExtra>({
-  providers: [
-    providerForDouYu,
-    providerForBilibili,
-    providerForHuYa,
-    providerForDouYin,
-  ],
+  providers: [providerForDouYu, providerForBilibili, providerForHuYa, providerForDouYin],
 })
 
-export function addRecorderWithAutoIncrementId(
-  args: RecorderCreateOpts<RecorderExtra>
-): Recorder<RecorderExtra> {
+export function addRecorderWithAutoIncrementId(args: RecorderCreateOpts<RecorderExtra>): Recorder<RecorderExtra> {
   return recorderManager.addRecorder({
     ...args,
     id: genRecorderIdInDB().toString(),
   })
 }
 
-export async function initRecorderManager(
-  serverOpts: ServerOpts
-): Promise<void> {
+export async function initRecorderManager(serverOpts: ServerOpts): Promise<void> {
   const { logger } = serverOpts
 
   const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, {
-    savePathRule: path.join(
-      paths.data,
-      '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'
-    ),
+    savePathRule: path.join(paths.data, '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'),
     autoCheckLiveStatusAndRecord: true,
     ffmpegOutputArgs: recorderManager.ffmpegOutputArgs,
   })
@@ -80,13 +58,7 @@ export async function initRecorderManager(
   recorderManager.on('Updated', () => {
     writeJSONFileSync<ManagerConfig>(
       managerConfigPath,
-      pick(
-        recorderManager,
-        'savePathRule',
-        'autoCheckLiveStatusAndRecord',
-        'autoCheckInterval',
-        'ffmpegOutputArgs'
-      )
+      pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord', 'autoCheckInterval', 'ffmpegOutputArgs'),
     )
   })
 
@@ -111,18 +83,16 @@ export async function initRecorderManager(
       startTimestamp: Date.now(),
     })
 
-    const updateRecordOnceRecordStop: Parameters<
-      typeof recorderManager.on<'RecordStop'>
-    >[1] = async ({ recordHandle }) => {
+    const updateRecordOnceRecordStop: Parameters<typeof recorderManager.on<'RecordStop'>>[1] = async ({
+      recordHandle,
+    }) => {
       if (recordHandle.id !== recordId) return
       recorderManager.off('RecordStop', updateRecordOnceRecordStop)
 
-      const { autoGenerateSRTOnRecordStop, autoRemoveRecordWhenTinySize } =
-        await serverOpts.getSettings()
+      const { autoGenerateSRTOnRecordStop, autoRemoveRecordWhenTinySize } = await serverOpts.getSettings()
       if (
         autoRemoveRecordWhenTinySize &&
-        (!fs.existsSync(recordHandle.savePath) ||
-          fs.statSync(recordHandle.savePath).size === 0)
+        (!fs.existsSync(recordHandle.savePath) || fs.statSync(recordHandle.savePath).size === 0)
       ) {
         const extraDataPath = replaceExtName(recordHandle.savePath, '.json')
         // 直接把错误吞掉，影响不大
@@ -143,10 +113,7 @@ export async function initRecorderManager(
         const extraDataPath = replaceExtName(recordHandle.savePath, '.json')
         if (!fs.existsSync(extraDataPath)) return
 
-        await genSRTFile(
-          extraDataPath,
-          replaceExtName(recordHandle.savePath, '.srt')
-        )
+        await genSRTFile(extraDataPath, replaceExtName(recordHandle.savePath, '.srt'))
       }
     }
 
@@ -158,23 +125,14 @@ export async function initRecorderManager(
     logger.debug(`[${recorder.id}][${log.type}]: ${log.text}`)
   })
 
-  recorderManager.on('RecorderAdded', (recorder) =>
-    insertRecorder(recorder.toJSON())
-  )
-  recorderManager.on('RecorderRemoved', (recorder) =>
-    removeRecorder(recorder.id)
-  )
-  recorderManager.on('RecorderUpdated', ({ recorder }) =>
-    updateRecorder(recorder.toJSON())
-  )
+  recorderManager.on('RecorderAdded', (recorder) => insertRecorder(recorder.toJSON()))
+  recorderManager.on('RecorderRemoved', (recorder) => removeRecorder(recorder.id))
+  recorderManager.on('RecorderUpdated', ({ recorder }) => updateRecorder(recorder.toJSON()))
 }
 
 // ass 看起来只有序列化和反序列化的库（如 ass-compiler），没有支持帮助排列弹幕的库，
 // 要自己实现，成本较高。所以先只简单实现个 srt 的，后面有需要的话再加个 ass 的版本。
-export async function genSRTFile(
-  extraDataPath: string,
-  srtPath: string
-): Promise<void> {
+export async function genSRTFile(extraDataPath: string, srtPath: string): Promise<void> {
   // TODO: 这里要不要考虑用 RecordExtraDataController 去操作？
   const buffer = await fs.promises.readFile(extraDataPath)
   const recordExtraData = JSON.parse(buffer.toString()) as RecordExtraData
@@ -199,10 +157,7 @@ export async function genSRTFile(
     }
   })
 
-  await fs.promises.writeFile(
-    srtPath,
-    stringifySync(parsedSRT, { format: 'SRT' })
-  )
+  await fs.promises.writeFile(srtPath, stringifySync(parsedSRT, { format: 'SRT' }))
 }
 
 interface ManagerConfig {

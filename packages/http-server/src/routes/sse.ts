@@ -27,7 +27,7 @@ export class SSE extends EventEmitter {
    */
   constructor(
     initial: any | any[] = [],
-    public options: Options = { isSerialized: true }
+    public options: Options = { isSerialized: true },
   ) {
     super()
 

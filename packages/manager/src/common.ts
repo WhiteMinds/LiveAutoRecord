@@ -3,7 +3,7 @@ import { AnyObject, UnknownObject } from './utils'
 export type ChannelId = string
 
 export const Qualities = ['lowest', 'low', 'medium', 'high', 'highest'] as const
-export type Quality = typeof Qualities[number]
+export type Quality = (typeof Qualities)[number]
 
 export interface MessageSender<E extends AnyObject = UnknownObject> {
   uid?: string

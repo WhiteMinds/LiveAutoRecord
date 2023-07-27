@@ -12,15 +12,11 @@
           label="保存路径规则"
           v-model="manager.savePathRule"
           append-inner-icon="mdi-help-circle"
-          @click:append-inner="
-            savePathRuleAlertVisible = !savePathRuleAlertVisible
-          "
+          @click:append-inner="savePathRuleAlertVisible = !savePathRuleAlertVisible"
         />
         <v-alert v-model="savePathRuleAlertVisible" closable>
           <v-alert-title>如何在保存路径中使用变量？</v-alert-title>
-          <p class="text-subtitle-1 m-2">
-            使用 `{}` 包裹住变量名即可，如 `/path/{platform}`
-          </p>
+          <p class="text-subtitle-1 m-2">使用 `{}` 包裹住变量名即可，如 `/path/{platform}`</p>
           <v-table>
             <thead>
               <tr>
@@ -78,15 +74,9 @@
           </v-table>
         </v-alert>
 
-        <v-text-field
-          label="FFMPEG 输出参数"
-          v-model="manager.ffmpegOutputArgs"
-        />
+        <v-text-field label="FFMPEG 输出参数" v-model="manager.ffmpegOutputArgs" />
 
-        <v-checkbox
-          label="自动检查并录制"
-          v-model="manager.autoCheckLiveStatusAndRecord"
-        />
+        <v-checkbox label="自动检查并录制" v-model="manager.autoCheckLiveStatusAndRecord" />
 
         <v-text-field
           v-if="manager.autoCheckLiveStatusAndRecord"
@@ -105,26 +95,13 @@
       </div>
 
       <v-form v-else>
-        <v-checkbox
-          v-if="isClient"
-          label="关闭时进入托盘"
-          v-model="settings.notExitOnAllWindowsClosed"
-        />
+        <v-checkbox v-if="isClient" label="关闭时进入托盘" v-model="settings.notExitOnAllWindowsClosed" />
 
-        <v-checkbox
-          label="录制结束时自动生成 SRT 字幕文件"
-          v-model="settings.autoGenerateSRTOnRecordStop"
-        />
+        <v-checkbox label="录制结束时自动生成 SRT 字幕文件" v-model="settings.autoGenerateSRTOnRecordStop" />
 
-        <v-checkbox
-          label="自动移除 0kb 的录制记录"
-          v-model="settings.autoRemoveRecordWhenTinySize"
-        />
+        <v-checkbox label="自动移除 0kb 的录制记录" v-model="settings.autoRemoveRecordWhenTinySize" />
 
-        <v-checkbox
-          label="录制开始时发出通知"
-          v-model="settings.noticeOnRecordStart"
-        />
+        <v-checkbox label="录制开始时发出通知" v-model="settings.noticeOnRecordStart" />
       </v-form>
     </v-card-item>
 
@@ -136,10 +113,7 @@
           <tr>
             <td>开源地址</td>
             <td>
-              <a
-                href="https://github.com/WhiteMinds/LiveAutoRecord"
-                target="_blank"
-              >
+              <a href="https://github.com/WhiteMinds/LiveAutoRecord" target="_blank">
                 https://github.com/WhiteMinds/LiveAutoRecord
               </a>
             </td>
@@ -147,10 +121,7 @@
           <tr>
             <td>BUG / 意见反馈</td>
             <td>
-              <a
-                href="https://github.com/WhiteMinds/LiveAutoRecord/issues"
-                target="_blank"
-              >
+              <a href="https://github.com/WhiteMinds/LiveAutoRecord/issues" target="_blank">
                 https://github.com/WhiteMinds/LiveAutoRecord/issues
               </a>
             </td>
@@ -158,9 +129,7 @@
           <tr>
             <td>作者</td>
             <td>
-              <a href="https://space.bilibili.com/23505769" target="_blank">
-                WhiteMind
-              </a>
+              <a href="https://space.bilibili.com/23505769" target="_blank">WhiteMind</a>
             </td>
           </tr>
           <tr>

@@ -1,9 +1,4 @@
-import {
-  createRouter as vueCreateRouter,
-  createWebHashHistory,
-  createWebHistory,
-  RouteRecordRaw,
-} from 'vue-router'
+import { createRouter as vueCreateRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { valuesToMapWithKVEqual } from '../utils'
 import RecordersManage from '../views/RecordersManage/index.vue'
 import RecorderEdit from '../views/RecordersManage/RecorderEdit.vue'
@@ -72,9 +67,7 @@ export function createRouter() {
   ]
 
   return vueCreateRouter({
-    history: ClientService.isClientMode()
-      ? createWebHashHistory()
-      : createWebHistory(),
+    history: ClientService.isClientMode() ? createWebHashHistory() : createWebHistory(),
     routes,
   })
 }

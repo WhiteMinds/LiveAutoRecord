@@ -14,9 +14,7 @@ import { createLogger } from './logger'
 
 export * from './routes/api_types'
 
-export async function startServer(
-  opts: PickPartial<ServerOpts, 'getSettings' | 'setSettings' | 'logger'> = {}
-) {
+export async function startServer(opts: PickPartial<ServerOpts, 'getSettings' | 'setSettings' | 'logger'> = {}) {
   const serverOpts: ServerOpts = {
     ...opts,
     getSettings: opts.getSettings ?? defaultGetSettings,
@@ -41,7 +39,7 @@ export async function startServer(
   app.use(
     cors({
       origin: 'http://localhost:5173',
-    })
+    }),
   )
 
   app.use(morgan('default'))

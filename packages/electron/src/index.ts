@@ -21,10 +21,7 @@ app.whenReady().then(initApp)
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
-  if (
-    process.platform !== 'darwin' &&
-    !getSettings().notExitOnAllWindowsClosed
-  ) {
+  if (process.platform !== 'darwin' && !getSettings().notExitOnAllWindowsClosed) {
     app.quit()
   }
 })

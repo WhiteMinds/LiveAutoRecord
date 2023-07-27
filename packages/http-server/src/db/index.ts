@@ -108,9 +108,7 @@ export function removeRecord(id: RecordModel['id']): void {
   scheduleSave()
 }
 
-export function updateRecordStopTime(
-  props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>
-): void {
+export function updateRecordStopTime(props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>): void {
   assertDBReady(db)
   // TODO: 性能有问题的话可以在 insert 时做个索引表
   const record = db.data.records.find((record) => record.id === props.id)

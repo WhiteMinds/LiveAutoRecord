@@ -41,10 +41,7 @@ onMounted(async () => {
 
         const start = res.meta.recordStartTimestamp
         const comments = res.messages
-          .filter(
-            (msg): msg is typeof msg & { type: 'comment' } =>
-              msg.type === 'comment'
-          )
+          .filter((msg): msg is typeof msg & { type: 'comment' } => msg.type === 'comment')
           .map((msg) => ({
             time: (msg.timestamp - start) / 1e3,
             text: msg.text,

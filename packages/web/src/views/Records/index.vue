@@ -1,12 +1,7 @@
 <template>
   <v-card class="m-4">
     <v-card-title class="flex items-center">
-      <v-icon
-        icon="mdi-arrow-left"
-        size="24"
-        class="mr-2"
-        @click="$router.back"
-      />
+      <v-icon icon="mdi-arrow-left" size="24" class="mr-2" @click="$router.back" />
       录像历史
     </v-card-title>
 
@@ -36,11 +31,7 @@
             {{ format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss') }}
           </td>
           <td>
-            {{
-              record.stopTimestamp
-                ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss')
-                : '/'
-            }}
+            {{ record.stopTimestamp ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss') : '/' }}
           </td>
           <td>
             {{ record.stopTimestamp ? formatInterval(record) : '/' }}
@@ -48,19 +39,10 @@
           <td>{{ record.savePath }}</td>
           <td>
             <div class="flex gap-0">
-              <router-link
-                :to="{ name: RouteNames.Player, query: { id: record.id } }"
-                target="_blank"
-                tabindex="-1"
-              >
+              <router-link :to="{ name: RouteNames.Player, query: { id: record.id } }" target="_blank" tabindex="-1">
                 <v-btn size="small" variant="text">播放</v-btn>
               </router-link>
-              <v-btn
-                @click="genSRT(record)"
-                size="small"
-                variant="text"
-                :loading="record.generatingSRT"
-              >
+              <v-btn @click="genSRT(record)" size="small" variant="text" :loading="record.generatingSRT">
                 生成 srt 字幕
               </v-btn>
             </div>
@@ -85,10 +67,7 @@ import { InteractionService } from '../../services/InteractionService'
 const route = useRoute()
 const router = useRouter()
 // TODO: 这里写的有点和路由层耦合了，应该把 query -> state 的处理放到路由层去
-const recorderId =
-  route.name === RouteNames.RecorderRecords
-    ? String(route.params.id)
-    : undefined
+const recorderId = route.name === RouteNames.RecorderRecords ? String(route.params.id) : undefined
 
 type Record = ClientRecord & { generatingSRT?: boolean }
 const records = ref<Record[]>([])

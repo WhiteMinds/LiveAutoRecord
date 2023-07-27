@@ -5,7 +5,7 @@ import { ClientRecorder } from './api_types'
 
 type PagedResultGetter<T = unknown> = (
   page: number,
-  pageSize: number
+  pageSize: number,
 ) => Promise<{
   page: number
   pageSize: number
@@ -15,10 +15,7 @@ type PagedResultGetter<T = unknown> = (
 }>
 
 export function createPagedResultGetter<T>(
-  getItems: (
-    startIdx: number,
-    count: number
-  ) => Promise<{ items: T[]; total: number }>
+  getItems: (startIdx: number, count: number) => Promise<{ items: T[]; total: number }>,
 ): PagedResultGetter<T> {
   return async (page, pageSize) => {
     const start = (page - 1) * pageSize
@@ -41,7 +38,7 @@ export function getNumberFromQuery(
     defaultValue: number
     min?: number
     max?: number
-  }
+  },
 ): number
 export function getNumberFromQuery(
   req: Request,
@@ -50,7 +47,7 @@ export function getNumberFromQuery(
     defaultValue?: number
     min?: number
     max?: number
-  }
+  },
 ): number | undefined
 export function getNumberFromQuery(
   req: Request,
@@ -59,7 +56,7 @@ export function getNumberFromQuery(
     defaultValue?: number
     min?: number
     max?: number
-  } = {}
+  } = {},
 ): number | undefined {
   const rawVal = req.query[key]
   const value = Number(rawVal)
@@ -72,14 +69,7 @@ export function getNumberFromQuery(
 export function recorderToClient(recorder: Recorder): ClientRecorder {
   return {
     // TODO: 用 pick 更加稳健一些，这里省事先 omit 了
-    ...omit(
-      recorder,
-      'all',
-      'getChannelURL',
-      'checkLiveStatusAndRecord',
-      'recordHandle',
-      'toJSON'
-    ),
+    ...omit(recorder, 'all', 'getChannelURL', 'checkLiveStatusAndRecord', 'recordHandle', 'toJSON'),
     channelURL: recorder.getChannelURL(),
     recordHandle: recorder.recordHandle && omit(recorder.recordHandle, 'stop'),
   }

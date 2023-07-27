@@ -33,10 +33,7 @@ export const InteractionService = {
 
   onEscapeWhenBody(callback: () => void) {
     const handler = (e: KeyboardEvent) => {
-      if (
-        e.key === 'Escape' &&
-        (e.target instanceof HTMLBodyElement || e.target == null)
-      ) {
+      if (e.key === 'Escape' && (e.target instanceof HTMLBodyElement || e.target == null)) {
         callback()
       }
     }

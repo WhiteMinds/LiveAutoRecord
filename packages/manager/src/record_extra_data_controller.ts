@@ -26,9 +26,7 @@ export interface RecordExtraDataController {
   flush: () => void
 }
 
-export function createRecordExtraDataController(
-  savePath: string
-): RecordExtraDataController {
+export function createRecordExtraDataController(savePath: string): RecordExtraDataController {
   const data: RecordExtraData = {
     meta: {
       recordStartTimestamp: Date.now(),
@@ -36,13 +34,9 @@ export function createRecordExtraDataController(
     messages: [],
   }
 
-  const scheduleSave = asyncThrottle(
-    () => fs.promises.writeFile(savePath, JSON.stringify(data)),
-    30e3,
-    {
-      immediateRunWhenEndOfDefer: true,
-    }
-  )
+  const scheduleSave = asyncThrottle(() => fs.promises.writeFile(savePath, JSON.stringify(data)), 30e3, {
+    immediateRunWhenEndOfDefer: true,
+  })
 
   const addMessage: RecordExtraDataController['addMessage'] = (comment) => {
     data.messages.push(comment)

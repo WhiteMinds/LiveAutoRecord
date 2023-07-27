@@ -7,15 +7,11 @@ import { scheduleBroadcastMessage } from './event'
 export function createRouter(serverOpts: ServerOpts) {
   const router = Router()
 
-  async function getSettings(
-    args: API.getSettings.Args
-  ): Promise<API.getSettings.Resp> {
+  async function getSettings(args: API.getSettings.Args): Promise<API.getSettings.Resp> {
     return serverOpts.getSettings()
   }
 
-  async function setSettings(
-    args: API.setSettings.Args
-  ): Promise<API.setSettings.Resp> {
+  async function setSettings(args: API.setSettings.Args): Promise<API.setSettings.Resp> {
     const newSettings: Settings = args
     return serverOpts.setSettings(newSettings)
   }

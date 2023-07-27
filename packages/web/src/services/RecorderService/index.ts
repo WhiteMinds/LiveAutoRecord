@@ -51,7 +51,7 @@ function removeRecorderCache(id: ClientRecorder['id']): void {
 
 async function getReactiveRecorder(
   id: ClientRecorder['id'],
-  opts: { noCache?: boolean } = {}
+  opts: { noCache?: boolean } = {},
 ): Promise<ClientRecorder | undefined> {
   const store = useStore()
 
@@ -63,15 +63,13 @@ async function getReactiveRecorder(
   return store.recorders.find((r) => r.id === id)
 }
 
-async function addRecorder(
-  ...args: Parameters<typeof LARServerService['addRecorder']>
-): Promise<ClientRecorder> {
+async function addRecorder(...args: Parameters<(typeof LARServerService)['addRecorder']>): Promise<ClientRecorder> {
   const recorder = await LARServerService.addRecorder(...args)
   return addOrUpdateRecorderCache(recorder)
 }
 
 async function updateRecorder(
-  ...args: Parameters<typeof LARServerService['updateRecorder']>
+  ...args: Parameters<(typeof LARServerService)['updateRecorder']>
 ): Promise<ClientRecorder> {
   const recorder = await LARServerService.updateRecorder(...args)
   return addOrUpdateRecorderCache(recorder)
@@ -106,7 +104,7 @@ function startUpdateRecordersOnServerMessage() {
             removeRecorderCache(msg.id)
             break
         }
-      })
+      }),
     )
     .subscribe()
 

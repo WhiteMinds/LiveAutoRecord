@@ -6,14 +6,12 @@ import { NotificationService } from '../NotificationService'
 import { TabService } from '../TabService'
 import fastMemo from 'fast-memoize'
 
-const getThrottledChannelNotifyFn = fastMemo(
-  function createThrottledChannelNotifyFn(
-    // 只是提供给 memoize 作为 cache 的 key，实际逻辑中不会使用。
-    channelId: string
-  ): DebouncedFunc<typeof NotificationService.notify> {
-    return throttle(NotificationService.notify.bind(NotificationService), 30e3)
-  }
-)
+const getThrottledChannelNotifyFn = fastMemo(function createThrottledChannelNotifyFn(
+  // 只是提供给 memoize 作为 cache 的 key，实际逻辑中不会使用。
+  channelId: string,
+): DebouncedFunc<typeof NotificationService.notify> {
+  return throttle(NotificationService.notify.bind(NotificationService), 30e3)
+})
 
 export async function init() {
   const settings = await LARServerService.getSettings({})
@@ -41,9 +39,7 @@ export async function init() {
     RecordService.noticeOnRecordStart = msg.settings.noticeOnRecordStart
   })
 
-  LARServerService.getServerMessages()
-    .pipe(updateNoticeSettingOnChange, tryNoticeOnRecordStartMsg)
-    .subscribe()
+  LARServerService.getServerMessages().pipe(updateNoticeSettingOnChange, tryNoticeOnRecordStartMsg).subscribe()
 }
 
 export const RecordService = {

@@ -4,11 +4,7 @@ import { paths } from './env'
 
 export const logger = createLogger({
   level: 'debug',
-  format: format.combine(
-    format.label({ label: 'default' }),
-    format.timestamp(),
-    format.json()
-  ),
+  format: format.combine(format.label({ label: 'default' }), format.timestamp(), format.json()),
   transports: [
     new transports.File({
       filename: path.join(paths.log, 'client-error.log'),
@@ -41,8 +37,8 @@ if (process.env.NODE_ENV !== 'production') {
         format.align(),
         format.printf(({ level, message, label, timestamp }) => {
           return `${timestamp} [${label}] ${level}: ${message}`
-        })
+        }),
       ),
-    })
+    }),
   )
 }

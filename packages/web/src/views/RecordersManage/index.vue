@@ -1,9 +1,6 @@
 <template>
   <div class="relative">
-    <div
-      class="h-screen overflow-auto"
-      :class="{ hidden: currentRouteParentIsRecordersManage }"
-    >
+    <div class="h-screen overflow-auto" :class="{ hidden: currentRouteParentIsRecordersManage }">
       <div class="sticky left-0 top-0 p-4 bg-inherit shadow flex">
         <div class="flex flex-auto gap-4">
           <v-select
@@ -16,58 +13,17 @@
             hide-details="auto"
           />
 
-          <v-text-field
-            label="过滤"
-            class="flex-auto"
-            v-model="filterText"
-            hide-details="auto"
-          />
+          <v-text-field label="过滤" class="flex-auto" v-model="filterText" hide-details="auto" />
 
           <div class="flex gap-2 items-center">
-            <router-link
-              class="h-full"
-              :to="{ name: RouteNames.NewRecorder }"
-              tabindex="-1"
-            >
-              <v-btn
-                class="!h-full"
-                stacked
-                prepend-icon="mdi-plus"
-                :rounded="0"
-                size="small"
-              >
-                添加频道
-              </v-btn>
+            <router-link class="h-full" :to="{ name: RouteNames.NewRecorder }" tabindex="-1">
+              <v-btn class="!h-full" stacked prepend-icon="mdi-plus" :rounded="0" size="small">添加频道</v-btn>
             </router-link>
-            <router-link
-              class="h-full"
-              :to="{ name: RouteNames.Records }"
-              tabindex="-1"
-            >
-              <v-btn
-                class="!h-full"
-                stacked
-                prepend-icon="mdi-history"
-                :rounded="0"
-                size="small"
-              >
-                录制历史
-              </v-btn>
+            <router-link class="h-full" :to="{ name: RouteNames.Records }" tabindex="-1">
+              <v-btn class="!h-full" stacked prepend-icon="mdi-history" :rounded="0" size="small">录制历史</v-btn>
             </router-link>
-            <router-link
-              class="h-full"
-              :to="{ name: RouteNames.RecordersSetting }"
-              tabindex="-1"
-            >
-              <v-btn
-                class="!h-full"
-                stacked
-                prepend-icon="mdi-cog"
-                :rounded="0"
-                size="small"
-              >
-                录制设置
-              </v-btn>
+            <router-link class="h-full" :to="{ name: RouteNames.RecordersSetting }" tabindex="-1">
+              <v-btn class="!h-full" stacked prepend-icon="mdi-cog" :rounded="0" size="small">录制设置</v-btn>
             </router-link>
           </div>
         </div>
@@ -87,10 +43,7 @@
     <!-- TODO: 这样设计有个缺陷，在子页刷新时，父路由也会在后台加载与请求，可以优化 -->
     <router-view v-slot="{ Component }">
       <!-- showViewIfRouteParentIsRecordersManage -->
-      <div
-        v-if="currentRouteParentIsRecordersManage"
-        class="absolute inset-0 h-screen overflow-auto bg-[#F0F0F0]"
-      >
+      <div v-if="currentRouteParentIsRecordersManage" class="absolute inset-0 h-screen overflow-auto bg-[#F0F0F0]">
         <component :is="Component" />
       </div>
     </router-view>
@@ -108,9 +61,7 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const currentRouteParentIsRecordersManage = computed(
-  () =>
-    route.matched.length >= 2 &&
-    route.matched[route.matched.length - 2].name === RouteNames.RecordersManage
+  () => route.matched.length >= 2 && route.matched[route.matched.length - 2].name === RouteNames.RecordersManage,
 )
 
 const recorders = ref<ClientRecorder[]>([])
@@ -142,9 +93,7 @@ const filterText = ref<string>('')
 const displayingRecorders = computed(() => {
   const fields: (keyof ClientRecorder)[] = ['remarks', 'channelId']
   const result = recorders.value.filter((recorder) =>
-    fields.some((field) =>
-      recorder[field]?.toString().includes(filterText.value)
-    )
+    fields.some((field) => recorder[field]?.toString().includes(filterText.value)),
   )
 
   assert(sortMode.value)

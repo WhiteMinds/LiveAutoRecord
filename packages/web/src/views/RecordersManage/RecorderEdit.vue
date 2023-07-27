@@ -32,10 +32,7 @@
           :disabled="!isCreating"
           :loading="parsing"
           persistent-hint
-          :hint="
-            parseState ??
-            '输入频道的 ID 或完整 URL，检测到 URL 时会自动解析为频道 ID'
-          "
+          :hint="parseState ?? '输入频道的 ID 或完整 URL，检测到 URL 时会自动解析为频道 ID'"
         />
 
         <v-text-field label="备注" v-model="recorder.remarks" />
@@ -80,9 +77,7 @@
       <v-btn @click="applyOrAddRecorder" :loading="operating || parsing">
         {{ parsing ? '等待解析' : isCreating ? '添加' : '应用' }}
       </v-btn>
-      <v-btn v-if="!isCreating" @click="removeRecorder" :loading="operating">
-        删除
-      </v-btn>
+      <v-btn v-if="!isCreating" @click="removeRecorder" :loading="operating">删除</v-btn>
       <v-btn @click="$router.back" :disabled="operating">取消</v-btn>
     </v-card-actions>
   </v-card>
@@ -117,9 +112,7 @@ const router = useRouter()
 const recorderId = String(route.params.id)
 const isCreating = route.name === RouteNames.NewRecorder
 const loading = ref(!isCreating)
-const recorder = reactive<
-  Partial<ClientRecorder> & API.addRecorder.Args & API.updateRecorder.Args
->({
+const recorder = reactive<Partial<ClientRecorder> & API.addRecorder.Args & API.updateRecorder.Args>({
   providerId: defaultProviderId,
   channelId: '',
   quality: 'medium',

@@ -17,29 +17,20 @@ export * from './record_extra_data_controller'
 
 export function defaultFromJSON<E extends AnyObject>(
   provider: RecorderProvider<E>,
-  json: SerializedRecorder<E>
+  json: SerializedRecorder<E>,
 ): Recorder<E> {
   return provider.createRecorder(R.omit(['providerId'], json))
 }
 
 export function defaultToJSON<E extends AnyObject>(
   provider: RecorderProvider<E>,
-  recorder: Recorder<E>
+  recorder: Recorder<E>,
 ): SerializedRecorder<E> {
   return {
     providerId: provider.id,
     ...R.pick(
-      [
-        'id',
-        'channelId',
-        'remarks',
-        'disableAutoCheck',
-        'quality',
-        'streamPriorities',
-        'sourcePriorities',
-        'extra',
-      ],
-      recorder
+      ['id', 'channelId', 'remarks', 'disableAutoCheck', 'quality', 'streamPriorities', 'sourcePriorities', 'extra'],
+      recorder,
     ),
   }
 }
@@ -63,9 +54,7 @@ export const createFFMPEGBuilder = (...args: Parameters<typeof ffmpeg>) => {
   return ffmpeg(...args)
 }
 
-export function getDataFolderPath<E extends AnyObject>(
-  provider: RecorderProvider<E>
-): string {
+export function getDataFolderPath<E extends AnyObject>(provider: RecorderProvider<E>): string {
   // TODO: 改成 AppData 之类的目录
   return './' + provider.id
 }

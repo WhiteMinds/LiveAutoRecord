@@ -24,10 +24,7 @@ export interface RecorderCreateOpts<E extends AnyObject = UnknownObject> {
   extra?: Partial<E>
 }
 
-export type SerializedRecorder<E extends AnyObject> = PickRequired<
-  RecorderCreateOpts<E>,
-  'id'
->
+export type SerializedRecorder<E extends AnyObject> = PickRequired<RecorderCreateOpts<E>, 'id'>
 
 export type RecorderState = 'idle' | 'recording' | 'stopping-record'
 
@@ -79,7 +76,7 @@ export interface Recorder<E extends AnyObject = UnknownObject>
     this: Recorder<E>,
     opts: {
       getSavePath(data: { owner: string; title: string }): string
-    }
+    },
   ) => Promise<RecordHandle | null>
   // 正在进行的录制的操作接口
   recordHandle?: RecordHandle

@@ -9,7 +9,7 @@ export function asyncThrottle(
   time: number,
   opts: {
     immediateRunWhenEndOfDefer?: boolean
-  } = {}
+  } = {},
 ): DebouncedFunc<() => void> {
   let savingPromise: Promise<void> | null = null
   let hasDeferred = false

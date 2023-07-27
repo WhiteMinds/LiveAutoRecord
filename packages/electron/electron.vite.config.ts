@@ -37,9 +37,7 @@ export default defineConfig({
         {
           name: 'prevent:vite:asset:generateBundle',
           options(opts) {
-            const viteAssetPlugin = opts.plugins?.find(
-              (p) => p && 'name' in p && p.name === 'vite:asset'
-            )
+            const viteAssetPlugin = opts.plugins?.find((p) => p && 'name' in p && p.name === 'vite:asset')
             if (viteAssetPlugin) {
               delete viteAssetPlugin.generateBundle
             }
@@ -83,7 +81,5 @@ export default defineConfig({
 })
 
 function isPromiseLike<T>(obj: unknown): obj is PromiseLike<T> {
-  return (
-    !!obj && typeof obj === 'object' && typeof (obj as any).then === 'function'
-  )
+  return !!obj && typeof obj === 'object' && typeof (obj as any).then === 'function'
 }

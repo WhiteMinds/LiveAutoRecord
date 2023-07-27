@@ -44,10 +44,7 @@ function startElection() {
       expire: Date.now() + leaderHeartbeatTimeout,
     })
 
-  updateTenureTimer = window.setInterval(
-    updateTenure,
-    leaderHeartbeatTimeout / 10
-  )
+  updateTenureTimer = window.setInterval(updateTenure, leaderHeartbeatTimeout / 10)
 
   updateTenure()
 }

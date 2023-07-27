@@ -21,11 +21,7 @@ export interface PagedResp extends PagedArgs {
 export type ClientRecorder = Omit<
   Recorder<RecorderExtra>,
   // TODO: 可以改成排除所有方法 & EmitterProps
-  | 'all'
-  | 'getChannelURL'
-  | 'checkLiveStatusAndRecord'
-  | 'recordHandle'
-  | 'toJSON'
+  'all' | 'getChannelURL' | 'checkLiveStatusAndRecord' | 'recordHandle' | 'toJSON'
 > & {
   channelURL: string
   recordHandle?: Omit<RecordHandle, 'stop'>
@@ -59,12 +55,7 @@ export namespace API {
   export namespace updateRecorder {
     export type Args = Pick<
       RecorderCreateOpts,
-      | 'id'
-      | 'remarks'
-      | 'disableAutoCheck'
-      | 'quality'
-      | 'streamPriorities'
-      | 'sourcePriorities'
+      'id' | 'remarks' | 'disableAutoCheck' | 'quality' | 'streamPriorities' | 'sourcePriorities'
     >
 
     export type Resp = ClientRecorder
@@ -182,9 +173,4 @@ export interface SettingsChange {
   settings: Settings
 }
 
-export type SSEMessage =
-  | UpdateRecorder
-  | AddRecorder
-  | RemoveRecorder
-  | RecordStart
-  | SettingsChange
+export type SSEMessage = UpdateRecorder | AddRecorder | RemoveRecorder | RecordStart | SettingsChange

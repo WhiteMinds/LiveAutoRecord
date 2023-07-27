@@ -6,30 +6,18 @@ import { API } from './api_types'
 const router = Router()
 
 function getManager(args: API.getManager.Args): API.getManager.Resp {
-  return pick(
-    recorderManager,
-    'savePathRule',
-    'autoCheckLiveStatusAndRecord',
-    'autoCheckInterval',
-    'ffmpegOutputArgs'
-  )
+  return pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord', 'autoCheckInterval', 'ffmpegOutputArgs')
 }
 
 function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
   Object.assign(recorderManager, args)
   // TODO: 这段或许应该放在 recorderManager 内部实现
   if (args.autoCheckLiveStatusAndRecord != null) {
-    if (
-      args.autoCheckLiveStatusAndRecord &&
-      !recorderManager.isCheckLoopRunning
-    ) {
+    if (args.autoCheckLiveStatusAndRecord && !recorderManager.isCheckLoopRunning) {
       recorderManager.startCheckLoop()
     }
 
-    if (
-      !args.autoCheckLiveStatusAndRecord &&
-      recorderManager.isCheckLoopRunning
-    ) {
+    if (!args.autoCheckLiveStatusAndRecord && recorderManager.isCheckLoopRunning) {
       recorderManager.stopCheckLoop()
     }
   }
@@ -38,9 +26,7 @@ function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
   return getManager({})
 }
 
-async function resolveChannel(
-  args: API.resolveChannel.Args
-): Promise<API.resolveChannel.Resp> {
+async function resolveChannel(args: API.resolveChannel.Args): Promise<API.resolveChannel.Resp> {
   for (const provider of recorderManager.providers) {
     const info = await provider.resolveChannelInfoFromURL(args.channelURL)
     if (!info) continue
@@ -67,7 +53,7 @@ router
       'savePathRule',
       'autoCheckLiveStatusAndRecord',
       'autoCheckInterval',
-      'ffmpegOutputArgs'
+      'ffmpegOutputArgs',
     )
 
     res.json({ payload: updateManager(args) })
