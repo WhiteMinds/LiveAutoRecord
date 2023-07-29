@@ -17,6 +17,14 @@ export function omit<T extends Record<string, any>, U extends Exclude<keyof T, n
   return R.omit(props, object)
 }
 
+// Copied from https://stackoverflow.com/a/69019874
+
+export function createTypedObjectFromEntries<T extends ReadonlyArray<readonly [PropertyKey, unknown]>>(
+  entries: T,
+): { [K in T[number] as K[0]]: K[1] } {
+  return Object.fromEntries(entries) as { [K in T[number] as K[0]]: K[1] }
+}
+
 export function valuesToMapWithKVEqual<Values extends string>(
   values: Values[],
 ): {

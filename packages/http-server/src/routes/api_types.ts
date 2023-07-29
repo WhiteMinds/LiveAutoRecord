@@ -146,6 +146,14 @@ export namespace API {
 
     export type Resp = Settings
   }
+
+  export namespace logMethod {
+    export type Args = {
+      text: string
+    }
+
+    export type Resp = null
+  }
 }
 
 export interface UpdateRecorder {

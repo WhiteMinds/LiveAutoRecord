@@ -4,6 +4,7 @@ import { router as recordRoutes } from './record'
 import { router as managerRoutes } from './manager'
 import { router as eventRoutes } from './event'
 import { createRouter as createSettingRouter } from './setting'
+import { createRouter as createLoggerRouter } from './logger'
 import { ServerOpts } from '../types'
 // import { respond } from './utils'
 
@@ -17,6 +18,8 @@ export function createRouter(serverOpts: ServerOpts) {
   router.use(eventRoutes)
   const settingRoutes = createSettingRouter(serverOpts)
   router.use(settingRoutes)
+  const loggerRoutes = createLoggerRouter(serverOpts)
+  router.use(loggerRoutes)
 
   const handle: ErrorRequestHandler = (err: unknown, req, res, next) => {
     logger.error(err)

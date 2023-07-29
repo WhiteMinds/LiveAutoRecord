@@ -1,6 +1,6 @@
 import axios from 'axios'
 import type { API } from '@autorecord/http-server'
-import { omit } from '../../utils'
+import { createTypedObjectFromEntries, omit } from '../../utils'
 import { getServerMessages } from './server_messages'
 
 // TODO: 暂时用固定值
@@ -98,6 +98,21 @@ async function setSettings(args: API.setSettings.Args): Promise<API.setSettings.
   return resp.data.payload
 }
 
+const logMethods = ['error', 'warn', 'info', 'debug'] as const
+const logFunctions = createTypedObjectFromEntries(
+  logMethods.map((method) => {
+    return [
+      method,
+      async function (...objList: unknown[]): Promise<API.logMethod.Resp> {
+        const resp = await requester.post<{ payload: API.logMethod.Resp }>(`/logger/${method}`, {
+          text: objList.map((obj) => (typeof obj === 'string' ? obj : JSON.stringify(obj))).join(' '),
+        })
+        return resp.data.payload
+      },
+    ] as const
+  }),
+)
+
 export const LARServerService = {
   getRecorders,
   getRecorder,
@@ -117,4 +132,6 @@ export const LARServerService = {
   setSettings,
 
   getServerMessages,
+
+  ...logFunctions,
 }
