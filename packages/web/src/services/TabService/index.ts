@@ -36,17 +36,16 @@ function cleanLeaderInfo() {
 let updateTenureTimer: number | null = null
 function startElection() {
   if (getLeaderInfo() != null) return
-  if (updateTenureTimer != null) return
 
   const updateTenure = () =>
     setLeaderInfo({
       id,
       expire: Date.now() + leaderHeartbeatTimeout,
     })
-
-  updateTenureTimer = window.setInterval(updateTenure, leaderHeartbeatTimeout / 10)
-
   updateTenure()
+
+  if (updateTenureTimer != null) return
+  updateTenureTimer = window.setInterval(updateTenure, leaderHeartbeatTimeout / 10)
 }
 
 function quitElection() {
