@@ -4,7 +4,12 @@
  */
 import { ClientAPI } from '@autorecord/shared'
 import { contextBridge } from 'electron'
+import packageJSON from '../package.json'
 
-const clientAPI: ClientAPI = {}
+const clientAPI: ClientAPI = {
+  getVersion() {
+    return packageJSON.version
+  },
+}
 
 contextBridge.exposeInMainWorld('clientAPI', clientAPI)

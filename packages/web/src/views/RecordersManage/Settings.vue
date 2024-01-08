@@ -113,6 +113,10 @@
       <v-table>
         <tbody>
           <tr>
+            <td>版本</td>
+            <td>v{{ version }}</td>
+          </tr>
+          <tr>
             <td>开源地址</td>
             <td>
               <a href="https://github.com/WhiteMinds/LiveAutoRecord" target="_blank">
@@ -160,6 +164,7 @@ import { useEffectInLifecycle } from '../../hooks'
 import { InteractionService } from '../../services/InteractionService'
 
 const isClient = ClientService.isClientMode()
+const version = ClientService.getClientAPI()?.getVersion()
 const router = useRouter()
 const manager = ref<API.getManager.Resp>()
 const settings = ref<API.getSettings.Resp>()
