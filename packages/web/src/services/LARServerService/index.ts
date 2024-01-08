@@ -67,6 +67,11 @@ async function resolveChannel(args: API.resolveChannel.Args): Promise<API.resolv
   return resp.data.payload
 }
 
+async function getManagerDefault(args: API.getManagerDefault.Args): Promise<API.getManagerDefault.Resp> {
+  const resp = await requester.get<{ payload: API.getManagerDefault.Resp }>('/manager/default')
+  return resp.data.payload
+}
+
 async function getRecords(args: API.getRecords.Args): Promise<API.getRecords.Resp> {
   const resp = await requester.get<{ payload: API.getRecords.Resp }>('/records', {
     params: args,
@@ -124,6 +129,7 @@ export const LARServerService = {
   getManager,
   updateManager,
   resolveChannel,
+  getManagerDefault,
   getRecords,
   getRecordExtraData,
   createRecordSRT,

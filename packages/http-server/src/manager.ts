@@ -30,6 +30,13 @@ export const recorderManager = createRecorderManager<RecorderExtra>({
   providers: [providerForDouYu, providerForBilibili, providerForHuYa, providerForDouYin],
 })
 
+export const defaultManagerConfig: ManagerConfig = {
+  savePathRule: path.join(paths.data, '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'),
+  autoCheckLiveStatusAndRecord: true,
+  autoCheckInterval: 1000,
+  ffmpegOutputArgs: recorderManager.ffmpegOutputArgs,
+}
+
 export function addRecorderWithAutoIncrementId(args: RecorderCreateOpts<RecorderExtra>): Recorder<RecorderExtra> {
   return recorderManager.addRecorder({
     ...args,
@@ -40,11 +47,7 @@ export function addRecorderWithAutoIncrementId(args: RecorderCreateOpts<Recorder
 export async function initRecorderManager(serverOpts: ServerOpts): Promise<void> {
   const { logger } = serverOpts
 
-  const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, {
-    savePathRule: path.join(paths.data, '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'),
-    autoCheckLiveStatusAndRecord: true,
-    ffmpegOutputArgs: recorderManager.ffmpegOutputArgs,
-  })
+  const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig)
 
   // 这里做一些旧版本 schema 升级的处理
   if (managerConfig.ffmpegOutputArgs == null) {
@@ -176,5 +179,6 @@ export async function genSRTFile(extraDataPath: string, srtPath: string): Promis
 interface ManagerConfig {
   savePathRule: string
   autoCheckLiveStatusAndRecord: boolean
+  autoCheckInterval: number
   ffmpegOutputArgs: string
 }

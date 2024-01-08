@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { recorderManager } from '../manager'
+import { defaultManagerConfig, recorderManager } from '../manager'
 import { assertStringType, pick } from '../utils'
 import { API } from './api_types'
 
@@ -41,6 +41,10 @@ async function resolveChannel(args: API.resolveChannel.Args): Promise<API.resolv
   return null
 }
 
+function getManagerDefault(args: API.getManagerDefault.Args): API.getManagerDefault.Resp {
+  return defaultManagerConfig
+}
+
 router
   .route('/manager')
   .get(async (req, res) => {
@@ -64,6 +68,10 @@ router.route('/manager/resolve_channel').get(async (req, res) => {
   assertStringType(channelURL)
 
   res.json({ payload: await resolveChannel({ channelURL }) })
+})
+
+router.route('/manager/default').get(async (req, res) => {
+  res.json({ payload: getManagerDefault({}) })
 })
 
 export { router }

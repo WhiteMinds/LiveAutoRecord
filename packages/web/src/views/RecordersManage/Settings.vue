@@ -1,6 +1,9 @@
 <template>
   <v-card class="mx-auto my-4 max-w-2xl">
-    <v-card-title>录制全局设置</v-card-title>
+    <v-card-title class="flex gap-3 items-center">
+      录制全局设置
+      <v-btn v-if="isChanged" size="small" variant="tonal" @click="reset">重置</v-btn>
+    </v-card-title>
 
     <v-card-item>
       <div v-if="!manager" class="text-center p-4">
@@ -155,7 +158,7 @@
 
 <script setup lang="ts">
 import type { API } from '@autorecord/http-server'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { LARServerService } from '../../services/LARServerService'
 import { ClientService } from '../../services/ClientService'
@@ -167,6 +170,7 @@ const isClient = ClientService.isClientMode()
 const version = ClientService.getClientAPI()?.getVersion()
 const router = useRouter()
 const manager = ref<API.getManager.Resp>()
+const managerDefault = ref<API.getManagerDefault.Resp>()
 const settings = ref<API.getSettings.Resp>()
 const savePathRuleAlertVisible = ref(false)
 
@@ -176,6 +180,7 @@ useEffectInLifecycle(() => {
 
 onMounted(async () => {
   manager.value = await LARServerService.getManager({})
+  managerDefault.value = await LARServerService.getManagerDefault({})
   settings.value = await LARServerService.getSettings({})
 })
 
@@ -189,4 +194,10 @@ const apply = async () => {
   // TODO: 前端目前只有 RecordService 用到了 settings，为了降低开发复杂度，这里先直接赋值
   RecordService.noticeOnRecordStart = newSettings.noticeOnRecordStart
 }
+
+const reset = async () => {
+  manager.value = { ...managerDefault.value }
+}
+
+const isChanged = computed(() => JSON.stringify(manager.value) !== JSON.stringify(managerDefault.value))
 </script>

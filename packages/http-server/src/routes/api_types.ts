@@ -109,6 +109,12 @@ export namespace API {
     } | null
   }
 
+  export namespace getManagerDefault {
+    export interface Args {}
+
+    export type Resp = Omit<RecorderManagerCreateOpts, 'providers'>
+  }
+
   export namespace getRecords {
     export interface Args extends PagedArgs {
       recorderId?: Recorder['id']
