@@ -27,7 +27,7 @@ export type ClientRecorder = Omit<
   recordHandle?: Omit<RecordHandle, 'stop'>
 }
 
-export type ClientRecord = RecordModel
+export type ClientRecord = RecordModel & { isFileExists?: boolean }
 
 export namespace API {
   export namespace getRecorders {

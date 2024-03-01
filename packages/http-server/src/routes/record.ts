@@ -16,7 +16,13 @@ async function getRecords(args: API.getRecords.Args): Promise<API.getRecords.Res
       start: startIdx,
       count,
     })
-    return { items, total }
+    return {
+      items: items.map((item) => ({
+        ...item,
+        isFileExists: fs.existsSync(item.savePath),
+      })),
+      total,
+    }
   })
   return pagedGetter(args.page, args.pageSize)
 }

@@ -66,14 +66,30 @@
       <template v-slot:header.actions="{ column }">
         <span class="pl-3">{{ column.title }}</span>
       </template>
+
       <template v-slot:item.actions="{ value: record }">
         <div class="flex gap-0">
-          <router-link :to="{ name: RouteNames.Player, query: { id: record.id } }" target="_blank" tabindex="-1">
-            <v-btn size="small" variant="text">播放</v-btn>
-          </router-link>
-          <v-btn @click="genSRT(record)" size="small" variant="text" :loading="record.generatingSRT">
-            生成 srt 字幕
-          </v-btn>
+          <component
+            :is="!record.isFileExists ? 'span' : 'router-link'"
+            :to="{ name: RouteNames.Player, query: { id: record.id } }"
+            target="_blank"
+            tabindex="-1"
+            :title="!record.isFileExists ? '文件不存在' : ''"
+          >
+            <v-btn size="small" variant="text" :disabled="!record.isFileExists">播放</v-btn>
+          </component>
+
+          <span :title="!record.isFileExists ? '文件不存在' : ''">
+            <v-btn
+              @click="genSRT(record)"
+              size="small"
+              variant="text"
+              :loading="record.generatingSRT"
+              :disabled="!record.isFileExists"
+            >
+              生成 srt 字幕
+            </v-btn>
+          </span>
         </div>
       </template>
     </v-data-table>
