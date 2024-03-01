@@ -79,6 +79,11 @@ async function getRecords(args: API.getRecords.Args): Promise<API.getRecords.Res
   return resp.data.payload
 }
 
+async function getRecord(args: API.getRecord.Args): Promise<API.getRecord.Resp> {
+  const resp = await requester.get<{ payload: API.getRecord.Resp }>(`/records/${args.id}`)
+  return resp.data.payload
+}
+
 async function getRecordExtraData(args: API.getRecordExtraData.Args): Promise<API.getRecordExtraData.Resp> {
   const resp = await requester.get<{ payload: API.getRecordExtraData.Resp }>(`/records/${args.id}/extra_data`)
   return resp.data.payload
@@ -131,6 +136,7 @@ export const LARServerService = {
   resolveChannel,
   getManagerDefault,
   getRecords,
+  getRecord,
   getRecordExtraData,
   createRecordSRT,
   getRecordVideoURL,

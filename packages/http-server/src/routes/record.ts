@@ -21,6 +21,13 @@ async function getRecords(args: API.getRecords.Args): Promise<API.getRecords.Res
   return pagedGetter(args.page, args.pageSize)
 }
 
+function getRecord(args: API.getRecord.Args): API.getRecord.Resp {
+  const record = db.getRecord(args.id)
+  if (record == null) throw new Error('404')
+
+  return record
+}
+
 router.route('/records').get(async (req, res) => {
   const { recorderId } = req.query
   if (recorderId != null) {
@@ -34,6 +41,11 @@ router.route('/records').get(async (req, res) => {
   })
 
   res.json({ payload: await getRecords({ recorderId, page, pageSize }) })
+})
+
+router.route('/records/:id').get(async (req, res) => {
+  const { id } = req.params
+  res.json({ payload: getRecord({ id }) })
 })
 
 router.route('/records/:id/video').get(async (req, res) => {

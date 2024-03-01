@@ -28,6 +28,8 @@ const id = typeof route.query.id === 'string' ? route.query.id : null
 onMounted(async () => {
   if (id === null) return
   assert(container.value)
+  const record = await LARServerService.getRecord({ id })
+  document.title = record.savePath
   const videoURL = await LARServerService.getRecordVideoURL({ id })
   // 浏览器会缓存 fmp4 的 duration，需要加个 query 来 bypass 缓存
   const videoURLWithBypassCache = `${videoURL}?_=${Date.now()}`
@@ -47,6 +49,7 @@ onMounted(async () => {
     apiBackend: {
       async read({ success }) {
         const res = await LARServerService.getRecordExtraData({ id })
+        if (res.meta.title != null) document.title = `${res.meta.title} - ${record.savePath}`
 
         const start = res.meta.recordStartTimestamp
         const comments = res.messages

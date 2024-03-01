@@ -125,6 +125,14 @@ export namespace API {
     }
   }
 
+  export namespace getRecord {
+    export interface Args {
+      id: RecordModel['id']
+    }
+
+    export type Resp = ClientRecord
+  }
+
   export namespace getRecordExtraData {
     export interface Args {
       id: RecordModel['id']
