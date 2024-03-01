@@ -4,17 +4,22 @@
       {{ recorder.remarks || `${providerName} ${recorder.channelId}` }}
     </v-card-title>
 
-    <v-card-text>
-      <div>平台：{{ providerName }}</div>
+    <v-card-text class="grid grid-cols-[auto_1fr] items-center">
+      <span>平台：</span>
+      <span>{{ providerName }}</span>
+
+      <span>频道：</span>
       <div>
-        频道：
         <a :href="recorder.channelURL" target="_blank" class="hover:underline">
           {{ recorder.channelId }}
         </a>
       </div>
-      <div>备注：{{ recorder.remarks }}</div>
+
+      <span>备注：</span>
+      <span>{{ recorder.remarks }}</span>
+
+      <span>状态：</span>
       <div>
-        <span>状态：</span>
         <v-tooltip text="点击查看录制参数" :disabled="!ffmpegArgsDialogAvailable">
           <template v-slot:activator="{ props }">
             <span
@@ -36,14 +41,24 @@
           </v-card>
         </v-dialog>
       </div>
+
+      <span title="禁用自动录制">禁用：</span>
+      <v-switch
+        class="small-switch"
+        color="#880000"
+        hide-details
+        inset
+        v-model="recorder.disableAutoCheck"
+        :loading="requestingDisableAutoCheck"
+      />
     </v-card-text>
 
     <v-card-actions class="border-t justify-end">
-      <v-btn v-if="recorder.state === 'idle'" @click="startRecord" :loading="requesting" size="small">刷新</v-btn>
+      <v-btn v-if="recorder.state === 'idle'" @click="startRecord" :loading="requestingRecord" size="small">刷新</v-btn>
       <v-btn
         v-else
         @click="stopRecord"
-        :loading="requesting"
+        :loading="requestingRecord"
         :disabled="recorder.state === 'stopping-record'"
         size="small"
       >
@@ -64,7 +79,7 @@
 
 <script setup lang="ts">
 import type { ClientRecorder } from '@autorecord/http-server'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { RouteNames } from '../../router'
 import { RecorderService } from '../../services/RecorderService'
 
@@ -80,7 +95,8 @@ const providers = [
   { id: 'DouYin', name: '抖音' },
 ]
 
-const requesting = ref(false)
+const requestingRecord = ref(false)
+const requestingDisableAutoCheck = ref(false)
 
 const providerName = computed(() => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知')
 
@@ -93,20 +109,54 @@ const stateText = computed(() =>
 )
 
 const startRecord = async () => {
-  requesting.value = true
+  requestingRecord.value = true
   try {
     await RecorderService.startRecord(recorder.id)
   } finally {
-    requesting.value = false
+    requestingRecord.value = false
   }
 }
 
 const stopRecord = async () => {
-  requesting.value = true
+  requestingRecord.value = true
   try {
     await RecorderService.stopRecord(recorder.id)
   } finally {
-    requesting.value = false
+    requestingRecord.value = false
   }
 }
+
+const setDisableAutoCheck = async (value: boolean) => {
+  requestingDisableAutoCheck.value = true
+  try {
+    await RecorderService.updateRecorder({
+      ...recorder,
+      disableAutoCheck: value,
+    })
+  } finally {
+    requestingDisableAutoCheck.value = false
+  }
+}
+
+watch(
+  () => recorder.disableAutoCheck,
+  (newVal) => {
+    if (newVal == null) return
+    setDisableAutoCheck(newVal)
+  },
+)
 </script>
+
+<style scoped>
+.small-switch {
+  :deep(&.v-switch .v-selection-control) {
+    min-height: auto;
+  }
+
+  :deep(.v-selection-control__wrapper) {
+    height: auto;
+    transform: scale(0.5);
+    transform-origin: left;
+  }
+}
+</style>

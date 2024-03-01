@@ -22,7 +22,7 @@
     "uuid": "^9.0.0",
     "vue": "^3.2.37",
     "vue-router": "^4.0.0",
-    "vuetify": "^3.0.1"
+    "vuetify": "^3.5.6"
   },
   "devDependencies": {
     "@autorecord/http-server": "workspace:^",
