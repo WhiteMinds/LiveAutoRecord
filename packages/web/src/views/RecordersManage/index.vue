@@ -86,6 +86,21 @@ const sortModes: {
     name: '频道',
     resolver: (recorder) => recorder.channelId,
   },
+  {
+    id: 'state',
+    name: '状态',
+    resolver: (recorder) => {
+      return ['recording', 'stopping-record', 'idle'].indexOf(recorder.state)
+    },
+  },
+  {
+    id: 'remarks',
+    name: '备注',
+    resolver: (recorder) => {
+      if (recorder.remarks === '') return null
+      return recorder.remarks ?? null
+    },
+  },
 ]
 const sortMode = ref(sortModes[0])
 const filterText = ref<string>('')
@@ -104,8 +119,8 @@ const displayingRecorders = computed(() => {
 
     // 空值与非空值同时存在，则非空值排序靠前，如果都为空则顺序不变
     if (valA == null || valB == null) {
-      if (valA != null) return 1
-      if (valB != null) return -1
+      if (valA != null) return -1
+      if (valB != null) return 1
       return 0
     }
 
