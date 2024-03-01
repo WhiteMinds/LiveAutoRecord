@@ -49,6 +49,19 @@ router.route('/records').get(async (req, res) => {
   res.json({ payload: await getRecords({ recorderId, page, pageSize }) })
 })
 
+router.route('/records/clear_invalid').post(async (req, res) => {
+  const { recorderId } = req.body
+  if (recorderId != null) {
+    assertStringType(recorderId)
+  }
+
+  const records = await getRecords({ recorderId, page: 1, pageSize: 1e10 })
+  const invalidIds = records.items.filter((item) => !item.isFileExists).map((item) => item.id)
+  db.removeRecords(invalidIds)
+
+  res.json({ payload: invalidIds.length })
+})
+
 router.route('/records/:id').get(async (req, res) => {
   const { id } = req.params
   res.json({ payload: getRecord({ id }) })

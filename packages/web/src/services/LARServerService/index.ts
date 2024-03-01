@@ -72,6 +72,11 @@ async function getManagerDefault(args: API.getManagerDefault.Args): Promise<API.
   return resp.data.payload
 }
 
+async function clearInvalidRecords(args: API.clearInvalidRecords.Args): Promise<API.clearInvalidRecords.Resp> {
+  const resp = await requester.post<{ payload: API.clearInvalidRecords.Resp }>('/records/clear_invalid', args)
+  return resp.data.payload
+}
+
 async function getRecords(args: API.getRecords.Args): Promise<API.getRecords.Resp> {
   const resp = await requester.get<{ payload: API.getRecords.Resp }>('/records', {
     params: args,
@@ -135,6 +140,7 @@ export const LARServerService = {
   updateManager,
   resolveChannel,
   getManagerDefault,
+  clearInvalidRecords,
   getRecords,
   getRecord,
   getRecordExtraData,

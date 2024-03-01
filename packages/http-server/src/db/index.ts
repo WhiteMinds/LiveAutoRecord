@@ -108,6 +108,12 @@ export function removeRecord(id: RecordModel['id']): void {
   scheduleSave()
 }
 
+export function removeRecords(ids: RecordModel['id'][]): void {
+  assertDBReady(db)
+  db.data.records = db.data.records.filter((record) => !ids.includes(record.id))
+  scheduleSave()
+}
+
 export function updateRecordStopTime(props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>): void {
   assertDBReady(db)
   // TODO: 性能有问题的话可以在 insert 时做个索引表

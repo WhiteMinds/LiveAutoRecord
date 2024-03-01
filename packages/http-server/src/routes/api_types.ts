@@ -115,6 +115,14 @@ export namespace API {
     export type Resp = Omit<RecorderManagerCreateOpts, 'providers'>
   }
 
+  export namespace clearInvalidRecords {
+    export interface Args {
+      recorderId?: Recorder['id']
+    }
+
+    export type Resp = number
+  }
+
   export namespace getRecords {
     export interface Args extends PagedArgs {
       recorderId?: Recorder['id']

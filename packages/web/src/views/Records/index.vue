@@ -1,9 +1,21 @@
 <template>
   <v-card class="m-4" flat>
     <v-card-title class="my-2 flex items-center justify-between gap-4">
-      <div>
+      <div class="flex items-center">
         <v-icon icon="mdi-arrow-left" size="24" class="mr-2" @click="$router.back" />
-        录像历史
+        <span>录像历史</span>
+        <v-btn class="ml-4" size="small" variant="tonal" @click="clearInvalidWarnVisible = true">清理无效记录</v-btn>
+
+        <v-dialog v-model="clearInvalidWarnVisible">
+          <v-card title="注意" text="这将移除所有视频文件已被删除的记录，包括搜索过滤之前的文件。">
+            <template v-slot:actions>
+              <v-spacer></v-spacer>
+
+              <v-btn v-if="!requestingClearInvalid" @click="clearInvalidWarnVisible = false">取消</v-btn>
+              <v-btn @click="clearInvalid" :loading="requestingClearInvalid">确认</v-btn>
+            </template>
+          </v-card>
+        </v-dialog>
       </div>
 
       <v-text-field
@@ -16,6 +28,8 @@
         density="compact"
       />
     </v-card-title>
+
+    <v-alert class="m-4" type="success" v-model="alert" :text="alert" closable></v-alert>
 
     <div v-if="loading" class="text-center p-4">
       <v-progress-circular indeterminate color="primary" />
@@ -115,21 +129,26 @@ const recorderId = route.name === RouteNames.RecorderRecords ? String(route.para
 type Record = ClientRecord & { generatingSRT?: boolean }
 const records = ref<Record[]>([])
 const loading = ref(true)
+const clearInvalidWarnVisible = ref(false)
+const requestingClearInvalid = ref(false)
+const alert = ref<false | string>(false)
 const search = ref('')
 
 useEffectInLifecycle(() => {
   return InteractionService.onEscapeWhenBody(() => router.back())
 })
 
-onMounted(async () => {
+const refreshRecords = async () => {
+  loading.value = true
   const res = await LARServerService.getRecords({
     recorderId,
     page: 1,
-    pageSize: 9999,
+    // TODO: 暂时全部拉下来做本地分页
+    pageSize: 1e10,
   })
   loading.value = false
   records.value = [...res.items].reverse()
-})
+}
 
 const genSRT = async (record: Record) => {
   if (record.generatingSRT) return
@@ -141,6 +160,20 @@ const genSRT = async (record: Record) => {
     record.generatingSRT = false
   }
 }
+
+const clearInvalid = async () => {
+  requestingClearInvalid.value = true
+  try {
+    const count = await LARServerService.clearInvalidRecords({ recorderId })
+    alert.value = `共 ${count} 条无效记录被移除`
+  } finally {
+    requestingClearInvalid.value = false
+  }
+  clearInvalidWarnVisible.value = false
+  refreshRecords()
+}
+
+onMounted(refreshRecords)
 
 function formatInterval(record: ClientRecord) {
   const stopTimestamp = record.stopTimestamp ?? record.startTimestamp
