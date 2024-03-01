@@ -1,55 +1,82 @@
 <template>
-  <v-card class="m-4">
-    <v-card-title class="flex items-center">
-      <v-icon icon="mdi-arrow-left" size="24" class="mr-2" @click="$router.back" />
-      录像历史
+  <v-card class="m-4" flat>
+    <v-card-title class="my-2 flex items-center justify-between gap-4">
+      <div>
+        <v-icon icon="mdi-arrow-left" size="24" class="mr-2" @click="$router.back" />
+        录像历史
+      </div>
+
+      <v-text-field
+        class="w-96 flex-none"
+        v-model="search"
+        label="搜索"
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        hide-details
+        density="compact"
+      />
     </v-card-title>
 
     <div v-if="loading" class="text-center p-4">
       <v-progress-circular indeterminate color="primary" />
     </div>
 
-    <!--
-      TODO: 3.0.1 的 vuetify 还不支持 data-table，所以要手动实现 sort 的功能，
-      不过为了省事，还是先等等它的开发进度看看。
-      https://github.com/vuetifyjs/vuetify/issues/13479
-    -->
-    <v-table v-else>
-      <thead>
-        <tr>
-          <th class="text-left w-40">录制开始时间</th>
-          <th class="text-left w-40">录制终止时间</th>
-          <th class="text-left w-36">录制时长</th>
-          <th class="text-left">路径</th>
-          <th class="text-left w-64 pl-7">操作</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="record in records" :key="record.id">
-          <td>
-            {{ format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss') }}
-          </td>
-          <td>
-            {{ record.stopTimestamp ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss') : '/' }}
-          </td>
-          <td>
-            {{ record.stopTimestamp ? formatInterval(record) : '/' }}
-          </td>
-          <td>{{ record.savePath }}</td>
-          <td>
-            <div class="flex gap-0">
-              <router-link :to="{ name: RouteNames.Player, query: { id: record.id } }" target="_blank" tabindex="-1">
-                <v-btn size="small" variant="text">播放</v-btn>
-              </router-link>
-              <v-btn @click="genSRT(record)" size="small" variant="text" :loading="record.generatingSRT">
-                生成 srt 字幕
-              </v-btn>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
+    <v-data-table
+      v-else
+      item-key="id"
+      items-per-page="25"
+      :items="records"
+      :headers="[
+        {
+          title: '录制开始时间',
+          key: 'startTimestamp',
+          value: (record) => format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss'),
+          sortable: true,
+          width: 160,
+        },
+        {
+          title: '录制终止时间',
+          key: 'stopTimestamp',
+          value: (record) => (record.stopTimestamp ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss') : '/'),
+          sortable: true,
+          width: 160,
+        },
+        {
+          title: '录制时长',
+          key: 'totalTime',
+          value: (record) => (record.stopTimestamp ? formatInterval(record) : '/'),
+          sortable: true,
+          width: 144,
+        },
+        {
+          title: '路径',
+          value: 'savePath',
+          sortable: false,
+        },
+        {
+          title: '操作',
+          key: 'actions',
+          value: (record) => record,
+          sortable: false,
+          width: 256,
+        },
+      ]"
+      :search="search"
+    >
+      <template v-slot:header.actions="{ column }">
+        <span class="pl-3">{{ column.title }}</span>
+      </template>
+      <template v-slot:item.actions="{ value: record }">
+        <div class="flex gap-0">
+          <router-link :to="{ name: RouteNames.Player, query: { id: record.id } }" target="_blank" tabindex="-1">
+            <v-btn size="small" variant="text">播放</v-btn>
+          </router-link>
+          <v-btn @click="genSRT(record)" size="small" variant="text" :loading="record.generatingSRT">
+            生成 srt 字幕
+          </v-btn>
+        </div>
+      </template>
+    </v-data-table>
   </v-card>
 </template>
 
@@ -72,6 +99,7 @@ const recorderId = route.name === RouteNames.RecorderRecords ? String(route.para
 type Record = ClientRecord & { generatingSRT?: boolean }
 const records = ref<Record[]>([])
 const loading = ref(true)
+const search = ref('')
 
 useEffectInLifecycle(() => {
   return InteractionService.onEscapeWhenBody(() => router.back())
