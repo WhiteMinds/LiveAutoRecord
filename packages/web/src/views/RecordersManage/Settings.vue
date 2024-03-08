@@ -79,7 +79,7 @@
 
         <v-text-field label="FFMPEG 输出参数" v-model="manager.ffmpegOutputArgs" />
 
-        <v-checkbox label="自动检查并录制" v-model="manager.autoCheckLiveStatusAndRecord" />
+        <v-checkbox label="自动检查并录制" v-model="manager.autoCheckLiveStatusAndRecord" hide-details />
 
         <v-text-field
           v-if="manager.autoCheckLiveStatusAndRecord"
@@ -90,7 +90,7 @@
       </v-form>
     </v-card-item>
 
-    <v-card-title>应用设置</v-card-title>
+    <v-card-title>{{ t('settings.app_settings') }}</v-card-title>
 
     <v-card-item>
       <div v-if="!settings" class="text-center p-4">
@@ -98,15 +98,34 @@
       </div>
 
       <v-form v-else>
-        <v-checkbox v-if="isClient" label="关闭时进入托盘" v-model="settings.notExitOnAllWindowsClosed" />
+        <v-select
+          label="语言 - Language"
+          class="mb-2"
+          v-model="innerLocale"
+          density="comfortable"
+          :items="[
+            { name: '简体中文', value: 'zh' },
+            { name: 'Русский язык', value: 'ru' },
+            { name: 'English', value: 'en' },
+          ]"
+          item-title="name"
+          item-value="value"
+          hide-details="auto"
+        />
 
-        <v-checkbox label="录制结束时自动生成 SRT 字幕文件" v-model="settings.autoGenerateSRTOnRecordStop" />
+        <v-checkbox v-if="isClient" label="关闭时进入托盘" v-model="settings.notExitOnAllWindowsClosed" hide-details />
 
-        <v-checkbox label="自动移除 0kb 的录制记录" v-model="settings.autoRemoveRecordWhenTinySize" />
+        <v-checkbox
+          label="录制结束时自动生成 SRT 字幕文件"
+          v-model="settings.autoGenerateSRTOnRecordStop"
+          hide-details
+        />
 
-        <v-checkbox label="录制开始时发出通知" v-model="settings.noticeOnRecordStart" />
+        <v-checkbox label="自动移除 0kb 的录制记录" v-model="settings.autoRemoveRecordWhenTinySize" hide-details />
 
-        <v-checkbox label="调试模式" v-model="settings.debugMode" />
+        <v-checkbox label="录制开始时发出通知" v-model="settings.noticeOnRecordStart" hide-details />
+
+        <v-checkbox label="调试模式" v-model="settings.debugMode" hide-details />
       </v-form>
     </v-card-item>
 
@@ -160,6 +179,7 @@
 import type { API } from '@autorecord/http-server'
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { LARServerService } from '../../services/LARServerService'
 import { ClientService } from '../../services/ClientService'
 import { RecordService } from '../../services/RecordService'
@@ -173,6 +193,11 @@ const manager = ref<API.getManager.Resp>()
 const managerDefault = ref<API.getManagerDefault.Resp>()
 const settings = ref<API.getSettings.Resp>()
 const savePathRuleAlertVisible = ref(false)
+
+// 这里的实现方式是为了让设置页面内部可以预览语言更改后的效果
+const { locale: appLocale } = useI18n()
+const innerLocale = ref(appLocale.value)
+const { t } = useI18n({ locale: innerLocale.value })
 
 useEffectInLifecycle(() => {
   return InteractionService.onEscapeWhenBody(() => router.back())
@@ -193,6 +218,7 @@ const apply = async () => {
   const newSettings = await LARServerService.setSettings(settings.value)
   // TODO: 前端目前只有 RecordService 用到了 settings，为了降低开发复杂度，这里先直接赋值
   RecordService.noticeOnRecordStart = newSettings.noticeOnRecordStart
+  appLocale.value = innerLocale.value
 }
 
 const reset = async () => {

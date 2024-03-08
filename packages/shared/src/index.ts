@@ -8,6 +8,7 @@ export interface Settings {
   debugMode?: boolean
   autoGenerateSRTOnRecordStop?: boolean
   autoRemoveRecordWhenTinySize?: boolean
+  locale?: string
 }
 
 /** electron render 给 web 暴露的 API */

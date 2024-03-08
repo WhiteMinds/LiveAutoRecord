@@ -23,7 +23,7 @@
               <v-btn class="!h-full" stacked prepend-icon="mdi-history" :rounded="0" size="small">录制历史</v-btn>
             </router-link>
             <router-link class="h-full" :to="{ name: RouteNames.RecordersSetting }" tabindex="-1">
-              <v-btn class="!h-full" stacked prepend-icon="mdi-cog" :rounded="0" size="small">录制设置</v-btn>
+              <v-btn class="!h-full" stacked prepend-icon="mdi-cog" :rounded="0" size="small">设置</v-btn>
             </router-link>
           </div>
         </div>

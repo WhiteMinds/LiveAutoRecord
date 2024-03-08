@@ -192,6 +192,7 @@ __metadata:
     vite: ^3.1.0
     vite-svg-loader: ^3.6.0
     vue: ^3.2.37
+    vue-i18n: ^9.10.1
     vue-router: ^4.0.0
     vue-tsc: ^0.40.4
     vuetify: ^3.5.6
@@ -593,6 +594,33 @@ __metadata:
   version: 3.0.2
   resolution: "@hutson/parse-repository-url@npm:3.0.2"
   checksum: 39992c5f183c5ca3d761d6ed9dfabcb79b5f3750bf1b7f3532e1dc439ca370138bbd426ee250fdaba460bc948e6761fbefd484b8f4f36885d71ded96138340d1
+  languageName: node
+  linkType: hard
+
+"@intlify/core-base@npm:9.10.1":
+  version: 9.10.1
+  resolution: "@intlify/core-base@npm:9.10.1"
+  dependencies:
+    "@intlify/message-compiler": 9.10.1
+    "@intlify/shared": 9.10.1
+  checksum: c594ad8828a458606ba50e4ed8f4314996e14787bc461ed3251bb8f2d694f8ddaa01240542764f1428e45e81cbada728d2865dbfed1c54290915b1580e51d33d
+  languageName: node
+  linkType: hard
+
+"@intlify/message-compiler@npm:9.10.1":
+  version: 9.10.1
+  resolution: "@intlify/message-compiler@npm:9.10.1"
+  dependencies:
+    "@intlify/shared": 9.10.1
+    source-map-js: ^1.0.2
+  checksum: ee5600ae9c14a8108766dadd978bf631f72826ac93bb1e71ba6b8d37043d3a67faf07c416a2ecb7fa8e0bf50adb59dcf9e7d2a7be3915c25658e13d7bb649164
+  languageName: node
+  linkType: hard
+
+"@intlify/shared@npm:9.10.1":
+  version: 9.10.1
+  resolution: "@intlify/shared@npm:9.10.1"
+  checksum: d2424f339f0cb2f754ccdb8e9348caf6fd7ef0edc333f4c78510362c25e39987392bdb85110222c0b27b85257aeea3633a0088629d9f136162cde8e6003f30c9
   languageName: node
   linkType: hard
 
@@ -2437,6 +2465,13 @@ __metadata:
   version: 6.4.5
   resolution: "@vue/devtools-api@npm:6.4.5"
   checksum: 40c5adc8788cb283972ce09ba7ce105fa894f4decec9168829cc8e6211462763402442e6c31be76f9da62b0e74ae724971b924571367b4ac89b94dc6894e2d07
+  languageName: node
+  linkType: hard
+
+"@vue/devtools-api@npm:^6.5.0":
+  version: 6.6.1
+  resolution: "@vue/devtools-api@npm:6.6.1"
+  checksum: cf12b5ebcc7729725087072289410107b55bb82e0b86b8442e4e85516977110a8a3f4e1dec763be8b567a59173703b4e9c0ac1b0489bb2bb81363af7ea258a27
   languageName: node
   linkType: hard
 
@@ -10997,6 +11032,19 @@ __metadata:
     vue-demi-fix: bin/vue-demi-fix.js
     vue-demi-switch: bin/vue-demi-switch.js
   checksum: 0fbe9bf8ab7fe498ffa2bbd0cfc8f6f43a6bbaa5eda3e20ef1b70dca7c8b0ddb216a7ff2f632b694fe0735805638975abb441c621ec0bd2e6d4656353f316c15
+  languageName: node
+  linkType: hard
+
+"vue-i18n@npm:^9.10.1":
+  version: 9.10.1
+  resolution: "vue-i18n@npm:9.10.1"
+  dependencies:
+    "@intlify/core-base": 9.10.1
+    "@intlify/shared": 9.10.1
+    "@vue/devtools-api": ^6.5.0
+  peerDependencies:
+    vue: ^3.0.0
+  checksum: 257d178cbb19b942f6b5174e0e17e3873d707eb32440b5d2448f9c7a64bbd1393e68fd71c129b758202e9d708fd4a6847626bc9b1ffce533f46b0075c8bd195c
   languageName: node
   linkType: hard
 
