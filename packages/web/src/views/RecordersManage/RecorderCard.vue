@@ -1,26 +1,26 @@
 <template>
-  <v-card>
+  <v-card class="flex flex-col">
     <v-card-title>
-      {{ recorder.remarks || `${providerName} ${recorder.channelId}` }}
+      {{ recorder.remarks || `${$t(`platform_name.${recorder.providerId}`)} ${recorder.channelId}` }}
     </v-card-title>
 
-    <v-card-text class="grid grid-cols-[auto_1fr] items-center">
-      <span>平台：</span>
-      <span>{{ providerName }}</span>
+    <v-card-text class="grid grid-cols-[auto_1fr] items-center gap-x-1 flex-grow">
+      <span>{{ $t('recorder.platform') }}:</span>
+      <span>{{ $t(`platform_name.${recorder.providerId}`) }}</span>
 
-      <span>频道：</span>
+      <span>{{ $t('recorder.channel') }}:</span>
       <div>
         <a :href="recorder.channelURL" target="_blank" class="hover:underline">
           {{ recorder.channelId }}
         </a>
       </div>
 
-      <span>备注：</span>
+      <span>{{ $t('recorder.remarks') }}:</span>
       <span>{{ recorder.remarks }}</span>
 
-      <span>状态：</span>
+      <span>{{ $t('recorder.state') }}:</span>
       <div>
-        <v-tooltip text="点击查看录制参数" :disabled="!ffmpegArgsDialogAvailable">
+        <v-tooltip :text="$t('recorder.ffmpeg_args_tip')" :disabled="!ffmpegArgsDialogAvailable">
           <template v-slot:activator="{ props }">
             <span
               :class="ffmpegArgsDialogAvailable ? ['hover:underline cursor-pointer'] : null"
@@ -34,7 +34,7 @@
 
         <v-dialog v-model="ffmpegArgsDialogVisible" scrollable>
           <v-card location="center">
-            <v-card-title>FFMPEG 录制参数</v-card-title>
+            <v-card-title>{{ $t('recorder.ffmpeg_args') }}</v-card-title>
             <v-card-text class="h-48">
               {{ recorder.recordHandle?.ffmpegArgs?.join(' ') }}
             </v-card-text>
@@ -42,7 +42,7 @@
         </v-dialog>
       </div>
 
-      <span title="禁用自动录制">禁用：</span>
+      <span :title="$t('recorder.disable_auto_check')">{{ $t('recorder.disable') }}:</span>
       <v-switch
         class="small-switch"
         color="#880000"
@@ -54,7 +54,9 @@
     </v-card-text>
 
     <v-card-actions class="border-t justify-end">
-      <v-btn v-if="recorder.state === 'idle'" @click="startRecord" :loading="requestingRecord" size="small">刷新</v-btn>
+      <v-btn v-if="recorder.state === 'idle'" @click="startRecord" :loading="requestingRecord" size="small">
+        {{ $t('recorder.refresh') }}
+      </v-btn>
       <v-btn
         v-else
         @click="stopRecord"
@@ -62,15 +64,19 @@
         :disabled="recorder.state === 'stopping-record'"
         size="small"
       >
-        终止
+        {{ $t('recorder.stop') }}
       </v-btn>
 
       <router-link :to="{ name: RouteNames.RecorderRecords, params: { id: recorder.id } }" tabindex="-1">
-        <v-btn size="small">历史</v-btn>
+        <v-btn size="small">
+          {{ $t('recorder.history') }}
+        </v-btn>
       </router-link>
 
       <router-link :to="{ name: RouteNames.RecorderEdit, params: { id: recorder.id } }" tabindex="-1">
-        <v-btn size="small">设置</v-btn>
+        <v-btn size="small">
+          {{ $t('common.settings') }}
+        </v-btn>
       </router-link>
       <!-- TODO: 删除做到右上角 hover 时的 x -->
     </v-card-actions>
@@ -82,30 +88,20 @@ import type { ClientRecorder } from '@autorecord/http-server'
 import { computed, ref, watch } from 'vue'
 import { RouteNames } from '../../router'
 import { RecorderService } from '../../services/RecorderService'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { recorder } = defineProps<{ recorder: ClientRecorder }>()
 const ffmpegArgsDialogVisible = ref(false)
 const ffmpegArgsDialogAvailable = computed(() => recorder.recordHandle?.ffmpegArgs != null)
 
-// TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
-const providers = [
-  { id: 'DouYu', name: '斗鱼' },
-  { id: 'Bilibili', name: 'Bilibili' },
-  { id: 'HuYa', name: '虎牙' },
-  { id: 'DouYin', name: '抖音' },
-]
-
 const requestingRecord = ref(false)
 const requestingDisableAutoCheck = ref(false)
 
-const providerName = computed(() => providers.find((p) => p.id === recorder.providerId)?.name ?? '未知')
-
-const stateText = computed(() =>
-  recorder.state === 'recording'
-    ? recorder.usedSource
-      ? `正在录制 ${recorder.usedSource} / ${recorder.usedStream}`
-      : '正在录制'
-    : recorder.state,
+const stateText = computed(
+  () =>
+    t(`recorder.state_${recorder.state}`) +
+    (recorder.state === 'recording' && recorder.usedSource ? ` ${recorder.usedSource} / ${recorder.usedStream}` : ''),
 )
 
 const startRecord = async () => {

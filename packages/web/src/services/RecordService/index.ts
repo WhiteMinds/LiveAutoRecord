@@ -8,14 +8,6 @@ import { NotificationService } from '../NotificationService'
 import { TabService } from '../TabService'
 import { i18n } from '../../i18n'
 
-// TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
-const providers = [
-  { id: 'DouYu', name: '斗鱼' },
-  { id: 'Bilibili', name: 'Bilibili' },
-  { id: 'HuYa', name: '虎牙' },
-  { id: 'DouYin', name: '抖音' },
-]
-
 const getThrottledChannelNotifyFn = fastMemo(function createThrottledChannelNotifyFn(
   // 只是提供给 memoize 作为 cache 的 key，实际逻辑中不会使用。
   channelId: string,
@@ -38,7 +30,7 @@ export async function init() {
 
     const noticeFormat =
       RecordService.noticeFormat !== '' ? RecordService.noticeFormat : i18n.global.t('settings.default_notice_format')
-    const providerName = providers.find((p) => p.id === msg.recorder.providerId)?.name ?? '未知'
+    const providerName = i18n.global.t(`platform_name.${msg.recorder.providerId}`)
 
     // 对每个频道的通知单独节流，防止开播、下播时的流不正常造成反复的录制通知。
     const notify = getThrottledChannelNotifyFn(msg.recorder.channelId)

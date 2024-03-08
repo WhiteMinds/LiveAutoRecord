@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import 'vuetify/styles'
+import { useI18n } from 'vue-i18n'
 import { createVuetify } from 'vuetify'
+import { createVueI18nAdapter } from 'vuetify/locale/adapters/vue-i18n'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import App from './App.vue'
@@ -19,6 +21,9 @@ InteractionService.blurSomeElementOnPressEscape = true
 const vuetify = createVuetify({
   components,
   directives,
+  locale: {
+    adapter: createVueI18nAdapter({ i18n, useI18n }),
+  },
 })
 
 const app = createApp(App)

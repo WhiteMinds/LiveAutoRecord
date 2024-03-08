@@ -3,16 +3,20 @@
     <v-card-title class="my-2 flex items-center justify-between gap-4">
       <div class="flex items-center">
         <v-icon icon="mdi-arrow-left" size="24" class="mr-2" @click="$router.back" />
-        <span>录像历史</span>
-        <v-btn class="ml-4" size="small" variant="tonal" @click="clearInvalidWarnVisible = true">清理无效记录</v-btn>
+        <span>{{ $t('records.record_history') }}</span>
+        <v-btn class="ml-4" size="small" variant="tonal" @click="clearInvalidWarnVisible = true">
+          {{ $t('records.clean_invalid_record') }}
+        </v-btn>
 
         <v-dialog v-model="clearInvalidWarnVisible">
-          <v-card title="注意" text="这将移除所有视频文件已被删除的记录，包括搜索过滤之前的文件。">
+          <v-card :title="$t('records.note')" :text="$t('records.clean_invalid_record_tip')">
             <template v-slot:actions>
               <v-spacer></v-spacer>
 
-              <v-btn v-if="!requestingClearInvalid" @click="clearInvalidWarnVisible = false">取消</v-btn>
-              <v-btn @click="clearInvalid" :loading="requestingClearInvalid">确认</v-btn>
+              <v-btn v-if="!requestingClearInvalid" @click="clearInvalidWarnVisible = false">
+                {{ $t('common.cancel') }}
+              </v-btn>
+              <v-btn @click="clearInvalid" :loading="requestingClearInvalid">{{ $t('common.confirm') }}</v-btn>
             </template>
           </v-card>
         </v-dialog>
@@ -21,7 +25,7 @@
       <v-text-field
         class="w-96 flex-none"
         v-model="search"
-        label="搜索"
+        :label="$t('records.search')"
         prepend-inner-icon="mdi-magnify"
         variant="outlined"
         hide-details
@@ -42,37 +46,37 @@
       :items="records"
       :headers="[
         {
-          title: '录制开始时间',
+          title: $t('records.field_start_time'),
           key: 'startTimestamp',
           value: (record) => format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss'),
           sortable: true,
-          width: 160,
+          width: $i18n.locale.startsWith('zh') ? 160 : 200,
         },
         {
-          title: '录制终止时间',
+          title: $t('records.field_end_time'),
           key: 'stopTimestamp',
           value: (record) => (record.stopTimestamp ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss') : '/'),
           sortable: true,
-          width: 160,
+          width: $i18n.locale.startsWith('zh') ? 160 : 200,
         },
         {
-          title: '录制时长',
+          title: $t('records.field_duration'),
           key: 'totalTime',
           value: (record) => (record.stopTimestamp ? formatInterval(record) : '/'),
           sortable: true,
           width: 144,
         },
         {
-          title: '路径',
+          title: $t('records.field_path'),
           value: 'savePath',
           sortable: false,
         },
         {
-          title: '操作',
+          title: $t('records.field_action'),
           key: 'actions',
           value: (record) => record,
           sortable: false,
-          width: 256,
+          width: $i18n.locale.startsWith('zh') ? 256 : 320,
         },
       ]"
       :search="search"
@@ -88,12 +92,12 @@
             :to="{ name: RouteNames.Player, query: { id: record.id } }"
             target="_blank"
             tabindex="-1"
-            :title="!record.isFileExists ? '文件不存在' : ''"
+            :title="!record.isFileExists ? $t('records.file_not_exists') : ''"
           >
-            <v-btn size="small" variant="text" :disabled="!record.isFileExists">播放</v-btn>
+            <v-btn size="small" variant="text" :disabled="!record.isFileExists">{{ $t('records.play') }}</v-btn>
           </component>
 
-          <span :title="!record.isFileExists ? '文件不存在' : ''">
+          <span :title="!record.isFileExists ? $t('records.file_not_exists') : ''">
             <v-btn
               @click="genSRT(record)"
               size="small"
@@ -101,7 +105,7 @@
               :loading="record.generatingSRT"
               :disabled="!record.isFileExists"
             >
-              生成 srt 字幕
+              {{ $t('records.generate_srt') }}
             </v-btn>
           </span>
         </div>
@@ -114,13 +118,16 @@
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { ClientRecord } from '@autorecord/http-server'
-import { format, formatDuration, intervalToDuration } from 'date-fns'
-import { zhCN } from 'date-fns/locale'
+import { intervalToDuration } from 'date-fns'
 import { RouteNames } from '../../router'
 import { LARServerService } from '../../services/LARServerService'
 import { useEffectInLifecycle } from '../../hooks'
 import { InteractionService } from '../../services/InteractionService'
+import { useI18n } from 'vue-i18n'
+import { useDateFNS } from '../../i18n'
 
+const { t } = useI18n()
+const { format, formatDuration } = useDateFNS()
 const route = useRoute()
 const router = useRouter()
 // TODO: 这里写的有点和路由层耦合了，应该把 query -> state 的处理放到路由层去
@@ -165,7 +172,7 @@ const clearInvalid = async () => {
   requestingClearInvalid.value = true
   try {
     const count = await LARServerService.clearInvalidRecords({ recorderId })
-    alert.value = `共 ${count} 条无效记录被移除`
+    alert.value = t('records.invalid_record_removed', { count })
   } finally {
     requestingClearInvalid.value = false
   }
@@ -188,6 +195,6 @@ function formatInterval(record: ClientRecord) {
     duration.seconds = 0
   }
 
-  return formatDuration(duration, { locale: zhCN })
+  return formatDuration(duration)
 }
 </script>

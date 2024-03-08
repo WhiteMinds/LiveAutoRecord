@@ -4,26 +4,32 @@
       <div class="sticky left-0 top-0 p-4 shadow flex bg-[#F0F0F0] z-[1]">
         <div class="flex flex-auto gap-4">
           <v-select
-            label="排序"
+            :label="$t('recorders.sort')"
             class="basis-64 shrink-0 grow-0"
             v-model="sortMode"
             :items="sortModes"
-            item-title="name"
+            :item-title="(item) => $t(item.name)"
             :item-value="(item) => item"
             hide-details="auto"
           />
 
-          <v-text-field label="过滤" class="flex-auto" v-model="filterText" hide-details="auto" />
+          <v-text-field :label="$t('recorders.filter')" class="flex-auto" v-model="filterText" hide-details="auto" />
 
           <div class="flex gap-2 items-center">
             <router-link class="h-full" :to="{ name: RouteNames.NewRecorder }" tabindex="-1">
-              <v-btn class="!h-full" stacked prepend-icon="mdi-plus" :rounded="0" size="small">添加频道</v-btn>
+              <v-btn class="!h-full" stacked prepend-icon="mdi-plus" :rounded="0" size="small">
+                {{ $t('recorders.add_channel') }}
+              </v-btn>
             </router-link>
             <router-link class="h-full" :to="{ name: RouteNames.Records }" tabindex="-1">
-              <v-btn class="!h-full" stacked prepend-icon="mdi-history" :rounded="0" size="small">录制历史</v-btn>
+              <v-btn class="!h-full" stacked prepend-icon="mdi-history" :rounded="0" size="small">
+                {{ $t('common.record_history') }}
+              </v-btn>
             </router-link>
             <router-link class="h-full" :to="{ name: RouteNames.RecordersSetting }" tabindex="-1">
-              <v-btn class="!h-full" stacked prepend-icon="mdi-cog" :rounded="0" size="small">设置</v-btn>
+              <v-btn class="!h-full" stacked prepend-icon="mdi-cog" :rounded="0" size="small">
+                {{ $t('common.settings') }}
+              </v-btn>
             </router-link>
           </div>
         </div>
@@ -34,7 +40,7 @@
           v-for="recorder in displayingRecorders"
           :key="recorder.id"
           :recorder="recorder"
-          class="flex-shrink-0 flex-grow basis-48"
+          :class="normalizeClass(['flex-shrink-0 flex-grow', locale.startsWith('zh') ? 'basis-60' : 'basis-80'])"
         />
       </div>
     </div>
@@ -51,14 +57,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, normalizeClass } from 'vue'
 import type { ClientRecorder } from '@autorecord/http-server'
 import { RecorderService } from '../../services/RecorderService'
 import RecorderCard from './RecorderCard.vue'
 import { RouteNames } from '../../router'
 import { assert } from '../../utils'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t, locale } = useI18n()
 const route = useRoute()
 const currentRouteParentIsRecordersManage = computed(
   () => route.matched.length >= 2 && route.matched[route.matched.length - 2].name === RouteNames.RecordersManage,
@@ -73,29 +81,29 @@ const sortModes: {
 }[] = [
   {
     id: 'create',
-    name: '添加时间',
+    name: 'recorders.added_time',
     resolver: (recorder) => recorder.extra.createTimestamp ?? 0,
   },
   {
     id: 'provider',
-    name: '平台',
+    name: 'recorder.platform',
     resolver: (recorder) => recorder.providerId,
   },
   {
     id: 'channel',
-    name: '频道',
+    name: 'recorder.channel',
     resolver: (recorder) => recorder.channelId,
   },
   {
     id: 'state',
-    name: '状态',
+    name: 'recorder.state',
     resolver: (recorder) => {
       return ['recording', 'stopping-record', 'idle'].indexOf(recorder.state)
     },
   },
   {
     id: 'remarks',
-    name: '备注',
+    name: 'recorder.remarks',
     resolver: (recorder) => {
       if (recorder.remarks === '') return null
       return recorder.remarks ?? null
