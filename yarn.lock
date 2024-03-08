@@ -174,6 +174,7 @@ __metadata:
     "@types/dplayer": ^1.25.2
     "@types/lodash-es": ^4.17.6
     "@types/ramda": ^0.28.15
+    "@types/string-template": ^1.0.6
     "@vitejs/plugin-vue": ^3.1.0
     autoprefixer: ^10.4.11
     axios: ^0.27.2
@@ -186,6 +187,7 @@ __metadata:
     postcss: ^8.4.16
     ramda: ^0.28.0
     rxjs: ^7.5.7
+    string-template: ^1.0.0
     tailwindcss: ^3.2.3
     typescript: ^4.6.4
     uuid: ^9.0.0
@@ -2249,6 +2251,13 @@ __metadata:
   version: 1.0.2
   resolution: "@types/string-template@npm:1.0.2"
   checksum: 25b07ab4c7062dfd57c6a100a9eaac4cca9c836a1fff85351e143cf1696b311c322ca0f6f7a2bad834deeedfd0cb7ca96c180c36983092864169151e32abc15f
+  languageName: node
+  linkType: hard
+
+"@types/string-template@npm:^1.0.6":
+  version: 1.0.6
+  resolution: "@types/string-template@npm:1.0.6"
+  checksum: de68f02804014c390e6c911add2c8865fef61780062b8187e7803cbb5b43603dd0291ffffd1bd135df552878939cc2e0709380cc55203c87bb25281c4d325456
   languageName: node
   linkType: hard
 

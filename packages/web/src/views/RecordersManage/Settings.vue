@@ -125,6 +125,43 @@
 
         <v-checkbox label="录制开始时发出通知" v-model="settings.noticeOnRecordStart" hide-details />
 
+        <v-text-field
+          v-if="settings.noticeOnRecordStart"
+          label="通知内容格式"
+          v-model="settings.noticeFormat"
+          persistent-placeholder
+          :placeholder="t('settings.default_notice_format')"
+          append-inner-icon="mdi-help-circle"
+          @click:append-inner="noticeFormatAlertVisible = !noticeFormatAlertVisible"
+        />
+        <v-alert v-model="noticeFormatAlertVisible" closable>
+          <v-alert-title>如何在通知内容格式中使用变量？</v-alert-title>
+          <p class="text-subtitle-1 m-2">使用 `{}` 包裹住变量名即可，如 `频道 {channelId} 开始录制`</p>
+          <v-table>
+            <thead>
+              <tr>
+                <th class="text-left">变量名</th>
+                <th class="text-left">变量值</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>platform</td>
+                <td>录制的平台名，如 `Bilibili`</td>
+              </tr>
+              <tr>
+                <td>channelId</td>
+                <td>录制的频道 id，如 `196`</td>
+              </tr>
+              <tr>
+                <td>remarks</td>
+                <td>频道的备注，为用户自定义的值</td>
+              </tr>
+            </tbody>
+          </v-table>
+        </v-alert>
+
         <v-checkbox label="调试模式" v-model="settings.debugMode" hide-details />
       </v-form>
     </v-card-item>
@@ -193,6 +230,7 @@ const manager = ref<API.getManager.Resp>()
 const managerDefault = ref<API.getManagerDefault.Resp>()
 const settings = ref<API.getSettings.Resp>()
 const savePathRuleAlertVisible = ref(false)
+const noticeFormatAlertVisible = ref(false)
 
 // 这里的实现方式是为了让设置页面内部可以预览语言更改后的效果
 const { locale: appLocale } = useI18n()
@@ -218,6 +256,7 @@ const apply = async () => {
   const newSettings = await LARServerService.setSettings(settings.value)
   // TODO: 前端目前只有 RecordService 用到了 settings，为了降低开发复杂度，这里先直接赋值
   RecordService.noticeOnRecordStart = newSettings.noticeOnRecordStart
+  RecordService.noticeFormat = newSettings.noticeFormat ?? ''
   appLocale.value = innerLocale.value
 }
 

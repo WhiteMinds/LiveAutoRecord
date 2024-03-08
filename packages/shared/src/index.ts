@@ -5,6 +5,7 @@
 export interface Settings {
   notExitOnAllWindowsClosed: boolean
   noticeOnRecordStart: boolean
+  noticeFormat?: string
   debugMode?: boolean
   autoGenerateSRTOnRecordStop?: boolean
   autoRemoveRecordWhenTinySize?: boolean
