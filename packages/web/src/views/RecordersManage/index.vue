@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, normalizeClass } from 'vue'
+import { computed, onMounted, ref, normalizeClass, watch } from 'vue'
 import type { ClientRecorder } from '@autorecord/http-server'
 import { RecorderService } from '../../services/RecorderService'
 import RecorderCard from './RecorderCard.vue'
@@ -65,6 +65,7 @@ import { RouteNames } from '../../router'
 import { assert } from '../../utils'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { LARServerService } from '../../services/LARServerService'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -112,6 +113,15 @@ const sortModes: {
 ]
 const sortMode = ref(sortModes[0])
 const filterText = ref<string>('')
+
+// TODO: 不知道为啥直接 await 会白屏，先简单实现
+LARServerService.getSettings({}).then((settings) => {
+  sortMode.value = sortModes.find((mode) => mode.id === settings.sortMode) ?? sortModes[0]
+})
+watch(sortMode, async ({ id }) => {
+  const settings = await LARServerService.getSettings({})
+  await LARServerService.setSettings({ ...settings, sortMode: id })
+})
 
 const displayingRecorders = computed(() => {
   const fields: (keyof ClientRecorder)[] = ['remarks', 'channelId']

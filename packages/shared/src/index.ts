@@ -10,6 +10,7 @@ export interface Settings {
   autoGenerateSRTOnRecordStop?: boolean
   autoRemoveRecordWhenTinySize?: boolean
   locale?: string
+  sortMode?: string
 }
 
 /** electron render 给 web 暴露的 API */
