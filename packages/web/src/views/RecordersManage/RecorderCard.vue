@@ -1,10 +1,12 @@
 <template>
-  <v-card class="flex flex-col">
-    <v-card-title>
-      {{ recorder.remarks || `${$t(`platform_name.${recorder.providerId}`)} ${recorder.channelId}` }}
-    </v-card-title>
+  <v-card class="flex flex-col overflow-visible">
+    <v-badge v-if="recorder.state === 'recording'" color="green" bordered location="left top">
+      <v-card-title class="flex items-center">
+        {{ recorder.remarks || `${$t(`platform_name.${recorder.providerId}`)} ${recorder.channelId}` }}
+      </v-card-title>
+    </v-badge>
 
-    <v-card-text class="grid grid-cols-[auto_1fr] items-center gap-x-1 flex-grow">
+    <v-card-text class="pt-0 grid grid-cols-[auto_1fr] items-center gap-x-1 flex-grow">
       <span>{{ $t('recorder.platform') }}:</span>
       <span>{{ $t(`platform_name.${recorder.providerId}`) }}</span>
 
@@ -23,7 +25,7 @@
         <v-tooltip :text="$t('recorder.ffmpeg_args_tip')" :disabled="!ffmpegArgsDialogAvailable">
           <template v-slot:activator="{ props }">
             <span
-              :class="ffmpegArgsDialogAvailable ? ['hover:underline cursor-pointer'] : null"
+              :class="normalizeClass([ffmpegArgsDialogAvailable && 'hover:underline cursor-pointer'])"
               @click="ffmpegArgsDialogAvailable && (ffmpegArgsDialogVisible = true)"
               v-bind="props"
             >
@@ -85,7 +87,7 @@
 
 <script setup lang="ts">
 import type { ClientRecorder } from '@autorecord/http-server'
-import { computed, ref, watch } from 'vue'
+import { computed, normalizeClass, ref, watch } from 'vue'
 import { RouteNames } from '../../router'
 import { RecorderService } from '../../services/RecorderService'
 import { useI18n } from 'vue-i18n'
