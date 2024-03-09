@@ -1,6 +1,6 @@
 <template>
   <v-card class="flex flex-col overflow-visible">
-    <v-badge v-if="recorder.state === 'recording'" color="green" bordered location="left top">
+    <v-badge :model-value="recorder.state === 'recording'" color="green" bordered location="left top">
       <v-card-title class="flex items-center">
         {{ recorder.remarks || `${$t(`platform_name.${recorder.providerId}`)} ${recorder.channelId}` }}
       </v-card-title>
