@@ -259,6 +259,7 @@ export function genSavePathFromRule<
   const params = {
     platform: provider?.name ?? 'unknown',
     channelId: recorder.channelId,
+    remarks: recorder.remarks ?? '',
     year: formatDate(now, 'yyyy'),
     month: formatDate(now, 'MM'),
     date: formatDate(now, 'dd'),

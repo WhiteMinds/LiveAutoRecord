@@ -48,6 +48,10 @@
                 <td>{{ t('settings.field_owner_hint') }}</td>
               </tr>
               <tr>
+                <td>remarks</td>
+                <td>{{ t('settings.field_remarks_hint') }}</td>
+              </tr>
+              <tr>
                 <td>year</td>
                 <td>{{ t('settings.field_year_hint') }}</td>
               </tr>
