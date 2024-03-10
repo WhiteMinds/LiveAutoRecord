@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { defaultManagerConfig, recorderManager } from '../manager'
 import { assertStringType, pick } from '../utils'
 import { API } from './api_types'
+import { asyncRouteHandler } from './utils'
 
 const router = Router()
 
@@ -47,10 +48,10 @@ function getManagerDefault(args: API.getManagerDefault.Args): API.getManagerDefa
 
 router
   .route('/manager')
-  .get(async (req, res) => {
+  .get((req, res) => {
     res.json({ payload: getManager({}) })
   })
-  .patch(async (req, res) => {
+  .patch((req, res) => {
     const args = pick(
       // TODO: 这里先不做 schema 校验，以后再加
       (req.body ?? {}) as API.updateManager.Args,
@@ -63,14 +64,16 @@ router
     res.json({ payload: updateManager(args) })
   })
 
-router.route('/manager/resolve_channel').get(async (req, res) => {
-  const { channelURL } = req.query
-  assertStringType(channelURL)
+router.route('/manager/resolve_channel').get(
+  asyncRouteHandler(async (req, res) => {
+    const { channelURL } = req.query
+    assertStringType(channelURL)
 
-  res.json({ payload: await resolveChannel({ channelURL }) })
-})
+    res.json({ payload: await resolveChannel({ channelURL }) })
+  }),
+)
 
-router.route('/manager/default').get(async (req, res) => {
+router.route('/manager/default').get((req, res) => {
   res.json({ payload: getManagerDefault({}) })
 })
 

@@ -22,7 +22,7 @@ export function createRouter(serverOpts: ServerOpts) {
   router.use(loggerRoutes)
 
   const handle: ErrorRequestHandler = (err: unknown, req, res, next) => {
-    logger.error(err)
+    logger.error('RouterError', err)
     if (err instanceof Error) {
       // respond(res, { error: err.message }).status(500)
       return

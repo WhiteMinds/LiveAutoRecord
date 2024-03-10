@@ -1,6 +1,6 @@
 import { Settings } from '@autorecord/shared'
 
-export type LogFn = (data: unknown) => void
+export type LogFn = (...dataList: unknown[]) => void
 
 export interface ServerOpts {
   getSettings: () => Promise<Settings>

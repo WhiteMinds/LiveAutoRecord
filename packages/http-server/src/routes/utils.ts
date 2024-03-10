@@ -74,3 +74,14 @@ export function recorderToClient(recorder: Recorder): ClientRecorder {
     recordHandle: recorder.recordHandle && omit(recorder.recordHandle, 'stop'),
   }
 }
+
+export function asyncRouteHandler<T extends (...args: any[]) => Promise<any>>(handler: T): T {
+  return async function (...args) {
+    try {
+      return await handler(...args)
+    } catch (err) {
+      const next = args[args.length - 1]
+      next(err)
+    }
+  } as T
+}

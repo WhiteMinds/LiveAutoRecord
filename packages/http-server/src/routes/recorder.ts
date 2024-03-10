@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { addRecorderWithAutoIncrementId, recorderManager } from '../manager'
 import { pick } from '../utils'
 import { API } from './api_types'
-import { createPagedResultGetter, getNumberFromQuery, recorderToClient } from './utils'
+import { asyncRouteHandler, createPagedResultGetter, getNumberFromQuery, recorderToClient } from './utils'
 
 const router = Router()
 
@@ -83,17 +83,19 @@ async function stopRecord(args: API.stopRecord.Args): Promise<API.stopRecord.Res
 
 router
   .route('/recorders')
-  .get(async (req, res) => {
-    const page = getNumberFromQuery(req, 'page', { defaultValue: 1, min: 1 })
-    const pageSize = getNumberFromQuery(req, 'pageSize', {
-      defaultValue: 10,
-      min: 1,
-      max: 9999,
-    })
+  .get(
+    asyncRouteHandler(async (req, res) => {
+      const page = getNumberFromQuery(req, 'page', { defaultValue: 1, min: 1 })
+      const pageSize = getNumberFromQuery(req, 'pageSize', {
+        defaultValue: 10,
+        min: 1,
+        max: 9999,
+      })
 
-    res.json({ payload: await getRecorders({ page, pageSize }) })
-  })
-  .post(async (req, res) => {
+      res.json({ payload: await getRecorders({ page, pageSize }) })
+    }),
+  )
+  .post((req, res) => {
     // TODO: 这里的类型限制还是有些问题，Nullable 的 key（如 extra）如果没写在这也不会报错，之后想想怎么改
     const args = pick(
       // TODO: 这里先不做 schema 校验，以后再加
@@ -136,13 +138,17 @@ router
     res.json({ payload: removeRecorder({ id }) })
   })
 
-router.route('/recorders/:id/start_record').post(async (req, res) => {
-  const { id } = req.params
-  res.json({ payload: await startRecord({ id }) })
-})
-router.route('/recorders/:id/stop_record').post(async (req, res) => {
-  const { id } = req.params
-  res.json({ payload: await stopRecord({ id }) })
-})
+router.route('/recorders/:id/start_record').post(
+  asyncRouteHandler(async (req, res) => {
+    const { id } = req.params
+    res.json({ payload: await startRecord({ id }) })
+  }),
+)
+router.route('/recorders/:id/stop_record').post(
+  asyncRouteHandler(async (req, res) => {
+    const { id } = req.params
+    res.json({ payload: await stopRecord({ id }) })
+  }),
+)
 
 export { router }

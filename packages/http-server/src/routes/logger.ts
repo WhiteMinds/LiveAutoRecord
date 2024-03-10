@@ -6,7 +6,7 @@ export function createRouter(serverOpts: ServerOpts) {
   const router = Router()
 
   ;['error', 'warn', 'info', 'debug'].forEach((method) => {
-    router.route(`/logger/${method}`).post(async (req, res) => {
+    router.route(`/logger/${method}`).post((req, res) => {
       // TODO: 这里先不做 schema 校验，以后再加
       const args = req.body as API.logMethod.Args
       serverOpts.logger[method](`[frontend]: ${args.text}`)
