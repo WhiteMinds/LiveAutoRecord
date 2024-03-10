@@ -22,6 +22,12 @@ export function createRouter(serverOpts: ServerOpts) {
   router.use(loggerRoutes)
 
   const handle: ErrorRequestHandler = (err: unknown, req, res, next) => {
+    // 裁剪体积过大的 AxiosError
+    if (err != null && typeof err === 'object' && 'isAxiosError' in err) {
+      delete err['request']
+      delete err['response']
+    }
+
     logger.error('RouterError', err)
     if (err instanceof Error) {
       // respond(res, { error: err.message }).status(500)
