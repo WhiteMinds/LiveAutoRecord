@@ -92,6 +92,7 @@ function keyHandler(event: KeyboardEvent) {
       idx -= 1
       if (idx <= 0) idx = 0
       dp.video.playbackRate = speedList[idx]
+      dp.notice(`Speed ${dp.video.playbackRate.toFixed(2)}`, 2e3, 0.8)
       break
     }
 
@@ -100,6 +101,7 @@ function keyHandler(event: KeyboardEvent) {
       idx += 1
       if (idx >= speedList.length) idx = speedList.length - 1
       dp.video.playbackRate = speedList[idx]
+      dp.notice(`Speed ${dp.video.playbackRate.toFixed(2)}`, 2e3, 0.8)
       break
     }
   }
