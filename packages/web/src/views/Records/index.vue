@@ -48,22 +48,38 @@
         {
           title: $t('records.field_start_time'),
           key: 'startTimestamp',
-          value: (record) => format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss'),
+          value: (record: ClientRecord) => format(record.startTimestamp, 'yyyy/MM/dd HH:mm:ss'),
           sortable: true,
+          sortRaw(a: ClientRecord, b: ClientRecord) {
+            return a.startTimestamp - b.startTimestamp
+          },
           width: $i18n.locale.startsWith('zh') ? 160 : 200,
         },
         {
           title: $t('records.field_end_time'),
           key: 'stopTimestamp',
-          value: (record) => (record.stopTimestamp ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss') : '/'),
+          value: (record: ClientRecord) =>
+            record.stopTimestamp ? format(record.stopTimestamp, 'yyyy/MM/dd HH:mm:ss') : '/',
           sortable: true,
+          sortRaw(a: ClientRecord, b: ClientRecord) {
+            if (a.stopTimestamp == null) return 1
+            if (b.stopTimestamp == null) return -1
+            return a.stopTimestamp - b.stopTimestamp
+          },
           width: $i18n.locale.startsWith('zh') ? 160 : 200,
         },
         {
           title: $t('records.field_duration'),
           key: 'totalTime',
-          value: (record) => (record.stopTimestamp ? formatInterval(record) : '/'),
+          value: (record: ClientRecord) => (record.stopTimestamp ? formatInterval(record) : '/'),
           sortable: true,
+          sortRaw(a: ClientRecord, b: ClientRecord) {
+            if (a.stopTimestamp == null) return 1
+            if (b.stopTimestamp == null) return -1
+            const aTime = a.stopTimestamp - a.startTimestamp
+            const bTime = b.stopTimestamp - b.startTimestamp
+            return aTime - bTime
+          },
           width: 144,
         },
         {
@@ -74,7 +90,7 @@
         {
           title: $t('records.field_action'),
           key: 'actions',
-          value: (record) => record,
+          value: (record: ClientRecord) => record,
           sortable: false,
           width: $i18n.locale.startsWith('zh') ? 256 : 320,
         },
