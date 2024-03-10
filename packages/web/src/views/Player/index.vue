@@ -66,6 +66,7 @@ onMounted(async () => {
   dPlayer.value = dp
   // TODO: 不知道为啥没效果，之后调查看看。
   dp.play()
+  dp.focus = true
   dp.fullScreen.request('web')
 
   document.addEventListener('keydown', keyHandler)
