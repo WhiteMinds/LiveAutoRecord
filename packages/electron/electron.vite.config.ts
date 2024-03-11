@@ -75,6 +75,8 @@ export default defineConfig({
           ...rendererConfig.build?.rollupOptions,
           input: path.join(__dirname, '../web/index.html'),
         },
+        // electron-vite 要求这里如果配置了就必须是 chrome，所以这里直接将 web 端的配置覆盖掉。
+        target: undefined,
       },
     }
   },
