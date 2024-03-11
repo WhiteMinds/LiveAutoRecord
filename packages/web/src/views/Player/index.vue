@@ -12,13 +12,6 @@ import { assert } from '../../utils'
 import { LARServerService } from '../../services/LARServerService'
 import { onUnmounted } from 'vue'
 
-// 这里手动暴露一个 dplayer 未声明类型导出的属性
-declare module 'dplayer' {
-  export default interface DPlayer {
-    focus: boolean
-  }
-}
-
 const container = ref<HTMLDivElement>()
 const dPlayer = ref<DPlayer>()
 

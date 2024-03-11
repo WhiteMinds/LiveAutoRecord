@@ -15,7 +15,7 @@
           :label="$t('recorder.platform')"
           v-model="recorder.providerId"
           :items="providers"
-          :item-title="(item) => $t(`platform_name.${item.id}`)"
+          :item-title="(item: ProviderInfo) => $t(`platform_name.${item.id}`)"
           item-value="id"
           required
           :disabled="!isCreating"
@@ -42,7 +42,7 @@
           class="mb-4"
           v-model="recorder.quality"
           :items="Qualities"
-          :item-title="(item) => $t(`quality.${item}`)"
+          :item-title="(item: string) => $t(`quality.${item}`)"
           required
           persistent-hint
           :hint="$t('edit.quality_input_hint')"
@@ -101,7 +101,8 @@ import { useI18n } from 'vue-i18n'
 // import { Qualities } from '@autorecord/manager'
 const Qualities = ['lowest', 'low', 'medium', 'high', 'highest'] as const
 // TODO: 这个应该是从服务器拉取一个支持的 providers 列表，临时手写下
-const providers = [{ id: 'DouYu' }, { id: 'Bilibili' }, { id: 'HuYa' }, { id: 'DouYin' }]
+type ProviderInfo = { id: string }
+const providers: ProviderInfo[] = [{ id: 'DouYu' }, { id: 'Bilibili' }, { id: 'HuYa' }, { id: 'DouYin' }]
 const defaultProviderId = providers[0].id
 
 const { t } = useI18n()

@@ -8,8 +8,8 @@
             class="basis-64 shrink-0 grow-0"
             v-model="sortMode"
             :items="sortModes"
-            :item-title="(item) => $t(item.name)"
-            :item-value="(item) => item"
+            :item-title="(item: SortMode) => $t(item.name)"
+            :item-value="(item: SortMode) => item"
             hide-details="auto"
           />
 
@@ -75,11 +75,13 @@ const currentRouteParentIsRecordersManage = computed(
 
 const recorders = ref<ClientRecorder[]>([])
 
-const sortModes: {
+type SortMode = {
   id: string
   name: string
   resolver: (recorder: ClientRecorder) => string | number | null
-}[] = [
+}
+
+const sortModes: SortMode[] = [
   {
     id: 'create',
     name: 'recorders.added_time',
