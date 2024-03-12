@@ -43,6 +43,7 @@
           v-model="recorder.quality"
           :items="Qualities"
           :item-title="(item: string) => $t(`quality.${item}`)"
+          :item-value="(item: string) => item"
           required
           persistent-hint
           :hint="$t('edit.quality_input_hint')"
