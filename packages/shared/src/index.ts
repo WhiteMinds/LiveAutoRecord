@@ -17,3 +17,6 @@ export interface Settings {
 export interface ClientAPI {
   getVersion(): string
 }
+
+export * from './steno'
+export * from './jsonfile'

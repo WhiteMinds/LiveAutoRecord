@@ -3,13 +3,9 @@
  * 一些代码来用。
  * from https://github.com/typicode/lowdb/tree/v3.0.0
  */
-import fs from 'fs'
-import { Writer } from 'steno'
+import { Adapter } from '@autorecord/shared'
 
-export interface Adapter<T> {
-  read: () => Promise<T | null>
-  write: (data: T) => Promise<void>
-}
+export * from '@autorecord/shared'
 
 export class Low<T = unknown> {
   adapter: Adapter<T>
@@ -31,56 +27,6 @@ export class Low<T = unknown> {
     if (this.data) {
       await this.adapter.write(this.data)
     }
-  }
-}
-
-export class JSONFile<T> implements Adapter<T> {
-  #adapter: TextFile
-
-  constructor(filename: string) {
-    this.#adapter = new TextFile(filename)
-  }
-
-  async read(): Promise<T | null> {
-    const data = await this.#adapter.read()
-    if (data === null) {
-      return null
-    } else {
-      return JSON.parse(data) as T
-    }
-  }
-
-  write(obj: T): Promise<void> {
-    return this.#adapter.write(JSON.stringify(obj, null, 2))
-  }
-}
-
-export class TextFile implements Adapter<string> {
-  #filename: string
-  #writer: Writer
-
-  constructor(filename: string) {
-    this.#filename = filename
-    this.#writer = new Writer(filename)
-  }
-
-  async read(): Promise<string | null> {
-    let data
-
-    try {
-      data = await fs.promises.readFile(this.#filename, 'utf-8')
-    } catch (e) {
-      if ((e as NodeJS.ErrnoException).code === 'ENOENT') {
-        return null
-      }
-      throw e
-    }
-
-    return data
-  }
-
-  write(str: string): Promise<void> {
-    return this.#writer.write(str)
   }
 }
 

@@ -17,7 +17,7 @@ export * from './routes/api_types'
 export async function startServer(opts: PickPartial<ServerOpts, 'getSettings' | 'setSettings' | 'logger'> = {}) {
   const serverOpts: ServerOpts = {
     ...opts,
-    getSettings: opts.getSettings ?? defaultGetSettings,
+    getSettings: opts.getSettings ?? createDefaultGetSettings({ logger: opts.logger ?? console }),
     setSettings: opts.setSettings ?? defaultSetSettings,
     logger: opts.logger ?? console,
   }
@@ -54,11 +54,17 @@ export async function startServer(opts: PickPartial<ServerOpts, 'getSettings' | 
 
 // TODO: Opts 的默认值代码似乎不应该放这里
 const settingsConfigPath = path.join(paths.config, 'settings.json')
-async function defaultGetSettings() {
-  return readJSONFile<Settings>(settingsConfigPath, {
-    notExitOnAllWindowsClosed: true,
-    noticeOnRecordStart: true,
-  })
+function createDefaultGetSettings(opts: Pick<ServerOpts, 'logger'>) {
+  return async function defaultGetSettings() {
+    return readJSONFile<Settings>(
+      settingsConfigPath,
+      {
+        notExitOnAllWindowsClosed: true,
+        noticeOnRecordStart: true,
+      },
+      opts,
+    )
+  }
 }
 async function defaultSetSettings(newSettings: Settings) {
   await writeJSONFile(settingsConfigPath, newSettings)

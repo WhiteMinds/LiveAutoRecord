@@ -47,7 +47,7 @@ export function addRecorderWithAutoIncrementId(args: RecorderCreateOpts<Recorder
 export async function initRecorderManager(serverOpts: ServerOpts): Promise<void> {
   const { logger } = serverOpts
 
-  const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig)
+  const managerConfig = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig, serverOpts)
 
   // 这里做一些旧版本 schema 升级的处理
   if (managerConfig.ffmpegOutputArgs == null) {

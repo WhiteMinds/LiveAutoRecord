@@ -109,7 +109,6 @@ __metadata:
     morgan: ^1.10.0
     nodemon: ^2.0.20
     ramda: ^0.28.0
-    steno: ^1.0.0
     subtitle: ^4.2.1
     ts-node: ^10.9.1
     typescript: ^4.8.3
@@ -10019,13 +10018,6 @@ __metadata:
   version: 1.1.1
   resolution: "stealthy-require@npm:1.1.1"
   checksum: 6805b857a9f3a6a1079fc6652278038b81011f2a5b22cbd559f71a6c02087e6f1df941eb10163e3fdc5391ab5807aa46758d4258547c1f5ede31e6d9bfda8dd3
-  languageName: node
-  linkType: hard
-
-"steno@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "steno@npm:1.0.0"
-  checksum: 36361f3ce58ce864eeb39ff35939acbb04861fd06607029f33eac1ef5dc893c1efdd0edeb90454cf1cb04b284413208b01796f874548a00f2c49cb65b961bc4c
   languageName: node
   linkType: hard
 
