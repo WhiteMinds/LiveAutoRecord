@@ -24,7 +24,7 @@ export async function startServer(opts: PickPartial<ServerOpts, 'getSettings' | 
   const { logger } = serverOpts
 
   logger.info('initializing db')
-  await initDB()
+  await initDB(serverOpts)
 
   logger.info('initializing recorder manager')
   if (opts.ffmpegPath != null) {

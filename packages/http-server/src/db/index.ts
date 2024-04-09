@@ -8,10 +8,12 @@
  */
 import { Recorder, RecordHandle, SerializedRecorder } from '@autorecord/manager'
 import path from 'path'
+import fs from 'fs'
 import { Low, JSONFile } from './lowdb'
 import { paths } from '../env'
 import { assert, asyncThrottle, ensureFileFolderExists } from '../utils'
 import { RecorderExtra } from '../manager'
+import { ServerOpts } from '../types'
 
 export interface DatabaseSchema {
   records: RecordModel[]
@@ -33,8 +35,17 @@ const dbPath = path.join(paths.data, 'data.json')
 const adapter = new JSONFile<DatabaseSchema>(dbPath)
 const db = new Low(adapter)
 
-export async function initDB() {
-  await db.read()
+export async function initDB(serverOpts: ServerOpts) {
+  try {
+    await db.read()
+  } catch (error) {
+    // 理论上这个文件的保存过程是原子化的不会损坏，但根据 https://github.com/WhiteMinds/LiveAutoRecord/issues/193 的反馈仍然出现了损坏的情况。
+    serverOpts.logger.error('Failed to read db:', error)
+    if (fs.existsSync(dbPath)) {
+      serverOpts.logger.debug('DB content', fs.readFileSync(dbPath, 'utf-8').toString())
+      fs.renameSync(dbPath, dbPath + '.bak')
+    }
+  }
   if (db.data == null) {
     db.data = { records: [], recorders: [], nextRecorderId: 1 }
   }
