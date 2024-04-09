@@ -35,6 +35,7 @@ export interface RecorderProvider<E extends AnyObject> {
 
 const configurableProps = [
   'savePathRule',
+  'autoRemoveSystemReservedChars',
   'autoCheckLiveStatusAndRecord',
   'autoCheckInterval',
   'ffmpegOutputArgs',
@@ -77,6 +78,7 @@ export interface RecorderManager<
   stopCheckLoop: (this: RecorderManager<ME, P, PE, E>) => void
 
   savePathRule: string
+  autoRemoveSystemReservedChars: boolean
   ffmpegOutputArgs: string
 }
 
@@ -197,6 +199,8 @@ export function createRecorderManager<
       opts.savePathRule ??
       path.join(process.cwd(), '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'),
 
+    autoRemoveSystemReservedChars: opts.autoRemoveSystemReservedChars ?? true,
+
     ffmpegOutputArgs:
       opts.ffmpegOutputArgs ??
       '-c copy' +
@@ -272,8 +276,21 @@ export function genSavePathFromRule<
     sec: formatDate(now, 'ss'),
     ...extData,
   }
+  if (manager.autoRemoveSystemReservedChars) {
+    for (const key in params) {
+      params[key] = removeSystemReservedChars(params[key])
+    }
+  }
 
   return formatTemplate(manager.savePathRule, params)
+}
+
+// TODO: 目前只对 windows 做了处理
+function removeSystemReservedChars(filename: string) {
+  if (process.platform !== 'win32') return filename
+
+  // Refs: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
+  return filename.replace(/[\\/:*?"<>|]/g, '')
 }
 
 export type GetProviderExtra<P> = P extends RecorderProvider<infer E> ? E : never

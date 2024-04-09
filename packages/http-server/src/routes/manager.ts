@@ -7,7 +7,14 @@ import { asyncRouteHandler } from './utils'
 const router = Router()
 
 function getManager(args: API.getManager.Args): API.getManager.Resp {
-  return pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord', 'autoCheckInterval', 'ffmpegOutputArgs')
+  return pick(
+    recorderManager,
+    'savePathRule',
+    'autoRemoveSystemReservedChars',
+    'autoCheckLiveStatusAndRecord',
+    'autoCheckInterval',
+    'ffmpegOutputArgs',
+  )
 }
 
 function updateManager(args: API.updateManager.Args): API.updateManager.Resp {
@@ -56,6 +63,7 @@ router
       // TODO: 这里先不做 schema 校验，以后再加
       (req.body ?? {}) as API.updateManager.Args,
       'savePathRule',
+      'autoRemoveSystemReservedChars',
       'autoCheckLiveStatusAndRecord',
       'autoCheckInterval',
       'ffmpegOutputArgs',

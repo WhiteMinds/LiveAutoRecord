@@ -69,6 +69,7 @@ export default {
   settings: {
     global_recording_settings: '全局录制设置',
     save_path_rule: '保存路径规则',
+    auto_remove_reserved_chars: '自动移除系统保留字符',
     spr_alert_title: '如何在保存路径中使用变量？',
     spr_alert_subtitle: "使用 `{'{}'}` 包裹住变量名即可，如 `/path/{'{platform}'}`",
     filed_name: '变量名',

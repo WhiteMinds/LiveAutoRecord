@@ -32,6 +32,7 @@ export const recorderManager = createRecorderManager<RecorderExtra>({
 
 export const defaultManagerConfig: ManagerConfig = {
   savePathRule: path.join(paths.data, '{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4'),
+  autoRemoveSystemReservedChars: true,
   autoCheckLiveStatusAndRecord: true,
   autoCheckInterval: 1000,
   ffmpegOutputArgs: recorderManager.ffmpegOutputArgs,
@@ -55,6 +56,10 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
     managerConfig.ffmpegOutputArgs = recorderManager.ffmpegOutputArgs
     managerConfig.savePathRule += '.mp4'
   }
+  if (managerConfig.autoRemoveSystemReservedChars == null) {
+    // v1.0.0 -> v1.1.0
+    managerConfig.autoRemoveSystemReservedChars = true
+  }
 
   Object.assign(recorderManager, managerConfig)
 
@@ -66,7 +71,14 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
   recorderManager.on('Updated', () => {
     writeJSONFileSync<ManagerConfig>(
       managerConfigPath,
-      pick(recorderManager, 'savePathRule', 'autoCheckLiveStatusAndRecord', 'autoCheckInterval', 'ffmpegOutputArgs'),
+      pick(
+        recorderManager,
+        'savePathRule',
+        'autoRemoveSystemReservedChars',
+        'autoCheckLiveStatusAndRecord',
+        'autoCheckInterval',
+        'ffmpegOutputArgs',
+      ),
     )
   })
 
@@ -178,6 +190,7 @@ export async function genSRTFile(extraDataPath: string, srtPath: string): Promis
 
 interface ManagerConfig {
   savePathRule: string
+  autoRemoveSystemReservedChars: boolean
   autoCheckLiveStatusAndRecord: boolean
   autoCheckInterval: number
   ffmpegOutputArgs: string

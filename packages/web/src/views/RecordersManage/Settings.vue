@@ -18,6 +18,7 @@
           v-model="manager.savePathRule"
           append-inner-icon="mdi-help-circle"
           @click:append-inner="savePathRuleAlertVisible = !savePathRuleAlertVisible"
+          hide-details
         />
         <v-alert v-model="savePathRuleAlertVisible" closable>
           <v-alert-title>{{ t('settings.spr_alert_title') }}</v-alert-title>
@@ -78,6 +79,12 @@
             </tbody>
           </v-table>
         </v-alert>
+
+        <v-checkbox
+          :label="t('settings.auto_remove_reserved_chars')"
+          v-model="manager.autoRemoveSystemReservedChars"
+          hide-details
+        />
 
         <v-text-field :label="t('settings.ffmpeg_output_args')" v-model="manager.ffmpegOutputArgs" />
 

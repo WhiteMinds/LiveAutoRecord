@@ -71,6 +71,7 @@ export default {
   settings: {
     global_recording_settings: 'Global Recording Settings',
     save_path_rule: 'Save Path Rule',
+    auto_remove_reserved_chars: 'Auto remove system reserved characters',
     spr_alert_title: 'How to use variables in the save path?',
     spr_alert_subtitle: "Wrap the variable name with `{'{}'}` to use it, such as `/path/{'{platform}'}`",
     filed_name: 'Variable Name',
