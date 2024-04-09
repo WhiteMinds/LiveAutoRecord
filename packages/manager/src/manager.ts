@@ -99,7 +99,7 @@ export function createRecorderManager<
 
   let checkLoopTimer: NodeJS.Timeout | undefined
 
-  const multiThreadCheck = async () => {
+  const multiThreadCheck = async (manager: RecorderManager<ME, P, PE, E>) => {
     // TODO: 先用写死的数量，后面改成可以设置的
     const maxThreadCount = 3
     // 这里暂时不打算用 state == recording 来过滤，provider 必须内部自己处理录制过程中的 check，
@@ -107,7 +107,7 @@ export function createRecorderManager<
     const needCheckRecorders = recorders.filter((r) => !r.disableAutoCheck)
 
     const checkOnce = async () => {
-      const recorder = needCheckRecorders.pop()
+      const recorder = needCheckRecorders.shift()
       if (recorder == null) return
 
       await recorder.checkLiveStatusAndRecord({
@@ -119,7 +119,11 @@ export function createRecorderManager<
 
     const threads = R.range(0, maxThreadCount).map(async () => {
       while (needCheckRecorders.length > 0) {
-        await checkOnce()
+        try {
+          await checkOnce()
+        } catch (err) {
+          manager.emit('error', { source: 'checkOnceInThread', err })
+        }
       }
     })
 
@@ -171,7 +175,7 @@ export function createRecorderManager<
 
       const checkLoop = async () => {
         try {
-          await multiThreadCheck()
+          await multiThreadCheck(this)
         } catch (err) {
           this.emit('error', { source: 'multiThreadCheck', err })
         } finally {
