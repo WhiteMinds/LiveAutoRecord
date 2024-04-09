@@ -15,7 +15,7 @@ import {
   removeRecord,
   removeRecorder,
   updateRecorder,
-  updateRecordStopTime,
+  updateRecordStopData,
 } from './db'
 import { ServerOpts } from './types'
 import { parseSync, stringifySync } from 'subtitle'
@@ -105,6 +105,7 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
 
     const updateRecordOnceRecordStop: Parameters<typeof recorderManager.on<'RecordStop'>>[1] = async ({
       recordHandle,
+      reason,
     }) => {
       if (recordHandle.id !== recordId) return
       recorderManager.off('RecordStop', updateRecordOnceRecordStop)
@@ -124,9 +125,10 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
         return
       }
 
-      updateRecordStopTime({
+      updateRecordStopData({
         id: recordId,
         stopTimestamp: Date.now(),
+        stopReason: reason,
       })
 
       if (autoGenerateSRTOnRecordStop) {

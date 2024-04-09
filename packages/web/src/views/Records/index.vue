@@ -83,6 +83,13 @@
           width: 144,
         },
         {
+          title: $t('records.field_stop_reason'),
+          key: 'stopReason',
+          value: (record: ClientRecord) => record.stopReason ?? '/',
+          sortable: true,
+          width: 140,
+        },
+        {
           title: $t('records.field_path'),
           value: 'savePath',
           sortable: false,

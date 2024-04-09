@@ -120,6 +120,7 @@ export default {
     field_start_time: 'Время начала записи',
     field_end_time: 'Время окончания записи',
     field_duration: 'Продолжительность записи',
+    field_stop_reason: 'Причина остановки',
     field_path: 'Путь',
     field_action: 'Действие',
     file_not_exists: 'Файл не существует',

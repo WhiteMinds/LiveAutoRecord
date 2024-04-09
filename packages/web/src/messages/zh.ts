@@ -115,6 +115,7 @@ export default {
     field_start_time: '录制开始时间',
     field_end_time: '录制终止时间',
     field_duration: '录制时长',
+    field_stop_reason: '终止原因',
     field_path: '路径',
     field_action: '操作',
     file_not_exists: '文件不存在',

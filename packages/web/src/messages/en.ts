@@ -119,6 +119,7 @@ export default {
     field_start_time: 'Recording start time',
     field_end_time: 'Recording end time',
     field_duration: 'Recording duration',
+    field_stop_reason: 'Stop reason',
     field_path: 'Path',
     field_action: 'Action',
     file_not_exists: 'File not exists',

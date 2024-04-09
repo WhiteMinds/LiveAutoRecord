@@ -38,7 +38,7 @@ export interface RecordHandle {
 
   savePath: string
 
-  stop: (this: RecordHandle) => Promise<void>
+  stop: (this: RecordHandle, reason?: string) => Promise<void>
 }
 
 export interface DebugLog {
@@ -49,7 +49,7 @@ export interface DebugLog {
 export interface Recorder<E extends AnyObject = UnknownObject>
   extends Emitter<{
       RecordStart: RecordHandle
-      RecordStop: RecordHandle
+      RecordStop: { recordHandle: RecordHandle; reason?: string }
       Updated: ((string & {}) | keyof Recorder)[]
       Message: Message
       DebugLog: DebugLog

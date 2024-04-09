@@ -27,6 +27,7 @@ export interface RecordModel {
   savePath: string
   startTimestamp: number
   stopTimestamp?: number
+  stopReason?: string
 }
 
 export type RecorderModel = SerializedRecorder<RecorderExtra>
@@ -125,13 +126,16 @@ export function removeRecords(ids: RecordModel['id'][]): void {
   scheduleSave()
 }
 
-export function updateRecordStopTime(props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>>): void {
+export function updateRecordStopData(
+  props: Required<Pick<RecordModel, 'id' | 'stopTimestamp'>> & Pick<RecordModel, 'stopReason'>,
+): void {
   assertDBReady(db)
   // TODO: 性能有问题的话可以在 insert 时做个索引表
   const record = db.data.records.find((record) => record.id === props.id)
   if (record == null) return
 
   record.stopTimestamp = props.stopTimestamp
+  record.stopReason = props.stopReason
   scheduleSave()
 }
 

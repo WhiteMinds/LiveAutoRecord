@@ -53,7 +53,7 @@ export interface RecorderManager<
 > extends Emitter<{
     error: { source: string; err: unknown }
     RecordStart: { recorder: Recorder<E>; recordHandle: RecordHandle }
-    RecordStop: { recorder: Recorder<E>; recordHandle: RecordHandle }
+    RecordStop: { recorder: Recorder<E>; recordHandle: RecordHandle; reason?: string }
     RecorderUpdated: {
       recorder: Recorder<E>
       keys: ((string & {}) | keyof Recorder<E>)[]
@@ -151,7 +151,9 @@ export function createRecorderManager<
       this.recorders.push(recorder)
 
       recorder.on('RecordStart', (recordHandle) => this.emit('RecordStart', { recorder, recordHandle }))
-      recorder.on('RecordStop', (recordHandle) => this.emit('RecordStop', { recorder, recordHandle }))
+      recorder.on('RecordStop', ({ recordHandle, reason }) =>
+        this.emit('RecordStop', { recorder, recordHandle, reason }),
+      )
       recorder.on('Updated', (keys) => this.emit('RecorderUpdated', { recorder, keys }))
       recorder.on('DebugLog', (log) => this.emit('RecorderDebugLog', { recorder, ...log }))
 
@@ -162,7 +164,7 @@ export function createRecorderManager<
     removeRecorder(recorder) {
       const idx = this.recorders.findIndex((item) => item === recorder)
       if (idx === -1) return
-      recorder.recordHandle?.stop()
+      recorder.recordHandle?.stop('remove recorder')
       this.recorders.splice(idx, 1)
       this.emit('RecorderRemoved', recorder)
     },

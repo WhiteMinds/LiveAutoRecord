@@ -22,9 +22,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/bilibili-recorder@npm:^1.1.6":
-  version: 1.1.6
-  resolution: "@autorecord/bilibili-recorder@npm:1.1.6"
+"@autorecord/bilibili-recorder@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@autorecord/bilibili-recorder@npm:1.2.0"
   dependencies:
     axios: ^0.27.2
     blive-message-listener: ^0.4.0
@@ -32,13 +32,13 @@ __metadata:
     ramda: ^0.28.0
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: 00678bd3595316cf816a853efc8c406c4ee88fda8de57c53734940ad087c2731410fcbab6eba1e56a924af66a9552027265c7f10bde4c4b0b828c458ccf90b1d
+  checksum: 8b377f5e742f8f59470e49da146ac666d6e4796a0072cdcbee019357f0b112339411bbadb8f2879b5ef76a2effec2b54b09eb261032c28d9abe8525d8d74a2fb
   languageName: node
   linkType: hard
 
-"@autorecord/douyin-recorder@npm:^1.0.8":
-  version: 1.0.8
-  resolution: "@autorecord/douyin-recorder@npm:1.0.8"
+"@autorecord/douyin-recorder@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@autorecord/douyin-recorder@npm:1.1.0"
   dependencies:
     axios: ^0.27.2
     axios-cookiejar-support: ^4.0.3
@@ -47,13 +47,13 @@ __metadata:
     tough-cookie: ^4.1.2
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: a1c8d449324facc420ad345c0981966afe51decc57b423ec7e0a502cd3211dd07201a119b887d002510634c78ced7502a344a4c92db3769e2553da4b5a59c5f0
+  checksum: eac88d565003708c11c553f157abdeaf289d424596c74c51802a6652be1c60d732d8e82c9962d43b585250bf54dfba33abf1c6dd6fe752b858e109482ea1e075
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.1.6":
-  version: 1.1.6
-  resolution: "@autorecord/douyu-recorder@npm:1.1.6"
+"@autorecord/douyu-recorder@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@autorecord/douyu-recorder@npm:1.2.0"
   dependencies:
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
@@ -66,7 +66,7 @@ __metadata:
     ws: ^8.9.0
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: 011d1c623358d2d3287228c8f7f9064d33acb7d29dbc1df99cfa3ea78c946a85862ddf646df8c5c4f7104ab012061a9cda4bf6d6a11fa77f63dfd73e5b4b6164
+  checksum: d96191deff444d98cb08f30df3c51eb88a5ef07b41f8af5c2e3c226d7a54e70ccfb99cf492e3d6890f3855b69c256e10b31d617dd15bdb27b7d9ca8799f0e5af
   languageName: node
   linkType: hard
 
@@ -90,10 +90,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
-    "@autorecord/bilibili-recorder": ^1.1.6
-    "@autorecord/douyin-recorder": ^1.0.8
-    "@autorecord/douyu-recorder": ^1.1.6
-    "@autorecord/huya-recorder": ^1.0.6
+    "@autorecord/bilibili-recorder": ^1.2.0
+    "@autorecord/douyin-recorder": ^1.1.0
+    "@autorecord/douyu-recorder": ^1.2.0
+    "@autorecord/huya-recorder": ^1.1.0
     "@autorecord/manager": "workspace:^"
     "@autorecord/shared": "workspace:^"
     "@types/cors": ^2.8.12
@@ -116,9 +116,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@autorecord/huya-recorder@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "@autorecord/huya-recorder@npm:1.0.6"
+"@autorecord/huya-recorder@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "@autorecord/huya-recorder@npm:1.1.0"
   dependencies:
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
@@ -127,7 +127,7 @@ __metadata:
     ramda: ^0.28.0
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: 57320a4705fbb49d9c79deee32856de1b3fb307f27da60445577a143437bf2e1fd4e147631414119fb4054a1396cc68ee4fcd838aeb8c098b9b55dfe374fb8a1
+  checksum: a8eb6b101c506f97130c7ca5e25495cddebc1105c617bf7e9105a06878d7d6f160e6f5834658144dd74833aa16fc599a363617c560f1adb95831ec070019c0d6
   languageName: node
   linkType: hard
 
