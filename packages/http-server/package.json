@@ -18,7 +18,7 @@
   "license": "LGPL",
   "dependencies": {
     "@autorecord/bilibili-recorder": "^1.1.6",
-    "@autorecord/douyin-recorder": "^1.0.7",
+    "@autorecord/douyin-recorder": "^1.0.8",
     "@autorecord/douyu-recorder": "^1.1.6",
     "@autorecord/huya-recorder": "^1.0.6",
     "@autorecord/manager": "workspace:^",

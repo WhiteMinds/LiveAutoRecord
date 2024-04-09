@@ -36,9 +36,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyin-recorder@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "@autorecord/douyin-recorder@npm:1.0.7"
+"@autorecord/douyin-recorder@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "@autorecord/douyin-recorder@npm:1.0.8"
   dependencies:
     axios: ^0.27.2
     axios-cookiejar-support: ^4.0.3
@@ -47,7 +47,7 @@ __metadata:
     tough-cookie: ^4.1.2
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: 969679208e1e6d68679dbd31b596e29d63f2d95454caa1ecec7ef36ba6db82846da15daaefeb498440d55c1839608f12e5e87098a2579deff0cf398200dcdc77
+  checksum: a1c8d449324facc420ad345c0981966afe51decc57b423ec7e0a502cd3211dd07201a119b887d002510634c78ced7502a344a4c92db3769e2553da4b5a59c5f0
   languageName: node
   linkType: hard
 
@@ -91,7 +91,7 @@ __metadata:
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
     "@autorecord/bilibili-recorder": ^1.1.6
-    "@autorecord/douyin-recorder": ^1.0.7
+    "@autorecord/douyin-recorder": ^1.0.8
     "@autorecord/douyu-recorder": ^1.1.6
     "@autorecord/huya-recorder": ^1.0.6
     "@autorecord/manager": "workspace:^"
