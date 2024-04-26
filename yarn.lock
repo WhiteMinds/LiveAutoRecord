@@ -51,9 +51,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@autorecord/douyu-recorder@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@autorecord/douyu-recorder@npm:1.2.0"
+"@autorecord/douyu-recorder@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@autorecord/douyu-recorder@npm:1.2.2"
   dependencies:
     axios: ^0.27.2
     cheerio: ^1.0.0-rc.12
@@ -66,7 +66,7 @@ __metadata:
     ws: ^8.9.0
   peerDependencies:
     "@autorecord/manager": "*"
-  checksum: d96191deff444d98cb08f30df3c51eb88a5ef07b41f8af5c2e3c226d7a54e70ccfb99cf492e3d6890f3855b69c256e10b31d617dd15bdb27b7d9ca8799f0e5af
+  checksum: 04e937c4557f04e4ecb648f1096ea8f8d4e9ced93531637db6f99fb45d6aad7c6c68083a120314ae28449e4acec4dd12a0e711d397fd3aa14d709264b29795d2
   languageName: node
   linkType: hard
 
@@ -92,7 +92,7 @@ __metadata:
   dependencies:
     "@autorecord/bilibili-recorder": ^1.2.0
     "@autorecord/douyin-recorder": ^1.1.0
-    "@autorecord/douyu-recorder": ^1.2.0
+    "@autorecord/douyu-recorder": ^1.2.2
     "@autorecord/huya-recorder": ^1.1.0
     "@autorecord/manager": "workspace:^"
     "@autorecord/shared": "workspace:^"
