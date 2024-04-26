@@ -292,7 +292,7 @@ function removeSystemReservedChars(filename: string) {
   if (process.platform !== 'win32') return filename
 
   // Refs: https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions
-  return filename.replace(/[\\/:*?"<>|]/g, '')
+  return filename.replace(/[\\/:*?"<>|]/g, '').replace(/[ .]+$/, '')
 }
 
 export type GetProviderExtra<P> = P extends RecorderProvider<infer E> ? E : never
