@@ -1,4 +1,6 @@
-import { DebouncedFunc, throttle } from 'lodash'
+import type { DebouncedFunc } from 'lodash'
+import lodash from 'lodash'
+const { throttle } = lodash
 
 export type AnyObject = Record<string, any>
 export type UnknownObject = Record<string, unknown>

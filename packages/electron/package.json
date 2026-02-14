@@ -2,6 +2,7 @@
   "name": "@autorecord/electron",
   "version": "4.7.1",
   "description": "Integrate two packets http-server and web, packaged as the client",
+  "type": "module",
   "main": "./dist/main/index.js",
   "private": true,
   "scripts": {
@@ -64,8 +65,8 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "electron": "^20.1.1",
-    "electron-builder": "^23.3.3",
-    "electron-vite": "^1.0.14"
+    "electron": "^40.0.0",
+    "electron-builder": "^26.7.0",
+    "electron-vite": "^5.0.0"
   }
 }

@@ -1,6 +1,6 @@
 import path from 'path'
 import mitt, { Emitter } from 'mitt'
-import R from 'ramda'
+import * as R from 'ramda'
 import formatTemplate from 'string-template'
 import { format as formatDate } from 'date-fns'
 import { ChannelId } from './common'

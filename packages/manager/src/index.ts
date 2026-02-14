@@ -1,6 +1,6 @@
 import ffmpeg from 'fluent-ffmpeg'
 import ffmpegPathFromModule from 'ffmpeg-static'
-import R from 'ramda'
+import * as R from 'ramda'
 import { v4 as uuid } from 'uuid'
 import { RecorderProvider } from './manager'
 import { SerializedRecorder, Recorder, RecordHandle } from './recorder'

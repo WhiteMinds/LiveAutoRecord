@@ -1,7 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 import * as R from 'ramda'
-import { debounce, DebouncedFunc, DebounceSettings, memoize, throttle } from 'lodash'
+import type { DebouncedFunc, DebounceSettings } from 'lodash'
+import lodash from 'lodash'
+const { debounce, memoize, throttle } = lodash
 import { JSONFile, JSONFileSync } from '@autorecord/shared'
 import { ServerOpts } from './types'
 

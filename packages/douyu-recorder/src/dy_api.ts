@@ -1,5 +1,5 @@
 import { v4 as uuid4 } from 'uuid'
-import MD5 from 'crypto-js/md5'
+import MD5 from 'crypto-js/md5.js'
 import { VM } from 'vm2'
 import * as queryString from 'query-string'
 import { requester } from './requester'

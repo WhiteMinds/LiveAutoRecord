@@ -1,6 +1,9 @@
 import { logger } from './logger'
 import { dirname, join } from 'path'
+import { fileURLToPath } from 'node:url'
 import { app, screen, shell, BrowserWindow, Menu, Tray } from 'electron'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 import { startServer } from '@autorecord/http-server'
 import ffmpegPathFromModule from 'ffmpeg-static'
 import { getSettings, setSettings } from './settings'
