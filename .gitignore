@@ -34,3 +34,6 @@ dist-ssr
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Claude
+.claude/settings.local.json

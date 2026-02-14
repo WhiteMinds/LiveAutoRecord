@@ -1,0 +1,32 @@
+{
+  "name": "@autorecord/core",
+  "version": "0.0.1",
+  "description": "Shared core utilities for CLI and HTTP server",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js"
+    }
+  },
+  "private": true,
+  "scripts": {
+    "build": "yarn run -T tsup",
+    "watch": "yarn run -T tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "lib"
+  ],
+  "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
+  "author": "WhiteMind",
+  "license": "LGPL",
+  "dependencies": {
+    "@autorecord/manager": "workspace:^",
+    "@autorecord/shared": "workspace:^",
+    "env-paths": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

@@ -31,6 +31,37 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@autorecord/cli@workspace:packages/cli":
+  version: 0.0.0-use.local
+  resolution: "@autorecord/cli@workspace:packages/cli"
+  dependencies:
+    "@autorecord/bilibili-recorder": "workspace:^"
+    "@autorecord/core": "workspace:^"
+    "@autorecord/douyin-recorder": "workspace:^"
+    "@autorecord/douyu-recorder": "workspace:^"
+    "@autorecord/huya-recorder": "workspace:^"
+    "@autorecord/manager": "workspace:^"
+    "@autorecord/shared": "workspace:^"
+    commander: ^14.0.0
+    consola: ^3.4.0
+    console-table-printer: ^2.12.1
+    typescript: ^5.7.0
+  bin:
+    lar: ./lib/bin.js
+  languageName: unknown
+  linkType: soft
+
+"@autorecord/core@workspace:^, @autorecord/core@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@autorecord/core@workspace:packages/core"
+  dependencies:
+    "@autorecord/manager": "workspace:^"
+    "@autorecord/shared": "workspace:^"
+    env-paths: ^2.0.0
+    typescript: ^5.7.0
+  languageName: unknown
+  linkType: soft
+
 "@autorecord/douyin-recorder@workspace:^, @autorecord/douyin-recorder@workspace:packages/douyin-recorder":
   version: 0.0.0-use.local
   resolution: "@autorecord/douyin-recorder@workspace:packages/douyin-recorder"
@@ -100,6 +131,7 @@ __metadata:
   resolution: "@autorecord/http-server@workspace:packages/http-server"
   dependencies:
     "@autorecord/bilibili-recorder": "workspace:^"
+    "@autorecord/core": "workspace:^"
     "@autorecord/douyin-recorder": "workspace:^"
     "@autorecord/douyu-recorder": "workspace:^"
     "@autorecord/huya-recorder": "workspace:^"
@@ -112,7 +144,6 @@ __metadata:
     "@types/ramda": ^0.28.15
     cors: ^2.8.5
     cross-env: ^7.0.3
-    env-paths: ^2.0.0
     express: ^4.18.1
     lodash: ^4.17.21
     morgan: ^1.10.0
@@ -4625,6 +4656,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^14.0.0":
+  version: 14.0.3
+  resolution: "commander@npm:14.0.3"
+  checksum: b8440159124aefbb02784a8996cd0481d8ce503d8d3cd413f4289d06db7e912c36b511277c2faba62f59152dd9ff79239d75e3b9400d9402851878994201d429
+  languageName: node
+  linkType: hard
+
 "commander@npm:^4.0.0":
   version: 4.1.1
   resolution: "commander@npm:4.1.1"
@@ -4737,6 +4775,15 @@ __metadata:
   version: 1.1.0
   resolution: "console-control-strings@npm:1.1.0"
   checksum: 8755d76787f94e6cf79ce4666f0c5519906d7f5b02d4b884cf41e11dcd759ed69c57da0670afd9236d229a46e0f9cf519db0cd829c6dca820bb5a5c3def584ed
+  languageName: node
+  linkType: hard
+
+"console-table-printer@npm:^2.12.1":
+  version: 2.15.0
+  resolution: "console-table-printer@npm:2.15.0"
+  dependencies:
+    simple-wcswidth: ^1.1.2
+  checksum: a878e446303eabaa86a2fd7f0d956d24252e0837be23249e7ad24daf3f304ce7bf155ca79b25ccd4f380f31fa35e427adc762e49ff29236f82a96c4b1d88551e
   languageName: node
   linkType: hard
 
@@ -10913,6 +10960,13 @@ __metadata:
   dependencies:
     semver: ~7.0.0
   checksum: aaadc1f158ad5101b363d1c7aed1f30fc1cac59a760aa31702633e0e6fe423348f07d0e78185aef0aad29130a7b7f0f188c21c7bc7353f897a0ea3682e051a70
+  languageName: node
+  linkType: hard
+
+"simple-wcswidth@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "simple-wcswidth@npm:1.1.2"
+  checksum: 210eea36d28fb8dbadb1dcf5a19e747c1435548ec56bfd86f1c79fb9ddf676b252d84632d3ab9a787251281c499520e63bca1d9f5997cbd66c25996c10e056b1
   languageName: node
   linkType: hard
 

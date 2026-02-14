@@ -4,27 +4,25 @@ import * as R from 'ramda'
 import type { DebouncedFunc, DebounceSettings } from 'lodash'
 import lodash from 'lodash'
 const { debounce, memoize, throttle } = lodash
-import { JSONFile, JSONFileSync } from '@autorecord/shared'
+import { JSONFile } from '@autorecord/shared'
+import { ensureFileFolderExists as _ensureFileFolderExists } from '@autorecord/core'
 import { ServerOpts } from './types'
+
+// Re-export from core
+export { assert, ensureFileFolderExists, writeJSONFileSync } from '@autorecord/core'
 
 export type PickPartial<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>> & Partial<Pick<T, K>>
 
-export function assert(assertion: unknown, msg?: string): asserts assertion {
-  if (!assertion) {
-    throw new Error(msg)
-  }
-}
-
 export function assertStringType(data: unknown, msg?: string): asserts data is string {
-  assert(typeof data === 'string', msg)
+  if (typeof data !== 'string') throw new Error(msg)
 }
 
 export function assertNumberType(data: unknown, msg?: string): asserts data is number {
-  assert(typeof data === 'number', msg)
+  if (typeof data !== 'number') throw new Error(msg)
 }
 
 export function assertObjectType(data: unknown, msg?: string): asserts data is object {
-  assert(typeof data === 'object', msg)
+  if (typeof data !== 'object') throw new Error(msg)
 }
 
 export function pick<T extends Record<string, any>, U extends keyof T>(
@@ -39,12 +37,6 @@ export function omit<T extends Record<string, any>, U extends Exclude<keyof T, n
   ...props: U[]
 ): Omit<T, U> {
   return R.omit(props, object)
-}
-
-export function ensureFileFolderExists(filePath: string) {
-  const folder = path.dirname(filePath)
-  if (fs.existsSync(folder)) return
-  fs.mkdirSync(folder, { recursive: true })
 }
 
 export async function readJSONFile<T = unknown>(
@@ -76,13 +68,8 @@ export function readJSONFileSync<T = unknown>(filePath: string, defaultValue: T,
 }
 
 export async function writeJSONFile<T = unknown>(filePath: string, json: T): Promise<void> {
-  ensureFileFolderExists(filePath)
+  _ensureFileFolderExists(filePath)
   await new JSONFile<T>(filePath).write(json)
-}
-
-export function writeJSONFileSync<T = unknown>(filePath: string, json: T): void {
-  ensureFileFolderExists(filePath)
-  new JSONFileSync<T>(filePath).write(json)
 }
 
 /**

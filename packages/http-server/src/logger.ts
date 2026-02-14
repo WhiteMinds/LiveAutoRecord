@@ -1,6 +1,6 @@
 import path from 'path'
 import { createLogger as createWinstonLogger, format, transports } from 'winston'
-import { paths } from './env'
+import { paths } from '@autorecord/core'
 
 export function createLogger() {
   const logger = createWinstonLogger({

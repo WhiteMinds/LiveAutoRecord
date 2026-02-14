@@ -5,7 +5,8 @@ import { provider as providerForDouYu } from '@autorecord/douyu-recorder'
 import { provider as providerForBilibili } from '@autorecord/bilibili-recorder'
 import { provider as providerForHuYa } from '@autorecord/huya-recorder'
 import { provider as providerForDouYin } from '@autorecord/douyin-recorder'
-import { paths } from './env'
+import { paths } from '@autorecord/core'
+import type { RecorderExtra, ManagerConfig } from '@autorecord/core'
 import { pick, readJSONFileSync, replaceExtName, writeJSONFileSync } from './utils'
 import {
   genRecorderIdInDB,
@@ -20,11 +21,9 @@ import {
 import { ServerOpts } from './types'
 import { parseSync, stringifySync } from 'subtitle'
 
-const managerConfigPath = path.join(paths.config, 'manager.json')
+export type { RecorderExtra, ManagerConfig }
 
-export interface RecorderExtra {
-  createTimestamp: number
-}
+const managerConfigPath = path.join(paths.config, 'manager.json')
 
 export const recorderManager = createRecorderManager<RecorderExtra>({
   providers: [providerForDouYu, providerForBilibili, providerForHuYa, providerForDouYin],
@@ -190,10 +189,3 @@ export async function genSRTFile(extraDataPath: string, srtPath: string): Promis
   await fs.promises.writeFile(srtPath, stringifySync(parsedSRT, { format: 'SRT' }))
 }
 
-interface ManagerConfig {
-  savePathRule: string
-  autoRemoveSystemReservedChars: boolean
-  autoCheckLiveStatusAndRecord: boolean
-  autoCheckInterval: number
-  ffmpegOutputArgs: string
-}

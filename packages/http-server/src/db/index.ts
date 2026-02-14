@@ -6,31 +6,14 @@
  *
  * 之后记录条数多了性能有问题的话，可以考虑分表、限制表条数上限等方案。
  */
-import { Recorder, RecordHandle, SerializedRecorder } from '@autorecord/manager'
 import path from 'path'
 import fs from 'fs'
-import { Low, JSONFile } from './lowdb'
-import { paths } from '../env'
-import { assert, asyncThrottle, ensureFileFolderExists } from '../utils'
-import { RecorderExtra } from '../manager'
+import { Low, JSONFile, paths, assert, ensureFileFolderExists } from '@autorecord/core'
+import type { DatabaseSchema, RecordModel, RecorderModel, QueryRecordsOpts } from '@autorecord/core'
+import { asyncThrottle } from '../utils'
 import { ServerOpts } from '../types'
 
-export interface DatabaseSchema {
-  records: RecordModel[]
-  recorders: RecorderModel[]
-  nextRecorderId: number
-}
-
-export interface RecordModel {
-  id: RecordHandle['id']
-  recorderId: Recorder['id']
-  savePath: string
-  startTimestamp: number
-  stopTimestamp?: number
-  stopReason?: string
-}
-
-export type RecorderModel = SerializedRecorder<RecorderExtra>
+export type { DatabaseSchema, RecordModel, RecorderModel, QueryRecordsOpts }
 
 const dbPath = path.join(paths.data, 'data.json')
 const adapter = new JSONFile<DatabaseSchema>(dbPath)
@@ -76,11 +59,6 @@ export function getRecord(id: RecordModel['id']): RecordModel | undefined {
   return db.data.records.find((item) => item.id === id)
 }
 
-export interface QueryRecordsOpts {
-  recorderId?: Recorder['id']
-  start?: number
-  count?: number
-}
 export function getRecords(opts: QueryRecordsOpts = {}): {
   items: RecordModel[]
   total: number
