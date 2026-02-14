@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "strict": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": false,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "removeComments": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "noImplicitThis": false,
+    "noImplicitAny": true,
+    "noImplicitReturns": false,
+    "declaration": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"]
+}
