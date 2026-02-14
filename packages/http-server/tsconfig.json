@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "outDir": "./lib",
     "rootDir": "./src",
     "strict": true,
     "sourceMap": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
-    "moduleResolution": "Node",
     "esModuleInterop": true,
     "removeComments": false,
     "noUnusedParameters": false,
@@ -16,7 +16,8 @@
     "noImplicitThis": false,
     "noImplicitAny": false,
     "noImplicitReturns": false,
-    "declaration": true
+    "declaration": true,
+    "skipLibCheck": true
   },
   "include": ["src"]
 }

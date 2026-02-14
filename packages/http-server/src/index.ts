@@ -1,4 +1,5 @@
 import path from 'path'
+import { fileURLToPath } from 'node:url'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -71,7 +72,10 @@ async function defaultSetSettings(newSettings: Settings) {
   return newSettings
 }
 
-const isDirectlyRun = require.main === module
+// CJS 构建中 import.meta.url 为 undefined，此处仅在 ESM 入口（node lib/index.js）时触发
+const isDirectlyRun = import.meta.url
+  ? process.argv[1] === fileURLToPath(import.meta.url)
+  : false
 if (isDirectlyRun) {
   const logger = createLogger()
   // winston 的 rejectionHandlers / exceptionHandlers 实现有 bug，配置后在遇到

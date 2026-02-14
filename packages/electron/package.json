@@ -5,8 +5,6 @@
   "main": "./dist/main/index.js",
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
     "lint": "eslint -c .eslintrc --ext .ts ./src",
     "app:dev": "yarn workspace @autorecord/http-server build && concurrently \"yarn workspace @autorecord/http-server watch\" \"electron-vite dev\"",
     "app:build": "yarn workspace @autorecord/http-server build && electron-vite build && electron-builder",

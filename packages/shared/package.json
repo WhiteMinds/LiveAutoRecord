@@ -2,11 +2,20 @@
   "name": "@autorecord/shared",
   "version": "0.0.1",
   "description": "internal utils shared across @autorecord packages",
-  "main": "./lib/index.js",
+  "type": "module",
+  "main": "./lib/index.cjs",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
+    }
+  },
   "private": true,
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w"
+    "build": "yarn run -T tsup",
+    "watch": "yarn run -T tsup --watch",
+    "typecheck": "tsc --noEmit"
   },
   "files": [
     "lib"
@@ -15,6 +24,6 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "devDependencies": {
-    "typescript": "^4.8.3"
+    "typescript": "^5.7.0"
   }
 }
