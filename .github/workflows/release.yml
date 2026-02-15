@@ -6,6 +6,10 @@ on:
     tags:
       - v4.*
 
+concurrency:
+  group: electron-release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   build:
     name: build on ${{ matrix.os }}

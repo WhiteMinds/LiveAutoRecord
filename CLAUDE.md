@@ -83,6 +83,14 @@ pnpm -F @autorecord/<package-name> watch    # 监听模式
 pnpm clean   # 删除所有 node_modules、lib、dist、.turbo
 ```
 
+### 发布
+
+```bash
+pnpm changeset              # 创建 changeset（交互式选择包和版本类型）
+pnpm changeset status       # 查看待发布的变更
+# version-packages 和 release 由 CI 自动执行，一般不需要手动运行
+```
+
 **注意**：目前无测试框架，无测试命令。
 
 ## 核心架构
@@ -159,11 +167,89 @@ pnpm clean   # 删除所有 node_modules、lib、dist、.turbo
 - `asyncDebounce(fn, wait)` — 异步防抖
 - `ensureFolderExist(path)` — 确保目录存在
 
+## 发布流程
+
+使用 `@changesets/cli` 管理版本号、CHANGELOG 和发布，整体流程：
+
+```
+开发者 PR 中附带 .changeset/*.md
+        ↓
+合并到 master → changesets.yml 自动创建 "Version Packages" PR
+        ↓
+合并 Version PR → changesets.yml 再次触发
+        ↓
+├── pnpm build && changeset publish → 发布 npm 包
+└── 检测 electron 版本变更 → 创建 v4.x.x tag → 触发 release.yml
+        ↓
+release.yml: Windows + macOS 构建 → 上传到 GitHub Releases
+```
+
+### 开发者日常操作
+
+```bash
+# 做完功能/修复后，创建 changeset（交互式选择包和版本类型）
+pnpm changeset
+
+# 查看当前待发布的 changeset
+pnpm changeset status
+```
+
+每个 changeset 是 `.changeset/` 下的一个 markdown 文件，格式如下：
+
+```markdown
+---
+'@autorecord/douyu-recorder': patch
+---
+
+修复斗鱼 URL 解析失败的问题
+```
+
+**版本类型选择**：`patch`（bug 修复）、`minor`（新功能）、`major`（破坏性变更）。
+
+### 发布相关命令
+
+```bash
+pnpm changeset              # 创建新的 changeset
+pnpm changeset status       # 查看待发布的变更
+pnpm version-packages       # 本地预览：消费 changeset 并更新版本号 + CHANGELOG（CI 自动执行）
+pnpm release                # 本地预览：构建并发布到 npm（CI 自动执行）
+```
+
+### Changeset 配置要点
+
+配置文件：`.changeset/config.json`
+
+- `baseBranch: "master"` — 主分支
+- `access: "public"` — scoped 包 `@autorecord/*` 以 public 发布
+- `changelog: @changesets/changelog-github` — CHANGELOG 自动链接 PR 和 commit
+- `privatePackages.version: true, tag: false` — 私有包更新版本号但不创建 npm tag
+- `updateInternalDependencies: "patch"` — workspace 依赖更新时自动 patch bump 下游包
+
 ## CI/CD
 
-- `.github/workflows/release.yml`：tag push（`v4.*`）触发，pnpm + Turborepo 自动构建，Windows + macOS 双平台
-- `.github/workflows/package_for_test.yml`：push 触发测试打包，上传 artifact 并评论 PR
-- CI 使用 `pnpm/action-setup@v4`，自动从 `packageManager` 字段读取 pnpm 版本
+### GitHub Actions Workflows
+
+| Workflow         | 文件                   | 触发条件                          | 作用                                                |
+| ---------------- | ---------------------- | --------------------------------- | --------------------------------------------------- |
+| Changesets       | `changesets.yml`       | push to master                    | 自动创建 Version PR 或发布 npm + 创建 Electron tag  |
+| Build Release    | `release.yml`          | tag push `v4.*` / 手动            | Windows + macOS Electron 构建，上传 GitHub Releases |
+| Package for Test | `package_for_test.yml` | push（排除 changeset 分支和 tag） | 测试打包，上传 artifact 并评论 commit               |
+
+### GitHub Secrets
+
+| Secret                | 用途                                                                                                   |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `GITHUB_TOKEN`        | 自动提供，changesets/action 用于创建 Version PR                                                        |
+| `NPM_TOKEN`           | npm automation token，用于 `changeset publish` 发布包                                                  |
+| `repo_contents_token` | PAT（Contents R/W），用于推送 Electron tag 触发 release.yml，以及 electron-builder 上传 release assets |
+
+> **注意**：Electron tag 推送必须用 PAT（`repo_contents_token`），不能用默认 `GITHUB_TOKEN`。GitHub 安全限制：`GITHUB_TOKEN` 创建的 tag 不会触发其他 workflow。
+
+### CI 技术栈
+
+- `pnpm/action-setup@v4`：自动从 `packageManager` 字段读取 pnpm 版本
+- `changesets/action@v1`：自动化 Version PR 创建和 npm 发布
+- Node.js 24 + pnpm 缓存
 
 ## 开发原则
 

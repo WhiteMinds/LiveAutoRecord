@@ -1,6 +1,11 @@
 name: Package for Test
 
-on: [push]
+on:
+  push:
+    branches-ignore:
+      - 'changeset-release/**'
+    tags-ignore:
+      - 'v*'
 
 jobs:
   build:
