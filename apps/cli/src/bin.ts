@@ -11,6 +11,7 @@ import { createCheckCommand } from './commands/check'
 import { createWatchCommand } from './commands/watch'
 import { createConfigCommand } from './commands/config'
 import { createRecordsCommand } from './commands/records'
+import { createAuthCommand } from './commands/auth'
 
 const program = new Command()
 
@@ -45,6 +46,7 @@ program.addCommand(createCheckCommand())
 program.addCommand(createWatchCommand())
 program.addCommand(createConfigCommand())
 program.addCommand(createRecordsCommand())
+program.addCommand(createAuthCommand())
 
 program.parseAsync().catch((err) => {
   const msg = err instanceof Error ? err.message : String(err)

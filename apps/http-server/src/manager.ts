@@ -62,6 +62,16 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
 
   Object.assign(recorderManager, managerConfig)
 
+  // 加载并应用各 Provider 的鉴权配置
+  if (managerConfig.providerAuthConfigs) {
+    for (const provider of recorderManager.providers) {
+      const authConfig = managerConfig.providerAuthConfigs[provider.id]
+      if (authConfig && provider.setAuth) {
+        provider.setAuth(authConfig)
+      }
+    }
+  }
+
   recorderManager.on('error', ({ source, err }) => {
     const errText = err instanceof Error ? (err.stack ?? err.message) : JSON.stringify(err)
     logger.error(`[RecorderManager][${source}]: ${errText}`)
@@ -157,6 +167,24 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
   recorderManager.on('RecorderAdded', (recorder) => insertRecorder(recorder.toJSON()))
   recorderManager.on('RecorderRemoved', (recorder) => removeRecorder(recorder.id))
   recorderManager.on('RecorderUpdated', ({ recorder }) => updateRecorder(recorder.toJSON()))
+}
+
+export function saveProviderAuthConfig(providerId: string, authConfig: Record<string, string> | null): void {
+  const config = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig)
+  if (!config.providerAuthConfigs) config.providerAuthConfigs = {}
+
+  if (authConfig) {
+    config.providerAuthConfigs[providerId] = authConfig
+  } else {
+    delete config.providerAuthConfigs[providerId]
+  }
+
+  writeJSONFileSync(managerConfigPath, config)
+}
+
+export function getProviderAuthConfigs(): Record<string, Record<string, string>> {
+  const config = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig)
+  return config.providerAuthConfigs ?? {}
 }
 
 // ass 看起来只有序列化和反序列化的库（如 ass-compiler），没有支持帮助排列弹幕的库，

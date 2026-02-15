@@ -85,5 +85,16 @@ if (isDirectlyRun) {
     logger.error('unhandleExceptions', error)
   })
 
-  void startServer({ logger })
+  // 独立运行时，尝试注入 Playwright 浏览器登录 executor
+  void (async () => {
+    let executeAuthFlow: ServerOpts['executeAuthFlow'] | undefined
+    try {
+      const { createPlaywrightAuthFlowExecutor } = await import('./auth_flow')
+      executeAuthFlow = createPlaywrightAuthFlowExecutor()
+    } catch {
+      logger.info('Playwright not available, browser login disabled')
+    }
+
+    void startServer({ logger, executeAuthFlow })
+  })()
 }

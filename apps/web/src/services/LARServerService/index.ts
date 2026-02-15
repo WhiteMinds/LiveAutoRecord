@@ -113,6 +113,39 @@ async function setSettings(args: API.setSettings.Args): Promise<API.setSettings.
   return resp.data.payload
 }
 
+async function getProviders(): Promise<API.getProviders.Resp> {
+  const resp = await requester.get<{ payload: API.getProviders.Resp }>('/providers')
+  return resp.data.payload
+}
+
+async function getProviderAuth(args: API.getProviderAuth.Args): Promise<API.getProviderAuth.Resp> {
+  const resp = await requester.get<{ payload: API.getProviderAuth.Resp }>(`/providers/${args.id}/auth`)
+  return resp.data.payload
+}
+
+async function setProviderAuth(args: API.setProviderAuth.Args): Promise<API.setProviderAuth.Resp> {
+  const resp = await requester.put<{ payload: API.setProviderAuth.Resp }>(`/providers/${args.id}/auth`, {
+    config: args.config,
+  })
+  return resp.data.payload
+}
+
+async function performProviderLogin(args: API.performProviderLogin.Args): Promise<API.performProviderLogin.Resp> {
+  const resp = await requester.post<{ payload: API.performProviderLogin.Resp }>(
+    `/providers/${args.id}/auth/login`,
+    null,
+    {
+      timeout: 300_000,
+    },
+  )
+  return resp.data.payload
+}
+
+async function clearProviderAuth(args: API.clearProviderAuth.Args): Promise<API.clearProviderAuth.Resp> {
+  const resp = await requester.delete<{ payload: API.clearProviderAuth.Resp }>(`/providers/${args.id}/auth`)
+  return resp.data.payload
+}
+
 const logMethods = ['error', 'warn', 'info', 'debug'] as const
 const logFunctions = createTypedObjectFromEntries(
   logMethods.map((method) => {
@@ -148,6 +181,11 @@ export const LARServerService = {
   getRecordVideoURL,
   getSettings,
   setSettings,
+  getProviders,
+  getProviderAuth,
+  setProviderAuth,
+  performProviderLogin,
+  clearProviderAuth,
 
   getServerMessages,
 

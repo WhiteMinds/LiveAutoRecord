@@ -41,6 +41,9 @@
     "subtitle": "^4.2.2",
     "winston": "catalog:"
   },
+  "optionalDependencies": {
+    "playwright": "^1.58.0"
+  },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",

@@ -5,6 +5,7 @@ import { router as managerRoutes } from './manager'
 import { router as eventRoutes } from './event'
 import { createRouter as createSettingRouter } from './setting'
 import { createRouter as createLoggerRouter } from './logger'
+import { createRouter as createProviderRouter } from './provider'
 import { ServerOpts } from '../types'
 // import { respond } from './utils'
 
@@ -20,6 +21,8 @@ export function createRouter(serverOpts: ServerOpts) {
   router.use(settingRoutes)
   const loggerRoutes = createLoggerRouter(serverOpts)
   router.use(loggerRoutes)
+  const providerRoutes = createProviderRouter(serverOpts)
+  router.use(providerRoutes)
 
   const handle: ErrorRequestHandler = (err: unknown, req, res, next) => {
     // 裁剪体积过大的 AxiosError

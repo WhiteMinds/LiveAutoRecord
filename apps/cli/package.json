@@ -36,6 +36,9 @@
     "consola": "^3.4.2",
     "console-table-printer": "^2.12.1"
   },
+  "optionalDependencies": {
+    "playwright": "^1.58.0"
+  },
   "devDependencies": {
     "tsup": "catalog:",
     "typescript": "catalog:"

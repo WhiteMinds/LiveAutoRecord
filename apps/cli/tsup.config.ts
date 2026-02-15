@@ -9,6 +9,7 @@ export default defineConfig([
     sourcemap: true,
     clean: true,
     outDir: 'lib',
+    external: ['playwright'],
   },
   {
     entry: ['src/index.ts'],
@@ -17,5 +18,6 @@ export default defineConfig([
     sourcemap: true,
     clean: false,
     outDir: 'lib',
+    external: ['playwright'],
   },
 ])

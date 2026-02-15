@@ -69,6 +69,16 @@ export async function initManager(): Promise<void> {
 
   Object.assign(recorderManager, managerConfig)
 
+  // 加载并应用各 Provider 的鉴权配置
+  if (managerConfig.providerAuthConfigs) {
+    for (const provider of recorderManager.providers) {
+      const authConfig = managerConfig.providerAuthConfigs[provider.id]
+      if (authConfig && provider.setAuth) {
+        provider.setAuth(authConfig)
+      }
+    }
+  }
+
   recorderManager.on('error', ({ source, err }) => {
     const errText = err instanceof Error ? (err.stack ?? err.message) : JSON.stringify(err)
     logger.error(`[RecorderManager][${source}]: ${errText}`)
@@ -134,6 +144,19 @@ export function enableRecordEvents(): void {
 
     recorderManager.on('RecordStop', onRecordStop)
   })
+}
+
+export function saveProviderAuthConfig(providerId: string, authConfig: Record<string, string> | null): void {
+  const config = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig)
+  if (!config.providerAuthConfigs) config.providerAuthConfigs = {}
+
+  if (authConfig) {
+    config.providerAuthConfigs[providerId] = authConfig
+  } else {
+    delete config.providerAuthConfigs[providerId]
+  }
+
+  writeJSONFileSync(managerConfigPath, config)
 }
 
 export { saveDB }

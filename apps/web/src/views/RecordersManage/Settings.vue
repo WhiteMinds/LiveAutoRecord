@@ -192,6 +192,86 @@
       </v-form>
     </v-card-item>
 
+    <v-card-title>{{ t('settings.provider_auth') }}</v-card-title>
+
+    <v-card-item>
+      <div v-if="!providers" class="text-center p-4">
+        <v-progress-circular indeterminate color="primary" />
+      </div>
+
+      <div v-else>
+        <div v-for="provider in providersWithAuth" :key="provider.id" class="mb-6">
+          <div class="text-subtitle-1 font-weight-bold mb-2">
+            {{ t(`platform_name.${provider.id}`) }}
+          </div>
+
+          <v-chip
+            :color="providerAuthStatuses[provider.id]?.isAuthenticated ? 'success' : 'default'"
+            size="small"
+            class="mb-2"
+          >
+            {{
+              providerAuthStatuses[provider.id]?.isAuthenticated
+                ? t('settings.auth_logged_in', { name: providerAuthStatuses[provider.id]?.description })
+                : t('settings.auth_not_logged_in')
+            }}
+          </v-chip>
+
+          <template v-for="field in provider.authFields" :key="field.key">
+            <v-textarea
+              v-if="field.type === 'textarea'"
+              :label="field.label"
+              :placeholder="field.placeholder"
+              v-model="providerAuthInputs[provider.id][field.key]"
+              rows="2"
+              auto-grow
+              hide-details
+              class="mb-2"
+            />
+            <v-text-field
+              v-else
+              :label="field.label"
+              :placeholder="field.placeholder"
+              :type="field.type === 'password' ? 'password' : 'text'"
+              v-model="providerAuthInputs[provider.id][field.key]"
+              hide-details
+              class="mb-2"
+            />
+          </template>
+
+          <div class="d-flex gap-2 mt-2">
+            <v-btn
+              size="small"
+              variant="tonal"
+              @click="saveProviderAuth(provider.id)"
+              :loading="authOperating[provider.id]"
+            >
+              {{ t('settings.auth_save') }}
+            </v-btn>
+            <v-btn
+              v-if="provider.hasAuthFlow"
+              size="small"
+              variant="tonal"
+              @click="browserLogin(provider.id)"
+              :loading="authLoggingIn[provider.id]"
+            >
+              {{ t('settings.auth_browser_login') }}
+            </v-btn>
+            <v-btn
+              size="small"
+              variant="text"
+              @click="clearProviderAuth(provider.id)"
+              :loading="authOperating[provider.id]"
+            >
+              {{ t('settings.auth_clear') }}
+            </v-btn>
+          </div>
+
+          <v-divider class="mt-4" />
+        </div>
+      </div>
+    </v-card-item>
+
     <v-card-title>{{ t('settings.about') }}</v-card-title>
 
     <v-card-item>
@@ -240,7 +320,7 @@
 
 <script setup lang="ts">
 import type { API } from '@autorecord/http-server'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { LARServerService } from '../../services/LARServerService'
@@ -259,6 +339,17 @@ const settings = ref<API.getSettings.Resp>()
 const savePathRuleAlertVisible = ref(false)
 const noticeFormatAlertVisible = ref(false)
 
+// Provider 鉴权相关状态
+const providers = ref<API.getProviders.Resp>()
+const providerAuthStatuses = reactive<Record<string, API.getProviderAuth.Resp>>({})
+const providerAuthInputs = reactive<Record<string, Record<string, string>>>({})
+const authOperating = reactive<Record<string, boolean>>({})
+const authLoggingIn = reactive<Record<string, boolean>>({})
+
+const providersWithAuth = computed(() => {
+  return (providers.value ?? []).filter((p) => p.authFields && p.authFields.length > 0)
+})
+
 // 这里的实现方式是为了让设置页面内部可以预览语言更改后的效果
 const { locale: appLocale } = useI18n()
 const { t, locale: innerLocale } = useI18n({ ...i18nOpts, locale: appLocale.value })
@@ -271,7 +362,59 @@ onMounted(async () => {
   manager.value = await LARServerService.getManager({})
   managerDefault.value = await LARServerService.getManagerDefault({})
   settings.value = await LARServerService.getSettings({})
+
+  // 加载 Provider 鉴权信息
+  providers.value = await LARServerService.getProviders()
+  for (const provider of providersWithAuth.value) {
+    providerAuthInputs[provider.id] = {}
+    for (const field of provider.authFields!) {
+      providerAuthInputs[provider.id][field.key] = ''
+    }
+    try {
+      providerAuthStatuses[provider.id] = await LARServerService.getProviderAuth({ id: provider.id })
+    } catch {
+      providerAuthStatuses[provider.id] = { isAuthenticated: false }
+    }
+  }
 })
+
+const saveProviderAuth = async (providerId: string) => {
+  authOperating[providerId] = true
+  try {
+    const config = providerAuthInputs[providerId]
+    const status = await LARServerService.setProviderAuth({ id: providerId, config })
+    providerAuthStatuses[providerId] = status
+  } finally {
+    authOperating[providerId] = false
+  }
+}
+
+const browserLogin = async (providerId: string) => {
+  authLoggingIn[providerId] = true
+  try {
+    const result = await LARServerService.performProviderLogin({ id: providerId })
+    providerAuthStatuses[providerId] = result.status
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err)
+    providerAuthStatuses[providerId] = { isAuthenticated: false, description: msg }
+  } finally {
+    authLoggingIn[providerId] = false
+  }
+}
+
+const clearProviderAuth = async (providerId: string) => {
+  authOperating[providerId] = true
+  try {
+    await LARServerService.clearProviderAuth({ id: providerId })
+    providerAuthStatuses[providerId] = { isAuthenticated: false }
+    // 清空输入框
+    for (const key of Object.keys(providerAuthInputs[providerId])) {
+      providerAuthInputs[providerId][key] = ''
+    }
+  } finally {
+    authOperating[providerId] = false
+  }
+}
 
 const apply = async () => {
   if (!manager.value) return

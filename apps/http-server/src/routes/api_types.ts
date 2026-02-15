@@ -4,6 +4,8 @@ import {
   RecorderManagerCreateOpts,
   RecordExtraData,
   RecordHandle,
+  ProviderAuthField,
+  ProviderAuthStatus,
 } from '@autorecord/manager'
 import { Settings } from '@autorecord/shared'
 import { RecordModel } from '../db'
@@ -174,6 +176,49 @@ export namespace API {
       text: string
     }
 
+    export type Resp = null
+  }
+
+  export namespace getProviders {
+    export interface Args {}
+    export type Resp = {
+      id: string
+      name: string
+      siteURL: string
+      authFields?: ProviderAuthField[]
+      hasAuthFlow?: boolean
+    }[]
+  }
+
+  export namespace getProviderAuth {
+    export interface Args {
+      id: string
+    }
+    export type Resp = ProviderAuthStatus
+  }
+
+  export namespace setProviderAuth {
+    export interface Args {
+      id: string
+      config: Record<string, string>
+    }
+    export type Resp = ProviderAuthStatus
+  }
+
+  export namespace performProviderLogin {
+    export interface Args {
+      id: string
+    }
+    export type Resp = {
+      authConfig: Record<string, string>
+      status: ProviderAuthStatus
+    }
+  }
+
+  export namespace clearProviderAuth {
+    export interface Args {
+      id: string
+    }
     export type Resp = null
   }
 }

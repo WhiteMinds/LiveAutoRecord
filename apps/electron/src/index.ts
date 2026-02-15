@@ -2,6 +2,7 @@ import { logger } from './logger'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'node:url'
 import { app, screen, shell, BrowserWindow, Menu, Tray } from 'electron'
+import type { ProviderAuthFlow } from '@autorecord/manager'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 import { startServer } from '@autorecord/http-server'
@@ -55,6 +56,7 @@ function initApp() {
     // https://github.com/electron-userland/electron-builder/blob/6f630927ca949d8bdcde06e4eafaa63ce3636d5a/packages/app-builder-lib/src/asar/unpackDetector.ts#L83
     // TODO: 更好的方案应该是在这里手动解包，可以确保路径一定正确，这里先简单实现顶着了。
     ffmpegPath: ffmpegPathFromModule.replace('.asar', '.asar.unpacked'),
+    executeAuthFlow: createElectronAuthFlowExecutor(),
   })
 
   app.on('browser-window-created', (e, window) => {
@@ -182,5 +184,66 @@ function getIconImagePath() {
     case 'linux':
     default:
       return join(__dirname, iconPNG)
+  }
+}
+
+function createElectronAuthFlowExecutor() {
+  return async (authFlow: ProviderAuthFlow): Promise<Record<string, string>> => {
+    const win = new BrowserWindow({
+      width: 900,
+      height: 700,
+      title: '平台登录',
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+      },
+    })
+    win.removeMenu()
+    await win.loadURL(authFlow.loginURL)
+
+    return new Promise((resolve, reject) => {
+      let settled = false
+      const timeoutMs = authFlow.timeout ?? 300_000
+      const timer = setTimeout(() => {
+        if (settled) return
+        settled = true
+        clearInterval(poller)
+        if (!win.isDestroyed()) win.close()
+        reject(new Error('登录超时'))
+      }, timeoutMs)
+
+      const poller = setInterval(async () => {
+        if (settled || win.isDestroyed()) return
+        try {
+          const cookies = await win.webContents.session.cookies.get({})
+          const result = authFlow.checkLoginResult({
+            url: win.webContents.getURL(),
+            cookies: cookies.map((c) => ({
+              name: c.name,
+              value: c.value,
+              domain: c.domain ?? '',
+              path: c.path ?? '',
+            })),
+          })
+          if (result.success && result.authConfig) {
+            settled = true
+            clearTimeout(timer)
+            clearInterval(poller)
+            if (!win.isDestroyed()) win.close()
+            resolve(result.authConfig)
+          }
+        } catch {
+          // 忽略
+        }
+      }, 1000)
+
+      win.on('closed', () => {
+        if (settled) return
+        settled = true
+        clearTimeout(timer)
+        clearInterval(poller)
+        reject(new Error('登录窗口已关闭'))
+      })
+    })
   }
 }
