@@ -6,11 +6,14 @@ export function createCheckCommand(): Command {
   return new Command('check')
     .description('Check live status and start recording if live (one-shot)')
     .argument('[id]', 'Recorder ID (omit to check all with autoCheck enabled)')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar check              # check all auto-check-enabled recorders
   $ lar check 29           # check a specific recorder
-  $ lar check --json`)
+  $ lar check --json`,
+    )
     .action(async (id?: string) => {
       await initManager()
       enableRecordEvents()
@@ -105,8 +108,12 @@ Examples:
             resolve()
           }
 
-          process.on('SIGINT', () => { gracefulStop() })
-          process.on('SIGTERM', () => { gracefulStop() })
+          process.on('SIGINT', () => {
+            gracefulStop()
+          })
+          process.on('SIGTERM', () => {
+            gracefulStop()
+          })
         })
 
         await saveDB()

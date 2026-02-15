@@ -1,11 +1,5 @@
 import path from 'path'
-import {
-  Low,
-  JSONFile,
-  paths,
-  assert,
-  ensureFileFolderExists,
-} from '@autorecord/core'
+import { Low, JSONFile, paths, assert, ensureFileFolderExists } from '@autorecord/core'
 import type { DatabaseSchema, RecordModel, RecorderModel, QueryRecordsOpts } from '@autorecord/core'
 
 export type { DatabaseSchema, RecordModel, RecorderModel, QueryRecordsOpts }

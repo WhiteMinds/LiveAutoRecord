@@ -14,12 +14,19 @@
     "dev:server": "turbo run build --filter=@autorecord/http-server^... && pnpm -F @autorecord/http-server start:dev",
     "dev:web": "pnpm -F @autorecord/web dev",
     "dev:cli": "turbo run build --filter=@autorecord/cli^... && pnpm -F @autorecord/cli build",
-    "clean": "rimraf --glob '**/node_modules' '**/lib' '**/dist' '**/.turbo'"
+    "clean": "rimraf --glob '**/node_modules' '**/lib' '**/dist' '**/.turbo'",
+    "prepare": "husky"
   },
   "devDependencies": {
     "concurrently": "^9.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "catalog:",
     "rimraf": "^6.0.0",
     "turbo": "^2.8.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,vue,json,css,scss,md,yaml,yml}": "prettier --write"
   },
   "pnpm": {
     "overrides": {

@@ -6,10 +6,13 @@ export function createStartCommand(): Command {
   return new Command('start')
     .description('Manually start recording for a recorder')
     .argument('<id>', 'Recorder ID to start')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar start 29
-  $ lar start 29 --json`)
+  $ lar start 29 --json`,
+    )
     .action(async (id: string) => {
       await initManager()
       enableRecordEvents()
@@ -60,7 +63,9 @@ Examples:
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err)
         if (msg.includes('ENOTFOUND') || msg.includes('ETIMEDOUT') || msg.includes('fetch failed')) {
-          outputError(`Network error while checking live status. Please check your internet connection.\n  Detail: ${msg}`)
+          outputError(
+            `Network error while checking live status. Please check your internet connection.\n  Detail: ${msg}`,
+          )
         } else {
           outputError(`Failed to start recording: ${msg}`)
         }

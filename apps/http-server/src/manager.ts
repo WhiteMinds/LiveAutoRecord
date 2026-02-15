@@ -63,7 +63,7 @@ export async function initRecorderManager(serverOpts: ServerOpts): Promise<void>
   Object.assign(recorderManager, managerConfig)
 
   recorderManager.on('error', ({ source, err }) => {
-    const errText = err instanceof Error ? err.stack ?? err.message : JSON.stringify(err)
+    const errText = err instanceof Error ? (err.stack ?? err.message) : JSON.stringify(err)
     logger.error(`[RecorderManager][${source}]: ${errText}`)
   })
 
@@ -188,4 +188,3 @@ export async function genSRTFile(extraDataPath: string, srtPath: string): Promis
 
   await fs.promises.writeFile(srtPath, stringifySync(parsedSRT, { format: 'SRT' }))
 }
-

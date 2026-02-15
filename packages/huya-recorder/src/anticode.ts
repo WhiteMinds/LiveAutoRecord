@@ -39,13 +39,13 @@ function ve(e, t, i, s, a, r, n) {
 }
 function ge(e, t) {
   var i, s, a, r, n
-  ;(e[t >> 5] |= 128 << t % 32), (e[14 + (((t + 64) >>> 9) << 4)] = t)
+  ;((e[t >> 5] |= 128 << (t % 32)), (e[14 + (((t + 64) >>> 9) << 4)] = t))
   var o = 1732584193,
     h = -271733879,
     u = -1732584194,
     l = 271733878
   for (i = 0; i < e.length; i += 16)
-    (s = o),
+    ((s = o),
       (a = h),
       (r = u),
       (n = l),
@@ -113,14 +113,14 @@ function ge(e, t) {
       (o = pe(o, s)),
       (h = pe(h, a)),
       (u = pe(u, r)),
-      (l = pe(l, n))
+      (l = pe(l, n)))
   return [o, h, u, l]
 }
 function Se(e) {
   var t,
     i = '',
     s = 32 * e.length
-  for (t = 0; t < s; t += 8) i += String.fromCharCode((e[t >> 5] >>> t % 32) & 255)
+  for (t = 0; t < s; t += 8) i += String.fromCharCode((e[t >> 5] >>> (t % 32)) & 255)
   return i
 }
 function Te(e) {
@@ -128,7 +128,7 @@ function Te(e) {
     i = []
   for (i[(e.length >> 2) - 1] = void 0, t = 0; t < i.length; t += 1) i[t] = 0
   var s = 8 * e.length
-  for (t = 0; t < s; t += 8) i[t >> 5] |= (255 & e.charCodeAt(t / 8)) << t % 32
+  for (t = 0; t < s; t += 8) i[t >> 5] |= (255 & e.charCodeAt(t / 8)) << (t % 32)
   return i
 }
 function Pe(e) {
@@ -136,7 +136,7 @@ function Pe(e) {
     i,
     s = ''
   for (i = 0; i < e.length; i += 1)
-    (t = e.charCodeAt(i)), (s += '0123456789abcdef'.charAt((t >>> 4) & 15) + '0123456789abcdef'.charAt(15 & t))
+    ((t = e.charCodeAt(i)), (s += '0123456789abcdef'.charAt((t >>> 4) & 15) + '0123456789abcdef'.charAt(15 & t)))
   return s
 }
 function Ee(e) {
@@ -155,8 +155,8 @@ function Ae(e, t) {
       r = [],
       n = []
     for (r[15] = n[15] = void 0, a.length > 16 && (a = ge(a, 8 * e.length)), i = 0; i < 16; i += 1)
-      (r[i] = 909522486 ^ a[i]), (n[i] = 1549556828 ^ a[i])
-    return (s = ge(r.concat(Te(t)), 512 + 8 * t.length)), Se(ge(n.concat(s), 640))
+      ((r[i] = 909522486 ^ a[i]), (n[i] = 1549556828 ^ a[i]))
+    return ((s = ge(r.concat(Te(t)), 512 + 8 * t.length)), Se(ge(n.concat(s), 640)))
   })(Ee(e), Ee(t))
 }
 var keHash = function (e, t, i) {

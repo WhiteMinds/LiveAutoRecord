@@ -9,13 +9,16 @@ export function createRecordsCommand(): Command {
     .option('--recorder-id <id>', 'Filter by recorder ID')
     .option('--limit <count>', 'Limit number of results', '50')
     .option('--offset <start>', 'Skip first N results', '0')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar records                         # show latest 50 records
   $ lar records --recorder-id 29        # filter by recorder
   $ lar records --limit 10              # show only 10 records
   $ lar records --offset 50 --limit 20  # pagination
-  $ lar records --json                  # JSON output`)
+  $ lar records --json                  # JSON output`,
+    )
     .action(async (opts: { recorderId?: string; limit: string; offset: string }) => {
       await initManager()
 
@@ -45,9 +48,7 @@ Examples:
           savePath: r.savePath.length > 60 ? '...' + r.savePath.slice(-57) : r.savePath,
           start: new Date(r.startTimestamp).toLocaleString(),
           stop: r.stopTimestamp ? new Date(r.stopTimestamp).toLocaleString() : '-',
-          duration: r.stopTimestamp
-            ? formatDuration(r.stopTimestamp - r.startTimestamp)
-            : '-',
+          duration: r.stopTimestamp ? formatDuration(r.stopTimestamp - r.startTimestamp) : '-',
         }))
 
         outputTable(

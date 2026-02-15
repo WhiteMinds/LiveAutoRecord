@@ -55,10 +55,9 @@ interface Message$Gift {
 
 export type Message = Message$Chat | Message$Gift
 
-export interface DYClient
-  extends Emitter<{
-    message: Message
-  }> {
+export interface DYClient extends Emitter<{
+  message: Message
+}> {
   start: () => void
   stop: () => void
   send: (message: Record<string, unknown>) => void

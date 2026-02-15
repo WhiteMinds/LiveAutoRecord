@@ -1,24 +1,22 @@
 import { Command } from 'commander'
-import {
-  initManager,
-  recorderManager,
-  enableRecordEvents,
-  saveDB,
-} from '../core/manager-init'
+import { initManager, recorderManager, enableRecordEvents, saveDB } from '../core/manager-init'
 import { isServerRunning } from '../core/server-detect'
 import { isJsonMode, logger, outputError, outputJson } from '../core/output'
 
 export function createWatchCommand(): Command {
   return new Command('watch')
     .description('Start daemon mode: continuously monitor and record live streams')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar watch              # start daemon mode (human-readable output)
   $ lar watch --json       # NDJSON event stream (one JSON per line)
 
 Notes:
   Cannot run while HTTP server is active on port 8085 (concurrent write conflict).
-  Press Ctrl+C to gracefully stop all recordings and exit.`)
+  Press Ctrl+C to gracefully stop all recordings and exit.`,
+    )
     .action(async () => {
       const serverUp = await isServerRunning()
       if (serverUp) {
@@ -120,9 +118,7 @@ Notes:
           if (!isJsonMode()) {
             logger.info(`Stopping ${activeRecordings.length} active recording(s)...`)
           }
-          const stopPromises = activeRecordings.map((r) =>
-            r.recordHandle!.stop('watch mode exit'),
-          )
+          const stopPromises = activeRecordings.map((r) => r.recordHandle!.stop('watch mode exit'))
           await Promise.allSettled(stopPromises)
         }
 
@@ -137,8 +133,12 @@ Notes:
         process.exit(0)
       }
 
-      process.on('SIGINT', () => { gracefulStop() })
-      process.on('SIGTERM', () => { gracefulStop() })
+      process.on('SIGINT', () => {
+        gracefulStop()
+      })
+      process.on('SIGTERM', () => {
+        gracefulStop()
+      })
 
       // 保持进程运行
       await new Promise(() => {})

@@ -6,10 +6,13 @@ export function createListCommand(): Command {
   return new Command('list')
     .alias('ls')
     .description('List all recorders')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar list
-  $ lar ls --json`)
+  $ lar ls --json`,
+    )
     .action(async () => {
       await initManager()
 

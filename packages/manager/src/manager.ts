@@ -51,18 +51,18 @@ export interface RecorderManager<
   PE extends AnyObject = GetProviderExtra<P>,
   E extends AnyObject = ME & PE,
 > extends Emitter<{
-    error: { source: string; err: unknown }
-    RecordStart: { recorder: Recorder<E>; recordHandle: RecordHandle }
-    RecordStop: { recorder: Recorder<E>; recordHandle: RecordHandle; reason?: string }
-    RecorderUpdated: {
-      recorder: Recorder<E>
-      keys: ((string & {}) | keyof Recorder<E>)[]
-    }
-    RecorderAdded: Recorder<E>
-    RecorderRemoved: Recorder<E>
-    RecorderDebugLog: DebugLog & { recorder: Recorder<E> }
-    Updated: ConfigurableProp[]
-  }> {
+  error: { source: string; err: unknown }
+  RecordStart: { recorder: Recorder<E>; recordHandle: RecordHandle }
+  RecordStop: { recorder: Recorder<E>; recordHandle: RecordHandle; reason?: string }
+  RecorderUpdated: {
+    recorder: Recorder<E>
+    keys: ((string & {}) | keyof Recorder<E>)[]
+  }
+  RecorderAdded: Recorder<E>
+  RecorderRemoved: Recorder<E>
+  RecorderDebugLog: DebugLog & { recorder: Recorder<E> }
+  Updated: ConfigurableProp[]
+}> {
   providers: P[]
   // TODO: 这个或许可以去掉或者改改，感觉不是很有必要
   getChannelURLMatchedRecorderProviders: (this: RecorderManager<ME, P, PE, E>, channelURL: string) => P[]

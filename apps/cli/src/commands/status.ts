@@ -6,11 +6,14 @@ export function createStatusCommand(): Command {
   return new Command('status')
     .description('Show detailed status of recorder(s)')
     .argument('[id]', 'Recorder ID (omit to show all)')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar status             # overview of all recorders
   $ lar status 29          # full detail of recorder 29
-  $ lar status 29 --json`)
+  $ lar status 29 --json`,
+    )
     .action(async (id?: string) => {
       await initManager()
 

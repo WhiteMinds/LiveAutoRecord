@@ -10,11 +10,14 @@ export function createAddCommand(): Command {
     .option('-r, --remarks <remarks>', 'Remarks for the recorder')
     .option('--no-auto-check', 'Disable automatic live status checking')
     .option(`-q, --quality <quality>`, `Stream quality (${Qualities.join(', ')})`, 'highest')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar add https://live.bilibili.com/12345
   $ lar add https://www.douyu.com/288016 -r "My streamer" -q high
-  $ lar add https://www.huya.com/667812 --no-auto-check --json`)
+  $ lar add https://www.huya.com/667812 --no-auto-check --json`,
+    )
     .action(async (url: string, opts: { remarks?: string; autoCheck: boolean; quality: string }) => {
       if (!Qualities.includes(opts.quality as any)) {
         outputError(`Invalid quality "${opts.quality}". Valid values: ${Qualities.join(', ')}`)
@@ -62,9 +65,7 @@ Examples:
 
       await initManager()
 
-      const existing = recorderManager.recorders.find(
-        (r) => r.providerId === providerId && r.channelId === channelId,
-      )
+      const existing = recorderManager.recorders.find((r) => r.providerId === providerId && r.channelId === channelId)
       if (existing) {
         outputError(
           `Recorder already exists for this channel (id: ${existing.id}, remarks: "${existing.remarks ?? ''}")`,

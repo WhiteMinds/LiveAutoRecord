@@ -89,7 +89,7 @@ export async function getLiveInfo(opts: {
       name:
         json.data.rateSwitch !== 1
           ? '原画'
-          : json.data.multirates.find(({ rate }) => rate === json.data.rate)?.name ?? '未知',
+          : (json.data.multirates.find(({ rate }) => rate === json.data.rate)?.name ?? '未知'),
       rate: json.data.rate,
       url: `${json.data.rtmp_url}/${json.data.rtmp_live}`,
     },

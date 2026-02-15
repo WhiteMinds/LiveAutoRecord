@@ -8,10 +8,7 @@ export function assert(assertion: unknown, msg?: string): asserts assertion {
   }
 }
 
-export function pick<T extends Record<string, any>, U extends keyof T>(
-  object: T,
-  ...props: U[]
-): Pick<T, U> {
+export function pick<T extends Record<string, any>, U extends keyof T>(object: T, ...props: U[]): Pick<T, U> {
   const result = {} as Pick<T, U>
   for (const prop of props) {
     if (prop in object) {

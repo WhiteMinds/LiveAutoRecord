@@ -10,19 +10,19 @@ LiveAutoRecord（LAR）是一个多直播平台自动录制工具，支持斗鱼
 
 pnpm 10 Workspaces + Turborepo，`apps/` + `packages/` 分层，包含 11 个包：
 
-| 包 | 位置 | 角色 | 发布 |
-|---|------|------|------|
-| `@autorecord/manager` | `packages/manager` | 核心调度引擎：录制器模型、自动检查循环、FFmpeg 集成 | npm |
-| `@autorecord/shared` | `packages/shared` | 内部共享工具：Settings 类型、JSON 文件操作 | 私有 |
-| `@autorecord/core` | `packages/core` | CLI 和 Server 共享的核心模块：env-paths、lowdb、类型定义、工具函数 | 私有 |
-| `@autorecord/bilibili-recorder` | `packages/bilibili-recorder` | B站平台录制插件 | npm |
-| `@autorecord/douyu-recorder` | `packages/douyu-recorder` | 斗鱼平台录制插件 | npm |
-| `@autorecord/huya-recorder` | `packages/huya-recorder` | 虎牙平台录制插件 | npm |
-| `@autorecord/douyin-recorder` | `packages/douyin-recorder` | 抖音平台录制插件 | npm |
-| `@autorecord/cli` | `apps/cli` | CLI 工具（`lar` 命令），直接操作 manager + DB | 私有 |
-| `@autorecord/electron` | `apps/electron` | Electron 桌面客户端，整合 http-server 与 web | 私有 |
-| `@autorecord/http-server` | `apps/http-server` | Express REST API + SSE 实时推送 | 私有 |
-| `@autorecord/web` | `apps/web` | Vue 3 + Vite + Vuetify + Tailwind 前端 | 私有 |
+| 包                              | 位置                         | 角色                                                               | 发布 |
+| ------------------------------- | ---------------------------- | ------------------------------------------------------------------ | ---- |
+| `@autorecord/manager`           | `packages/manager`           | 核心调度引擎：录制器模型、自动检查循环、FFmpeg 集成                | npm  |
+| `@autorecord/shared`            | `packages/shared`            | 内部共享工具：Settings 类型、JSON 文件操作                         | 私有 |
+| `@autorecord/core`              | `packages/core`              | CLI 和 Server 共享的核心模块：env-paths、lowdb、类型定义、工具函数 | 私有 |
+| `@autorecord/bilibili-recorder` | `packages/bilibili-recorder` | B站平台录制插件                                                    | npm  |
+| `@autorecord/douyu-recorder`    | `packages/douyu-recorder`    | 斗鱼平台录制插件                                                   | npm  |
+| `@autorecord/huya-recorder`     | `packages/huya-recorder`     | 虎牙平台录制插件                                                   | npm  |
+| `@autorecord/douyin-recorder`   | `packages/douyin-recorder`   | 抖音平台录制插件                                                   | npm  |
+| `@autorecord/cli`               | `apps/cli`                   | CLI 工具（`lar` 命令），直接操作 manager + DB                      | 私有 |
+| `@autorecord/electron`          | `apps/electron`              | Electron 桌面客户端，整合 http-server 与 web                       | 私有 |
+| `@autorecord/http-server`       | `apps/http-server`           | Express REST API + SSE 实时推送                                    | 私有 |
+| `@autorecord/web`               | `apps/web`                   | Vue 3 + Vite + Vuetify + Tailwind 前端                             | 私有 |
 
 **依赖方向**：recorder 插件 → manager → shared；core → manager + shared；http-server → core + manager + 全部插件 + shared；cli → core + manager + 全部插件 + shared；electron → http-server + shared；web 独立通过 HTTP 与 http-server 通信。
 
@@ -90,6 +90,7 @@ pnpm clean   # 删除所有 node_modules、lib、dist、.turbo
 ### RecorderProvider 插件系统
 
 每个平台实现 `RecorderProvider<E>` 接口（定义在 manager 包）：
+
 - `matchURL(url)` — URL 匹配判断
 - `resolveChannelInfoFromURL(url)` — 解析频道信息
 - `createRecorder(opts)` / `fromJSON(json)` — 创建/反序列化录制器
@@ -152,6 +153,7 @@ pnpm clean   # 删除所有 node_modules、lib、dist、.turbo
 ## 关键工具函数
 
 定义在 manager 包的 `utils.ts` 中，被多处使用：
+
 - `singleton(fn)` — 确保异步函数同时只有一个实例运行
 - `asyncThrottle(fn, wait)` — 异步节流
 - `asyncDebounce(fn, wait)` — 异步防抖
@@ -203,17 +205,20 @@ pnpm clean   # 删除所有 node_modules、lib、dist、.turbo
 ### 实际案例：Google Gemini API SDK 选择
 
 ❌ **错误选择：** `@google/generative-ai`
+
 - 该库已于 2024 年底标记为 deprecated
 - 将在 2025 年 11 月 30 日停止更新
 - 不支持 Gemini 2.0+ 的新特性
 
 ✅ **正确选择：** `@google/genai`
+
 - 2025 年 5 月达到 GA（General Availability）
 - 官方推荐的统一 SDK
 - 同时支持 Gemini Developer API 和 Vertex AI
 - 活跃维护中（最新版本 1.30.0，更新于 4 天前）
 
 **调研来源：**
+
 - [官方文档](https://ai.google.dev/gemini-api/docs/libraries)
 - [GitHub 仓库](https://github.com/googleapis/js-genai)
 - [Deprecated 仓库说明](https://github.com/google-gemini/deprecated-generative-ai-js)

@@ -1,4 +1,11 @@
-export { recorderManager, initManager, addRecorderWithAutoIncrementId, enableRecordEvents, getSavePath, saveDB } from './core/manager-init'
+export {
+  recorderManager,
+  initManager,
+  addRecorderWithAutoIncrementId,
+  enableRecordEvents,
+  getSavePath,
+  saveDB,
+} from './core/manager-init'
 export type { RecorderExtra, ManagerConfig } from './core/manager-init'
 export { paths } from '@autorecord/core'
 export { logger, setJsonMode, isJsonMode, outputJson, outputTable, outputSuccess, outputError } from './core/output'

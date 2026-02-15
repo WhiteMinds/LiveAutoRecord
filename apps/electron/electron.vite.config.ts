@@ -13,8 +13,8 @@ export default defineConfig(async (env) => {
   const rendererConfig = isPromiseLike(webViteConfig)
     ? await webViteConfig
     : typeof webViteConfig === 'function'
-    ? await webViteConfig(env)
-    : webViteConfig
+      ? await webViteConfig(env)
+      : webViteConfig
 
   return {
     main: {
@@ -36,9 +36,7 @@ export default defineConfig(async (env) => {
         {
           name: 'prevent:vite:asset:generateBundle',
           options(opts) {
-            const viteAssetPlugin = opts.plugins?.find(
-              (p) => p && 'name' in p && p.name === 'vite:asset',
-            )
+            const viteAssetPlugin = opts.plugins?.find((p) => p && 'name' in p && p.name === 'vite:asset')
             if (viteAssetPlugin) {
               delete viteAssetPlugin.generateBundle
             }

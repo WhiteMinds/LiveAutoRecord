@@ -13,13 +13,16 @@ export function createResolveCommand(): Command {
   return new Command('resolve')
     .description('Resolve a live stream URL to platform/channel info')
     .argument('<url>', 'Live stream URL to resolve')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar resolve https://live.bilibili.com/12345
   $ lar resolve https://www.douyu.com/288016 --json
   $ lar resolve https://www.huya.com/667812
   $ lar resolve https://live.douyin.com/123456789
-${SUPPORTED_PLATFORMS}`)
+${SUPPORTED_PLATFORMS}`,
+    )
     .action(async (url: string) => {
       for (const provider of recorderManager.providers) {
         if (!provider.matchURL(url)) continue

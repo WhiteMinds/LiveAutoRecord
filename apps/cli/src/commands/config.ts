@@ -1,10 +1,5 @@
 import { Command } from 'commander'
-import {
-  managerConfigPath,
-  defaultManagerConfig,
-  managerConfigKeys,
-  type ManagerConfig,
-} from '../core/manager-init'
+import { managerConfigPath, defaultManagerConfig, managerConfigKeys, type ManagerConfig } from '../core/manager-init'
 import { readJSONFileSync, writeJSONFileSync } from '@autorecord/core'
 import { isJsonMode, logger, outputJson, outputSuccess, outputError, outputTable } from '../core/output'
 
@@ -14,7 +9,9 @@ export function createConfigCommand(): Command {
     .argument('[key]', 'Config key to view or set')
     .argument('[value]', 'New value to set')
     .option('--reset', 'Reset configuration to defaults')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar config                          # show all config
   $ lar config savePath                 # show a single key
@@ -22,7 +19,8 @@ Examples:
   $ lar config --reset                  # reset all to defaults
   $ lar config --json                   # JSON output
 
-Available keys: ${managerConfigKeys.join(', ')}`)
+Available keys: ${managerConfigKeys.join(', ')}`,
+    )
     .action(async (key?: string, value?: string, opts?: { reset?: boolean }) => {
       const config = readJSONFileSync<ManagerConfig>(managerConfigPath, defaultManagerConfig)
 
@@ -94,10 +92,7 @@ Available keys: ${managerConfigKeys.join(', ')}`)
       ;(config as any)[configKey] = parsedValue
       writeJSONFileSync(managerConfigPath, config)
 
-      outputSuccess(
-        { key: configKey, value: parsedValue },
-        `Config updated: ${configKey} = ${parsedValue}`,
-      )
+      outputSuccess({ key: configKey, value: parsedValue }, `Config updated: ${configKey} = ${parsedValue}`)
     })
 
   return cmd

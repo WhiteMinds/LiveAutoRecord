@@ -3,10 +3,7 @@ import Bowser from 'bowser'
 
 export type PickRequired<T, K extends keyof T> = T & Pick<Required<T>, K>
 
-export function pick<T extends Record<string, any>, U extends keyof T>(
-  object: T,
-  ...props: U[]
-): Pick<T, U> {
+export function pick<T extends Record<string, any>, U extends keyof T>(object: T, ...props: U[]): Pick<T, U> {
   return R.pick(props, object) as Pick<T, U>
 }
 

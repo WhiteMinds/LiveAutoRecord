@@ -16,7 +16,9 @@ const program = new Command()
 
 program
   .name('lar')
-  .description('LiveAutoRecord CLI - Multi-platform live stream auto-recorder\n\nSupported platforms: Bilibili, Douyu, Huya, Douyin')
+  .description(
+    'LiveAutoRecord CLI - Multi-platform live stream auto-recorder\n\nSupported platforms: Bilibili, Douyu, Huya, Douyin',
+  )
   .version('0.1.0')
   .option('--json', 'Output in JSON format')
   .showHelpAfterError(true)

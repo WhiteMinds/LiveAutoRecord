@@ -70,7 +70,7 @@ export async function initManager(): Promise<void> {
   Object.assign(recorderManager, managerConfig)
 
   recorderManager.on('error', ({ source, err }) => {
-    const errText = err instanceof Error ? err.stack ?? err.message : JSON.stringify(err)
+    const errText = err instanceof Error ? (err.stack ?? err.message) : JSON.stringify(err)
     logger.error(`[RecorderManager][${source}]: ${errText}`)
   })
 

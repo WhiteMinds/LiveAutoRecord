@@ -25,10 +25,7 @@ export function assertObjectType(data: unknown, msg?: string): asserts data is o
   if (typeof data !== 'object') throw new Error(msg)
 }
 
-export function pick<T extends Record<string, any>, U extends keyof T>(
-  object: T,
-  ...props: U[]
-): Pick<T, U> {
+export function pick<T extends Record<string, any>, U extends keyof T>(object: T, ...props: U[]): Pick<T, U> {
   return R.pick(props, object) as Pick<T, U>
 }
 

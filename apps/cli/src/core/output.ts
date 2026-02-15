@@ -20,7 +20,10 @@ export function outputJson(data: unknown): void {
   process.stdout.write(JSON.stringify(data, null, 2) + '\n')
 }
 
-export function outputTable(columns: { name: string; title?: string; alignment?: 'left' | 'right' | 'center' }[], rows: Record<string, unknown>[]): void {
+export function outputTable(
+  columns: { name: string; title?: string; alignment?: 'left' | 'right' | 'center' }[],
+  rows: Record<string, unknown>[],
+): void {
   const table = new Table({
     columns: columns.map((col) => ({
       name: col.name,

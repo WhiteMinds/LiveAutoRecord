@@ -7,10 +7,13 @@ export function createRemoveCommand(): Command {
     .alias('rm')
     .description('Remove a recorder by ID')
     .argument('<id>', 'Recorder ID to remove')
-    .addHelpText('after', `
+    .addHelpText(
+      'after',
+      `
 Examples:
   $ lar remove 29
-  $ lar rm 29 --json`)
+  $ lar rm 29 --json`,
+    )
     .action(async (id: string) => {
       await initManager()
 

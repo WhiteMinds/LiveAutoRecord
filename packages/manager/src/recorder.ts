@@ -47,7 +47,8 @@ export interface DebugLog {
 }
 
 export interface Recorder<E extends AnyObject = UnknownObject>
-  extends Emitter<{
+  extends
+    Emitter<{
       RecordStart: RecordHandle
       RecordStop: { recordHandle: RecordHandle; reason?: string }
       Updated: ((string & {}) | keyof Recorder)[]
