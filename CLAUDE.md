@@ -8,90 +8,82 @@ LiveAutoRecord（LAR）是一个多直播平台自动录制工具，支持斗鱼
 
 ## Monorepo 结构
 
-Yarn 3.2.3 Workspaces + Lerna（独立版本号），包含 11 个包：
+pnpm 10 Workspaces + Turborepo，`apps/` + `packages/` 分层，包含 11 个包：
 
-| 包 | 角色 | 发布 |
-|---|------|------|
-| `@autorecord/manager` | 核心调度引擎：录制器模型、自动检查循环、FFmpeg 集成 | npm |
-| `@autorecord/shared` | 内部共享工具：Settings 类型、JSON 文件操作 | 私有 |
-| `@autorecord/core` | CLI 和 Server 共享的核心模块：env-paths、lowdb、类型定义、工具函数 | 私有 |
-| `@autorecord/cli` | CLI 工具（`lar` 命令），直接操作 manager + DB | 私有 |
-| `@autorecord/electron` | Electron 桌面客户端，整合 http-server 与 web | 私有 |
-| `@autorecord/http-server` | Express REST API + SSE 实时推送 | 私有 |
-| `@autorecord/web` | Vue 3 + Vite + Vuetify + Tailwind 前端 | 私有 |
-| `@autorecord/bilibili-recorder` | B站平台录制插件 | npm |
-| `@autorecord/douyu-recorder` | 斗鱼平台录制插件 | npm |
-| `@autorecord/huya-recorder` | 虎牙平台录制插件 | npm |
-| `@autorecord/douyin-recorder` | 抖音平台录制插件 | npm |
+| 包 | 位置 | 角色 | 发布 |
+|---|------|------|------|
+| `@autorecord/manager` | `packages/manager` | 核心调度引擎：录制器模型、自动检查循环、FFmpeg 集成 | npm |
+| `@autorecord/shared` | `packages/shared` | 内部共享工具：Settings 类型、JSON 文件操作 | 私有 |
+| `@autorecord/core` | `packages/core` | CLI 和 Server 共享的核心模块：env-paths、lowdb、类型定义、工具函数 | 私有 |
+| `@autorecord/bilibili-recorder` | `packages/bilibili-recorder` | B站平台录制插件 | npm |
+| `@autorecord/douyu-recorder` | `packages/douyu-recorder` | 斗鱼平台录制插件 | npm |
+| `@autorecord/huya-recorder` | `packages/huya-recorder` | 虎牙平台录制插件 | npm |
+| `@autorecord/douyin-recorder` | `packages/douyin-recorder` | 抖音平台录制插件 | npm |
+| `@autorecord/cli` | `apps/cli` | CLI 工具（`lar` 命令），直接操作 manager + DB | 私有 |
+| `@autorecord/electron` | `apps/electron` | Electron 桌面客户端，整合 http-server 与 web | 私有 |
+| `@autorecord/http-server` | `apps/http-server` | Express REST API + SSE 实时推送 | 私有 |
+| `@autorecord/web` | `apps/web` | Vue 3 + Vite + Vuetify + Tailwind 前端 | 私有 |
 
 **依赖方向**：recorder 插件 → manager → shared；core → manager + shared；http-server → core + manager + 全部插件 + shared；cli → core + manager + 全部插件 + shared；electron → http-server + shared；web 独立通过 HTTP 与 http-server 通信。
+
+**依赖版本管理**：跨包共享的依赖通过 `pnpm-workspace.yaml` 中的 `catalog` 统一版本，各包用 `"catalog:"` 引用。
 
 ## 常用命令
 
 ### 开发（Electron 客户端）
 
 ```bash
-yarn install
-# 必须先编译核心依赖包
-cd packages/shared && yarn build
-cd packages/manager && yarn build
-cd packages/core && yarn build
-# 启动 Electron 开发模式（会同时 watch http-server + electron-vite dev）
-yarn app:dev      # 在 packages/electron 目录下运行
+pnpm install
+# Turborepo 自动按拓扑排序编译所有依赖，然后并行运行 http-server watch + electron-vite dev
+pnpm app:dev
 ```
 
 ### 开发（服务端 + Web）
 
 ```bash
-yarn install
-cd packages/shared && yarn build
-cd packages/manager && yarn build
-cd packages/core && yarn build
-cd packages/http-server && yarn start:dev   # nodemon 监听
-cd packages/web && yarn dev                 # Vite dev server
+pnpm install
+pnpm dev:server   # 自动编译依赖 + 启动 http-server（tsup watch）
+pnpm dev:web      # Vite dev server
 ```
 
 ### 开发（CLI）
 
 ```bash
-yarn install
-cd packages/shared && yarn build
-cd packages/manager && yarn build
-cd packages/core && yarn build
-cd packages/cli && yarn build
+pnpm install
+pnpm dev:cli      # 自动编译所有依赖 + cli
 # 运行
-node packages/cli/lib/bin.js --help
-node packages/cli/lib/bin.js list --json
+node apps/cli/lib/bin.js --help
+node apps/cli/lib/bin.js list --json
 ```
 
 ### 构建
 
 ```bash
-# Electron 打包（输出 .exe / .dmg）
-cd packages/electron && yarn app:build
+# 全量构建（Turborepo 自动拓扑排序 + 缓存）
+pnpm build
 
-# CLI 构建
-cd packages/cli && yarn build
+# Electron 打包（输出 .exe / .dmg）
+pnpm app:build
 
 # 服务端生产部署
-cd packages/http-server && yarn build && yarn start
-cd packages/web && yarn build   # 通过 nginx 等提供静态文件
+pnpm -F @autorecord/http-server build && pnpm -F @autorecord/http-server start
+pnpm -F @autorecord/web build   # 通过 nginx 等提供静态文件
 ```
 
 ### 单包编译
 
 ```bash
-cd packages/<package-name> && yarn build   # TypeScript 编译
-cd packages/<package-name> && yarn watch   # 监听模式
+pnpm -F @autorecord/<package-name> build    # TypeScript 编译
+pnpm -F @autorecord/<package-name> watch    # 监听模式
 ```
 
-### Lint
+### 清理
 
 ```bash
-cd packages/electron && yarn lint   # ESLint（仅 electron 包配有）
+pnpm clean   # 删除所有 node_modules、lib、dist、.turbo
 ```
 
-**注意**：目前无测试框架，无 `yarn test` 命令。
+**注意**：目前无测试框架，无测试命令。
 
 ## 核心架构
 
@@ -167,8 +159,9 @@ cd packages/electron && yarn lint   # ESLint（仅 electron 包配有）
 
 ## CI/CD
 
-- `.github/workflows/release.yml`：tag push（`v4.*`）触发，Windows + macOS 双平台构建
+- `.github/workflows/release.yml`：tag push（`v4.*`）触发，pnpm + Turborepo 自动构建，Windows + macOS 双平台
 - `.github/workflows/package_for_test.yml`：push 触发测试打包，上传 artifact 并评论 PR
+- CI 使用 `pnpm/action-setup@v4`，自动从 `packageManager` 字段读取 pnpm 版本
 
 ## 开发原则
 

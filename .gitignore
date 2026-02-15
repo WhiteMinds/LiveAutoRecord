@@ -25,15 +25,8 @@ dist-ssr
 *.sln
 *.sw?
 
-# 忽略 yarn 相关的本地文件，官方文档：
-# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
-**/.yarn/*
-!.yarn/patches
-!.yarn/releases
-!.yarn/plugins
-!.yarn/sdks
-!.yarn/versions
-.pnp.*
+# Turbo
+.turbo
 
 # Claude
 .claude/settings.local.json

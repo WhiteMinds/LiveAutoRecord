@@ -33,7 +33,7 @@
       />
     </v-card-title>
 
-    <v-alert class="m-4" type="success" v-model="alert" :text="alert" closable></v-alert>
+    <v-alert v-if="alert" class="m-4" type="success" :text="alert" closable @click:close="alert = false"></v-alert>
 
     <div v-if="loading" class="text-center p-4">
       <v-progress-circular indeterminate color="primary" />

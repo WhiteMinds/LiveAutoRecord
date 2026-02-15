@@ -6,9 +6,8 @@
   "main": "./dist/main/index.js",
   "private": true,
   "scripts": {
-    "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "app:dev": "yarn workspace @autorecord/http-server build && concurrently \"yarn workspace @autorecord/http-server watch\" \"electron-vite dev\"",
-    "app:build": "yarn workspace @autorecord/http-server build && electron-vite build && electron-builder",
+    "dev": "electron-vite dev",
+    "app:build": "electron-vite build && electron-builder",
     "app:preview": "electron-vite build && electron ."
   },
   "build": {
@@ -53,16 +52,12 @@
   "repository": "https://github.com/WhiteMinds/LiveAutoRecord",
   "author": "WhiteMind",
   "license": "LGPL",
-  "installConfig": {
-    "hoistingLimits": "dependencies"
-  },
   "dependencies": {
     "@autorecord/http-server": "workspace:^",
     "@autorecord/shared": "workspace:^",
-    "concurrently": "^9.0.0",
     "env-paths": "^3.0.0",
     "ffmpeg-static": "^5.0.2",
-    "winston": "^3.19.0"
+    "winston": "catalog:"
   },
   "devDependencies": {
     "electron": "^40.0.0",

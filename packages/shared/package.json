@@ -13,8 +13,8 @@
   },
   "private": true,
   "scripts": {
-    "build": "yarn run -T tsup",
-    "watch": "yarn run -T tsup --watch",
+    "build": "tsup",
+    "watch": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -24,6 +24,7 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "devDependencies": {
-    "typescript": "^5.8.0"
+    "tsup": "catalog:",
+    "typescript": "catalog:"
   }
 }

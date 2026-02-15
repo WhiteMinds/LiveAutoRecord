@@ -17,28 +17,28 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.repo_contents_token }}
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: yarn
-      - run: cd ./packages/shared && yarn build
-      - run: cd ./packages/manager && yarn build
-      - run: yarn app:build -p never
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm app:build -p never
 
       - name: Upload Dmg
         if: matrix.os == 'macOS-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test Package Dmg
-          path: packages/electron/build/**/*.dmg
+          path: apps/electron/build/**/*.dmg
 
       - name: Upload Exe
         if: matrix.os == 'windows-latest'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Test Package Exe
-          path: packages/electron/build/**/*.exe
+          path: apps/electron/build/**/*.exe
 
   comment:
     needs: [build]

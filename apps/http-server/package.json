@@ -13,10 +13,10 @@
   },
   "private": true,
   "scripts": {
-    "build": "yarn run -T tsup",
-    "watch": "yarn run -T tsup --watch",
+    "build": "tsup",
+    "watch": "tsup --watch",
     "start": "node ./lib/index.js",
-    "start:dev": "yarn run -T tsup --watch --onSuccess \"node lib/index.js\"",
+    "start:dev": "tsup --watch --onSuccess \"node lib/index.js\"",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -35,21 +35,22 @@
     "@autorecord/shared": "workspace:^",
     "cors": "^2.8.6",
     "express": "^5.0.0",
-    "lodash": "^4.17.21",
+    "lodash": "catalog:",
     "morgan": "^1.10.1",
-    "ramda": "^0.30.0",
+    "ramda": "catalog:",
     "subtitle": "^4.2.2",
-    "winston": "^3.19.0"
+    "winston": "catalog:"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
-    "@types/lodash": "^4.17.0",
+    "@types/lodash": "catalog:",
     "@types/morgan": "^1.9.9",
-    "@types/ramda": "^0.30.0",
+    "@types/ramda": "catalog:",
     "cross-env": "^7.0.3",
     "nodemon": "^3.0.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.8.0"
+    "tsup": "catalog:",
+    "typescript": "catalog:"
   }
 }

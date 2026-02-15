@@ -15,8 +15,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn run -T tsup",
-    "watch": "yarn run -T tsup --watch",
+    "build": "tsup",
+    "watch": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -27,22 +27,23 @@
   "license": "LGPL",
   "dependencies": {
     "@types/fluent-ffmpeg": "^2.1.26",
-    "date-fns": "^4.1.0",
+    "date-fns": "catalog:",
     "ffmpeg-static": "^5.0.2",
     "fluent-ffmpeg": "^2.1.2",
-    "lodash": "^4.17.21",
-    "mitt": "^3.0.0",
-    "ramda": "^0.30.0",
+    "lodash": "catalog:",
+    "mitt": "catalog:",
+    "ramda": "catalog:",
     "string-argv": "^0.3.1",
     "string-template": "^1.0.0",
-    "uuid": "^11.0.0"
+    "uuid": "catalog:"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.0",
-    "@types/ramda": "^0.30.0",
+    "@types/lodash": "catalog:",
+    "@types/ramda": "catalog:",
     "@types/string-template": "^1.0.6",
-    "@types/uuid": "^10.0.0",
-    "typescript": "^5.8.0"
+    "@types/uuid": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "@types/lodash": "^4.14.185"

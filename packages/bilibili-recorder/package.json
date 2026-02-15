@@ -15,8 +15,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "yarn run -T tsup",
-    "watch": "yarn run -T tsup --watch",
+    "build": "tsup",
+    "watch": "tsup --watch",
     "typecheck": "tsc --noEmit"
   },
   "files": [
@@ -26,18 +26,19 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "axios": "^1.7.0",
+    "axios": "catalog:",
     "blive-message-listener": "^0.5.0",
-    "mitt": "^3.0.0",
-    "ramda": "^0.30.0"
+    "mitt": "catalog:",
+    "ramda": "catalog:"
   },
   "devDependencies": {
     "@autorecord/manager": "workspace:^",
-    "@types/lodash": "^4.17.0",
-    "@types/node": "*",
-    "@types/ramda": "^0.30.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.8.0"
+    "@types/lodash": "catalog:",
+    "@types/node": "catalog:",
+    "@types/ramda": "catalog:",
+    "prettier": "catalog:",
+    "tsup": "catalog:",
+    "typescript": "catalog:"
   },
   "peerDependencies": {
     "@autorecord/manager": "*"

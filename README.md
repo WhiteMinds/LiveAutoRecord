@@ -3,7 +3,7 @@
 <div align="center">
   <div align="center">
     <img
-      src="packages/electron/build/icons/256x256.png"
+      src="apps/electron/build/icons/256x256.png"
       alt="Logo"
       width="240"
     />
@@ -36,7 +36,7 @@
 
 ### Built With
 
-<img src="https://img.shields.io/badge/Lerna-9333EA?style=for-the-badge&logo=lerna&logoColor=white" /> <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" /> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" /> <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" /> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> <img src="https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=white" /> <img src="https://img.shields.io/badge/FFmpeg-007808?style=for-the-badge&logo=ffmpeg&logoColor=white" /> <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" />
+<img src="https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white" /> <img src="https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white" /> <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" /> <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" /> <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white" /> <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" /> <img src="https://img.shields.io/badge/Electron-47848F?style=for-the-badge&logo=electron&logoColor=white" /> <img src="https://img.shields.io/badge/FFmpeg-007808?style=for-the-badge&logo=ffmpeg&logoColor=white" /> <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" />
 
 ## 客户端
 
@@ -87,17 +87,13 @@
 
 ```bash
 # install dependencies
-yarn install
+pnpm install
 
-# build client dep packages
-cd packages/shared && yarn build
-cd packages/manager && yarn build
-
-# dev electron
-yarn app:dev
+# dev electron (Turborepo auto-builds all dependencies)
+pnpm app:dev
 
 # build electron application for production
-yarn app:build
+pnpm app:build
 ```
 
 ## 服务端部署
@@ -108,33 +104,29 @@ yarn app:build
 # 克隆本仓库
 git clone git@github.com:WhiteMinds/LiveAutoRecord.git && cd LiveAutoRecord
 # 安装依赖
-yarn install
-# 编译内部依赖包
-cd packages/shared && yarn build
-cd packages/manager && yarn build
+pnpm install
+# 编译所有包（Turborepo 自动处理构建顺序）
+pnpm build
 # 启动服务端
-cd packages/http-server && yarn build && yarn start
+pnpm -F @autorecord/http-server start
 # 启动前端（也可以将前端 build 后通过 nginx 等方案来访问）
-cd packages/web && yarn preview
+pnpm -F @autorecord/web preview
 ```
 
 #### 开发
 
 ```bash
 # install dependencies
-yarn install
+pnpm install
 
-# build client dep packages
-cd packages/shared && yarn build
-cd packages/manager && yarn build
-
-# dev server
-cd packages/http-server && yarn start:dev
-cd packages/web && yarn dev
+# dev server (auto-builds dependencies via Turborepo)
+pnpm dev:server
+pnpm dev:web
 
 # deployment for production
-cd packages/http-server && yarn build && yarn start # Or start using another method, such as nodemon
-cd packages/web && yarn build # Start a web service using a tool such as nginx
+pnpm build
+pnpm -F @autorecord/http-server start
+pnpm -F @autorecord/web build # Start a web service using a tool such as nginx
 ```
 
 ## 作为 NPM 包引入
@@ -148,7 +140,7 @@ cd packages/web && yarn build # Start a web service using a tool such as nginx
 - [@autorecord/huya-recorder](https://www.npmjs.com/package/@autorecord/huya-recorder)
 - [@autorecord/douyin-recorder](https://www.npmjs.com/package/@autorecord/douyin-recorder)
 
-你可以通过 `yarn add @autorecord/manager ` 或其他包管理器来引入它们。
+你可以通过 `pnpm add @autorecord/manager` 或其他包管理器来引入它们。
 
 下面是代码实例，另外 http-server 包也是通过 `@autorecord/manager` 和多个插件实现的，也可以作为开发时的参考。
 

@@ -44,7 +44,7 @@ export function genRecordUUID(): RecordHandle['id'] {
   return uuid()
 }
 
-let ffmpegPath = ffmpegPathFromModule
+let ffmpegPath: string = ffmpegPathFromModule ?? 'ffmpeg'
 export function setFFMPEGPath(newPath: string) {
   ffmpegPath = newPath
 }
