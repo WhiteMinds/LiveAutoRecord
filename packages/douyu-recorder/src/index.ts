@@ -1,5 +1,4 @@
 import mitt from 'mitt'
-import * as cheerio from 'cheerio'
 import {
   Recorder,
   RecorderCreateOpts,
@@ -316,20 +315,24 @@ export const provider: RecorderProvider<{}> = {
 
     channelURL = channelURL.trim()
     const res = await requester.get(channelURL)
-    const html = res.data
-    const $ = cheerio.load(html)
+    const html: string = res.data
 
-    const scriptNode: any = $('script')
-      .map((i, tag) => tag.children[0])
-      .filter((i, tag: any) => tag.data.includes('$ROOM'))[0]
-    if (!scriptNode) return null
-    const matched = scriptNode.data.match(/\$ROOM\.room_id.?=(.*?);/)
-    if (!matched) return null
+    // 斗鱼已迁移到 Next.js，旧的 $ROOM 变量和 CSS class 已失效，
+    // 现在从 getLegacyFirstStream 脚本和 RSC 数据中提取信息。
+    const roomIdMatch = html.match(/roomID:\s*(\d+)/)
+    if (!roomIdMatch) return null
+
+    const id = roomIdMatch[1]
+
+    // owner_name / room_name 在 RSC 的 self.__next_f.push 数据中，
+    // 值被转义为 JSON 字符串片段（含反斜杠）。
+    const ownerMatch = html.match(/owner_name[\\]*"\s*:\s*[\\]*"([^"\\]+)/)
+    const titleMatch = html.match(/room_name[\\]*"\s*:\s*[\\]*"([^"\\]+)/)
 
     return {
-      id: matched[1].trim(),
-      title: $('.Title-header').text(),
-      owner: $('.Title-anchorName').text(),
+      id,
+      title: titleMatch?.[1] ?? '',
+      owner: ownerMatch?.[1] ?? '',
     }
   },
 
