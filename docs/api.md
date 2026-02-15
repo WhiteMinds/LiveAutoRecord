@@ -6,13 +6,13 @@
 
 ## 1. 基础信息
 
-| 项目 | 说明 |
-|------|------|
-| Base URL | `http://localhost:8085/api` |
-| 默认端口 | `8085`（可通过环境变量 `PORT` 覆盖） |
-| Content-Type | `application/json`（请求和响应均为 JSON） |
-| 请求体大小限制 | 32MB |
-| CORS | 默认允许 `http://localhost:5173`（Vite 开发服务器） |
+| 项目           | 说明                                                |
+| -------------- | --------------------------------------------------- |
+| Base URL       | `http://localhost:8085/api`                         |
+| 默认端口       | `8085`（可通过环境变量 `PORT` 覆盖）                |
+| Content-Type   | `application/json`（请求和响应均为 JSON）           |
+| 请求体大小限制 | 32MB                                                |
+| CORS           | 默认允许 `http://localhost:5173`（Vite 开发服务器） |
 
 ### 统一响应格式
 
@@ -28,10 +28,10 @@
 
 部分列表接口支持分页，通过 Query 参数传递：
 
-| 参数 | 类型 | 默认值 | 范围 | 说明 |
-|------|------|--------|------|------|
-| `page` | number | 1 | >= 1 | 页码 |
-| `pageSize` | number | 10 | 1 ~ 9999 | 每页条目数 |
+| 参数       | 类型   | 默认值 | 范围     | 说明       |
+| ---------- | ------ | ------ | -------- | ---------- |
+| `page`     | number | 1      | >= 1     | 页码       |
+| `pageSize` | number | 10     | 1 ~ 9999 | 每页条目数 |
 
 分页响应格式：
 
@@ -61,10 +61,10 @@ GET /api/recorders
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `page` | number | 否 | 页码，默认 1 |
-| `pageSize` | number | 否 | 每页条目数，默认 10 |
+| 参数       | 类型   | 必填 | 说明                |
+| ---------- | ------ | ---- | ------------------- |
+| `page`     | number | 否   | 页码，默认 1        |
+| `pageSize` | number | 否   | 每页条目数，默认 10 |
 
 **响应示例：**
 
@@ -117,8 +117,8 @@ GET /api/recorders/:id
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明      |
+| ---- | ------ | --------- |
 | `id` | string | 录制器 ID |
 
 **响应：** `{ "payload": ClientRecorder }`
@@ -135,16 +135,16 @@ POST /api/recorders
 
 **请求体：**
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `providerId` | string | 是 | 平台 Provider ID（`Bilibili` / `DouYu` / `HuYa` / `DouYin`） |
-| `channelId` | string | 是 | 频道 ID（平台对应的房间号） |
-| `remarks` | string | 否 | 备注信息（主播名等） |
-| `disableAutoCheck` | boolean | 否 | 是否禁用自动检查 |
-| `quality` | Quality | 否 | 录制画质偏好 |
-| `streamPriorities` | string[] | 否 | 视频流优先级列表 |
-| `sourcePriorities` | string[] | 否 | 源（CDN）优先级列表 |
-| `extra` | object | 否 | 额外扩展字段 |
+| 字段               | 类型     | 必填 | 说明                                                         |
+| ------------------ | -------- | ---- | ------------------------------------------------------------ |
+| `providerId`       | string   | 是   | 平台 Provider ID（`Bilibili` / `DouYu` / `HuYa` / `DouYin`） |
+| `channelId`        | string   | 是   | 频道 ID（平台对应的房间号）                                  |
+| `remarks`          | string   | 否   | 备注信息（主播名等）                                         |
+| `disableAutoCheck` | boolean  | 否   | 是否禁用自动检查                                             |
+| `quality`          | Quality  | 否   | 录制画质偏好                                                 |
+| `streamPriorities` | string[] | 否   | 视频流优先级列表                                             |
+| `sourcePriorities` | string[] | 否   | 源（CDN）优先级列表                                          |
+| `extra`            | object   | 否   | 额外扩展字段                                                 |
 
 **请求示例：**
 
@@ -171,18 +171,18 @@ PATCH /api/recorders/:id
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明      |
+| ---- | ------ | --------- |
 | `id` | string | 录制器 ID |
 
 **请求体（部分更新）：**
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `remarks` | string | 备注信息 |
-| `disableAutoCheck` | boolean | 是否禁用自动检查 |
-| `quality` | Quality | 录制画质偏好 |
-| `streamPriorities` | string[] | 视频流优先级列表 |
+| 字段               | 类型     | 说明                |
+| ------------------ | -------- | ------------------- |
+| `remarks`          | string   | 备注信息            |
+| `disableAutoCheck` | boolean  | 是否禁用自动检查    |
+| `quality`          | Quality  | 录制画质偏好        |
+| `streamPriorities` | string[] | 视频流优先级列表    |
 | `sourcePriorities` | string[] | 源（CDN）优先级列表 |
 
 **请求示例：**
@@ -206,8 +206,8 @@ DELETE /api/recorders/:id
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明      |
+| ---- | ------ | --------- |
 | `id` | string | 录制器 ID |
 
 **响应：** `{ "payload": null }`
@@ -226,8 +226,8 @@ POST /api/recorders/:id/start_record
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明      |
+| ---- | ------ | --------- |
 | `id` | string | 录制器 ID |
 
 **响应：** `{ "payload": ClientRecorder }`
@@ -246,8 +246,8 @@ POST /api/recorders/:id/stop_record
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明      |
+| ---- | ------ | --------- |
 | `id` | string | 录制器 ID |
 
 **响应：** `{ "payload": ClientRecorder }`
@@ -268,11 +268,11 @@ GET /api/records
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `page` | number | 否 | 页码，默认 1 |
-| `pageSize` | number | 否 | 每页条目数，默认 10 |
-| `recorderId` | string | 否 | 按录制器 ID 过滤 |
+| 参数         | 类型   | 必填 | 说明                |
+| ------------ | ------ | ---- | ------------------- |
+| `page`       | number | 否   | 页码，默认 1        |
+| `pageSize`   | number | 否   | 每页条目数，默认 10 |
+| `recorderId` | string | 否   | 按录制器 ID 过滤    |
 
 **响应示例：**
 
@@ -308,8 +308,8 @@ GET /api/records/:id
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
 | `id` | string | 录制记录 ID |
 
 **响应：** `{ "payload": ClientRecord }`
@@ -328,8 +328,8 @@ GET /api/records/:id/video
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
 | `id` | string | 录制记录 ID |
 
 **响应：** 视频文件流（通过 `res.download` 返回）。
@@ -348,8 +348,8 @@ GET /api/records/:id/extra_data
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
 | `id` | string | 录制记录 ID |
 
 **响应示例：**
@@ -402,8 +402,8 @@ POST /api/records/:id/srt
 
 **路径参数：**
 
-| 参数 | 类型 | 说明 |
-|------|------|------|
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
 | `id` | string | 录制记录 ID |
 
 **响应示例：**
@@ -430,9 +430,9 @@ POST /api/records/clear_invalid
 
 **请求体：**
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `recorderId` | string | 否 | 仅清理指定录制器的无效记录；不传则清理全部 |
+| 字段         | 类型   | 必填 | 说明                                       |
+| ------------ | ------ | ---- | ------------------------------------------ |
+| `recorderId` | string | 否   | 仅清理指定录制器的无效记录；不传则清理全部 |
 
 **请求示例：**
 
@@ -488,13 +488,13 @@ PATCH /api/manager
 
 **请求体（部分更新）：**
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `savePathRule` | string | 保存路径模板（支持变量：`{platform}`, `{owner}`, `{channelId}`, `{remarks}`, `{year}`, `{month}`, `{date}`, `{hour}`, `{min}`, `{sec}`, `{title}`） |
-| `autoRemoveSystemReservedChars` | boolean | 是否自动移除系统保留字符（Windows 下的 `\/:*?"<>\|` 等） |
-| `autoCheckLiveStatusAndRecord` | boolean | 是否启用自动检查并录制 |
-| `autoCheckInterval` | number | 自动检查间隔（毫秒） |
-| `ffmpegOutputArgs` | string | FFmpeg 输出参数 |
+| 字段                            | 类型    | 说明                                                                                                                                                |
+| ------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `savePathRule`                  | string  | 保存路径模板（支持变量：`{platform}`, `{owner}`, `{channelId}`, `{remarks}`, `{year}`, `{month}`, `{date}`, `{hour}`, `{min}`, `{sec}`, `{title}`） |
+| `autoRemoveSystemReservedChars` | boolean | 是否自动移除系统保留字符（Windows 下的 `\/:*?"<>\|` 等）                                                                                            |
+| `autoCheckLiveStatusAndRecord`  | boolean | 是否启用自动检查并录制                                                                                                                              |
+| `autoCheckInterval`             | number  | 自动检查间隔（毫秒）                                                                                                                                |
+| `ffmpegOutputArgs`              | string  | FFmpeg 输出参数                                                                                                                                     |
 
 **请求示例：**
 
@@ -521,9 +521,9 @@ GET /api/manager/resolve_channel
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `channelURL` | string | 是 | 直播间 URL |
+| 参数         | 类型   | 必填 | 说明       |
+| ------------ | ------ | ---- | ---------- |
+| `channelURL` | string | 是   | 直播间 URL |
 
 **请求示例：**
 
@@ -614,16 +614,16 @@ PUT /api/settings
 
 **请求体（全量替换）：**
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `notExitOnAllWindowsClosed` | boolean | 是 | 关闭所有窗口时不退出（仅 Electron） |
-| `noticeOnRecordStart` | boolean | 是 | 录制开始时发送通知 |
-| `noticeFormat` | string | 否 | 通知消息格式模板 |
-| `debugMode` | boolean | 否 | 是否启用调试模式（输出 FFmpeg 日志等） |
-| `autoGenerateSRTOnRecordStop` | boolean | 否 | 录制停止后自动生成 SRT 字幕 |
-| `autoRemoveRecordWhenTinySize` | boolean | 否 | 录制停止后自动删除大小为 0 的文件 |
-| `locale` | string | 否 | 界面语言（`zh` / `en` / `ru`） |
-| `sortMode` | string | 否 | 录制器列表排序方式 |
+| 字段                           | 类型    | 必填 | 说明                                   |
+| ------------------------------ | ------- | ---- | -------------------------------------- |
+| `notExitOnAllWindowsClosed`    | boolean | 是   | 关闭所有窗口时不退出（仅 Electron）    |
+| `noticeOnRecordStart`          | boolean | 是   | 录制开始时发送通知                     |
+| `noticeFormat`                 | string  | 否   | 通知消息格式模板                       |
+| `debugMode`                    | boolean | 否   | 是否启用调试模式（输出 FFmpeg 日志等） |
+| `autoGenerateSRTOnRecordStop`  | boolean | 否   | 录制停止后自动生成 SRT 字幕            |
+| `autoRemoveRecordWhenTinySize` | boolean | 否   | 录制停止后自动删除大小为 0 的文件      |
+| `locale`                       | string  | 否   | 界面语言（`zh` / `en` / `ru`）         |
+| `sortMode`                     | string  | 否   | 录制器列表排序方式                     |
 
 **请求示例：**
 
@@ -656,15 +656,15 @@ POST /api/logger/{level}
 
 **路径参数：**
 
-| 参数 | 可选值 | 说明 |
-|------|--------|------|
+| 参数    | 可选值                              | 说明     |
+| ------- | ----------------------------------- | -------- |
 | `level` | `error` / `warn` / `info` / `debug` | 日志级别 |
 
 **请求体：**
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| `text` | string | 是 | 日志内容 |
+| 字段   | 类型   | 必填 | 说明     |
+| ------ | ------ | ---- | -------- |
+| `text` | string | 是   | 日志内容 |
 
 **请求示例：**
 
@@ -796,7 +796,196 @@ eventSource.onmessage = (event) => {
 
 ---
 
-## 8. 类型定义
+## 8. Provider 鉴权端点
+
+Provider 鉴权（Authentication）允许为每个平台配置登录凭据（如 Cookie），以获取更高画质的直播流。鉴权配置在 Provider 级别，同一平台的所有录制器共享同一份凭据。
+
+### 8.1 获取 Provider 列表
+
+```
+GET /api/providers
+```
+
+返回所有已注册的 Provider 列表，包含鉴权字段声明和浏览器登录支持信息。
+
+**响应示例：**
+
+```json
+{
+  "payload": [
+    {
+      "id": "Bilibili",
+      "name": "Bilibili",
+      "siteURL": "https://live.bilibili.com/",
+      "authFields": [
+        {
+          "key": "cookie",
+          "label": "Cookie",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx; ...",
+          "description": "从浏览器获取 B站登录 Cookie，用于获取原画等高画质直播流"
+        }
+      ],
+      "hasAuthFlow": true
+    },
+    {
+      "id": "DouYu",
+      "name": "DouYu",
+      "siteURL": "https://www.douyu.com/"
+    }
+  ]
+}
+```
+
+**字段说明：**
+
+| 字段          | 类型                | 说明                                          |
+| ------------- | ------------------- | --------------------------------------------- |
+| `id`          | string              | Provider 唯一标识                             |
+| `name`        | string              | 显示名称                                      |
+| `siteURL`     | string              | 平台网址                                      |
+| `authFields`  | ProviderAuthField[] | 鉴权字段声明（仅支持鉴权的 Provider 返回）    |
+| `hasAuthFlow` | boolean             | 是否支持浏览器自动登录（仅支持时返回 `true`） |
+
+---
+
+### 8.2 获取 Provider 鉴权状态
+
+```
+GET /api/providers/:id/auth
+```
+
+**路径参数：**
+
+| 参数 | 类型   | 说明                         |
+| ---- | ------ | ---------------------------- |
+| `id` | string | Provider ID（如 `Bilibili`） |
+
+**响应示例（已登录）：**
+
+```json
+{
+  "payload": {
+    "isAuthenticated": true,
+    "description": "用户名"
+  }
+}
+```
+
+**响应示例（未登录）：**
+
+```json
+{
+  "payload": {
+    "isAuthenticated": false
+  }
+}
+```
+
+**错误：** Provider 不存在或不支持鉴权时返回 404。
+
+---
+
+### 8.3 设置 Provider 鉴权配置
+
+```
+PUT /api/providers/:id/auth
+```
+
+手动设置鉴权配置（如粘贴 Cookie）。设置后会自动验证登录状态并持久化到 `manager.json`。
+
+**路径参数：**
+
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
+| `id` | string | Provider ID |
+
+**请求体：**
+
+| 字段     | 类型                     | 必填 | 说明           |
+| -------- | ------------------------ | ---- | -------------- |
+| `config` | `Record<string, string>` | 是   | 鉴权配置键值对 |
+
+**请求示例：**
+
+```json
+{
+  "config": {
+    "cookie": "SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx"
+  }
+}
+```
+
+**响应：** `{ "payload": ProviderAuthStatus }`（包含验证后的登录状态）
+
+---
+
+### 8.4 浏览器登录
+
+```
+POST /api/providers/:id/auth/login
+```
+
+触发浏览器登录流程。这是一个**长连接请求**，直到用户完成登录或超时（默认 5 分钟）才返回。
+
+**路径参数：**
+
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
+| `id` | string | Provider ID |
+
+**响应示例：**
+
+```json
+{
+  "payload": {
+    "authConfig": {
+      "cookie": "SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx; ..."
+    },
+    "status": {
+      "isAuthenticated": true,
+      "description": "用户名"
+    }
+  }
+}
+```
+
+**行为说明：**
+
+- Electron 模式：弹出 `BrowserWindow` 登录窗口
+- HTTP Server 独立运行模式：使用 Playwright 打开 Chromium 浏览器
+- 如果服务端未配置 `executeAuthFlow` 回调，返回 HTTP 501（Not Implemented）
+- 客户端断开连接时（`req.on('close')`），自动取消登录流程并关闭浏览器
+- 超时默认 5 分钟
+
+**错误：**
+
+- Provider 不存在或不支持浏览器登录：HTTP 400/404
+- 未配置 `executeAuthFlow`：HTTP 501
+- 登录超时或用户关闭浏览器：HTTP 500
+
+---
+
+### 8.5 清除 Provider 鉴权
+
+```
+DELETE /api/providers/:id/auth
+```
+
+清除指定 Provider 的鉴权配置，同时从持久化存储中移除。
+
+**路径参数：**
+
+| 参数 | 类型   | 说明        |
+| ---- | ------ | ----------- |
+| `id` | string | Provider ID |
+
+**响应：** `{ "payload": null }`
+
+---
+
+## 9. 类型定义
 
 ### ClientRecorder
 
@@ -805,36 +994,36 @@ eventSource.onmessage = (event) => {
 ```typescript
 interface ClientRecorder {
   // --- 基础属性 ---
-  id: string                      // 唯一标识
-  providerId: string              // 平台 Provider ID
-  channelId: string               // 频道 / 房间号
-  remarks?: string                // 备注
-  disableAutoCheck?: boolean      // 是否禁用自动检查
-  quality: Quality                // 录制画质偏好
-  streamPriorities: string[]      // 视频流优先级
-  sourcePriorities: string[]      // 源（CDN）优先级
+  id: string // 唯一标识
+  providerId: string // 平台 Provider ID
+  channelId: string // 频道 / 房间号
+  remarks?: string // 备注
+  disableAutoCheck?: boolean // 是否禁用自动检查
+  quality: Quality // 录制画质偏好
+  streamPriorities: string[] // 视频流优先级
+  sourcePriorities: string[] // 源（CDN）优先级
   extra: {
-    createTimestamp: number        // 录制器创建时间戳
+    createTimestamp: number // 录制器创建时间戳
   }
 
   // --- 运行时状态 ---
-  availableStreams: string[]       // 可用视频流列表
-  availableSources: string[]       // 可用源列表
-  usedStream?: string             // 当前使用的视频流
-  usedSource?: string             // 当前使用的源
-  state: RecorderState            // 状态：'idle' | 'recording' | 'stopping-record'
+  availableStreams: string[] // 可用视频流列表
+  availableSources: string[] // 可用源列表
+  usedStream?: string // 当前使用的视频流
+  usedSource?: string // 当前使用的源
+  state: RecorderState // 状态：'idle' | 'recording' | 'stopping-record'
 
   // --- 计算属性 ---
-  channelURL: string              // 完整的频道 URL
+  channelURL: string // 完整的频道 URL
 
   // --- 录制句柄（录制中时存在）---
   recordHandle?: {
-    id: string                    // 本次录制 ID
-    stream: string                // 使用的流
-    source: string                // 使用的源
-    url: string                   // 流地址
-    ffmpegArgs?: string[]         // FFmpeg 参数
-    savePath: string              // 保存路径
+    id: string // 本次录制 ID
+    stream: string // 使用的流
+    source: string // 使用的源
+    url: string // 流地址
+    ffmpegArgs?: string[] // FFmpeg 参数
+    savePath: string // 保存路径
   }
 }
 ```
@@ -845,13 +1034,13 @@ interface ClientRecorder {
 
 ```typescript
 interface ClientRecord {
-  id: string                      // 录制记录 ID（与 RecordHandle.id 一致）
-  recorderId: string              // 关联的录制器 ID
-  savePath: string                // 视频文件保存路径
-  startTimestamp: number          // 录制开始时间戳（毫秒）
-  stopTimestamp?: number          // 录制停止时间戳（毫秒）
-  stopReason?: string             // 停止原因（如 'manual stop'）
-  isFileExists?: boolean          // 视频文件是否存在（仅列表接口返回）
+  id: string // 录制记录 ID（与 RecordHandle.id 一致）
+  recorderId: string // 关联的录制器 ID
+  savePath: string // 视频文件保存路径
+  startTimestamp: number // 录制开始时间戳（毫秒）
+  stopTimestamp?: number // 录制停止时间戳（毫秒）
+  stopReason?: string // 停止原因（如 'manual stop'）
+  isFileExists?: boolean // 视频文件是否存在（仅列表接口返回）
 }
 ```
 
@@ -861,29 +1050,30 @@ interface ClientRecord {
 
 ```typescript
 interface ManagerConfig {
-  savePathRule: string             // 保存路径模板
-  autoRemoveSystemReservedChars: boolean  // 自动移除系统保留字符
-  autoCheckLiveStatusAndRecord: boolean   // 是否自动检查并录制
-  autoCheckInterval: number        // 自动检查间隔（毫秒）
-  ffmpegOutputArgs: string         // FFmpeg 输出参数字符串
+  savePathRule: string // 保存路径模板
+  autoRemoveSystemReservedChars: boolean // 自动移除系统保留字符
+  autoCheckLiveStatusAndRecord: boolean // 是否自动检查并录制
+  autoCheckInterval: number // 自动检查间隔（毫秒）
+  ffmpegOutputArgs: string // FFmpeg 输出参数字符串
+  providerAuthConfigs?: Record<string, Record<string, string>> // 各 Provider 的鉴权配置
 }
 ```
 
 **保存路径模板变量：**
 
-| 变量 | 说明 | 示例 |
-|------|------|------|
-| `{platform}` | 平台名称 | `Bilibili` |
-| `{owner}` | 主播名 | `某主播` |
-| `{channelId}` | 频道 ID | `12345` |
-| `{remarks}` | 录制器备注 | `我的备注` |
-| `{title}` | 直播标题 | `今天直播标题` |
-| `{year}` | 年份 | `2026` |
-| `{month}` | 月份 | `02` |
-| `{date}` | 日期 | `15` |
-| `{hour}` | 小时 | `20` |
-| `{min}` | 分钟 | `00` |
-| `{sec}` | 秒 | `00` |
+| 变量          | 说明       | 示例           |
+| ------------- | ---------- | -------------- |
+| `{platform}`  | 平台名称   | `Bilibili`     |
+| `{owner}`     | 主播名     | `某主播`       |
+| `{channelId}` | 频道 ID    | `12345`        |
+| `{remarks}`   | 录制器备注 | `我的备注`     |
+| `{title}`     | 直播标题   | `今天直播标题` |
+| `{year}`      | 年份       | `2026`         |
+| `{month}`     | 月份       | `02`           |
+| `{date}`      | 日期       | `15`           |
+| `{hour}`      | 小时       | `20`           |
+| `{min}`       | 分钟       | `00`           |
+| `{sec}`       | 秒         | `00`           |
 
 ### Settings
 
@@ -891,14 +1081,14 @@ interface ManagerConfig {
 
 ```typescript
 interface Settings {
-  notExitOnAllWindowsClosed: boolean       // 关闭所有窗口时不退出（Electron）
-  noticeOnRecordStart: boolean             // 录制开始时发送通知
-  noticeFormat?: string                    // 通知消息格式模板
-  debugMode?: boolean                      // 调试模式
-  autoGenerateSRTOnRecordStop?: boolean    // 录制停止后自动生成 SRT
-  autoRemoveRecordWhenTinySize?: boolean   // 自动删除空文件录制记录
-  locale?: string                          // 界面语言
-  sortMode?: string                        // 排序方式
+  notExitOnAllWindowsClosed: boolean // 关闭所有窗口时不退出（Electron）
+  noticeOnRecordStart: boolean // 录制开始时发送通知
+  noticeFormat?: string // 通知消息格式模板
+  debugMode?: boolean // 调试模式
+  autoGenerateSRTOnRecordStop?: boolean // 录制停止后自动生成 SRT
+  autoRemoveRecordWhenTinySize?: boolean // 自动删除空文件录制记录
+  locale?: string // 界面语言
+  sortMode?: string // 排序方式
 }
 ```
 
@@ -925,20 +1115,20 @@ type RecorderState = 'idle' | 'recording' | 'stopping-record'
 ```typescript
 interface RecordExtraData {
   meta: {
-    title?: string                         // 直播标题
-    recordStartTimestamp: number            // 录制开始时间戳
-    recordStopTimestamp?: number            // 录制停止时间戳
-    ffmpegArgs?: string[]                  // FFmpeg 参数
+    title?: string // 直播标题
+    recordStartTimestamp: number // 录制开始时间戳
+    recordStopTimestamp?: number // 录制停止时间戳
+    ffmpegArgs?: string[] // FFmpeg 参数
   }
-  messages: Message[]                      // 弹幕/礼物消息数组（按时间戳排序）
+  messages: Message[] // 弹幕/礼物消息数组（按时间戳排序）
 }
 
 // 弹幕消息
 interface Comment {
   type: 'comment'
-  timestamp: number                        // 时间戳（毫秒）
-  text: string                             // 弹幕文本
-  color?: string                           // 颜色
+  timestamp: number // 时间戳（毫秒）
+  text: string // 弹幕文本
+  color?: string // 颜色
   sender?: {
     uid?: string
     name: string
@@ -949,10 +1139,10 @@ interface Comment {
 // 礼物消息
 interface GiveGift {
   type: 'give_gift'
-  timestamp: number                        // 时间戳（毫秒）
-  name: string                             // 礼物名称
-  count: number                            // 数量
-  cost?: number                            // 价值
+  timestamp: number // 时间戳（毫秒）
+  name: string // 礼物名称
+  count: number // 数量
+  cost?: number // 价值
   sender?: {
     uid?: string
     name: string
@@ -961,6 +1151,32 @@ interface GiveGift {
 }
 
 type Message = Comment | GiveGift
+```
+
+### ProviderAuthField
+
+Provider 鉴权字段声明，定义 Provider 需要的鉴权配置项。
+
+```typescript
+interface ProviderAuthField {
+  key: string // 字段标识（如 "cookie"）
+  label: string // 显示标签
+  type: 'text' | 'password' | 'textarea' // 输入类型
+  required?: boolean // 是否必填
+  placeholder?: string // 占位提示
+  description?: string // 字段说明
+}
+```
+
+### ProviderAuthStatus
+
+Provider 鉴权验证结果。
+
+```typescript
+interface ProviderAuthStatus {
+  isAuthenticated: boolean // 是否已登录
+  description?: string // 人类可读描述（如 "已登录为: 用户名"）
+}
 ```
 
 ### SSEMessage

@@ -22,6 +22,7 @@
    - [watch](#watch) — 守护模式持续监控
    - [config](#config) — 查看或修改配置
    - [records](#records) — 查看录制历史
+   - [auth](#auth) — 管理平台鉴权
 4. [配置路径约定](#配置路径约定)
 5. [错误处理说明](#错误处理说明)
 6. [与 HTTP Server 的互斥约定](#与-http-server-的互斥约定)
@@ -33,21 +34,20 @@
 ### 前置依赖
 
 - Node.js >= 18
-- Yarn 3.x（项目使用 Yarn Workspaces）
+- pnpm 10（项目使用 pnpm Workspaces + Turborepo）
 - FFmpeg（录制功能需要，系统 PATH 中可用即可）
 
 ### 构建步骤
 
 ```bash
 # 1. 安装依赖
-yarn install
+pnpm install
 
-# 2. 编译核心依赖包（按顺序）
-cd packages/shared && yarn build
-cd packages/manager && yarn build
+# 2. 全量构建（Turborepo 自动拓扑排序）
+pnpm build
 
-# 3. 编译 CLI
-cd packages/cli && yarn build
+# 或者只构建 CLI 及其依赖
+pnpm dev:cli
 ```
 
 ### 运行
@@ -55,10 +55,10 @@ cd packages/cli && yarn build
 构建完成后，通过 Node.js 直接运行：
 
 ```bash
-node packages/cli/lib/bin.js --help
+node apps/cli/lib/bin.js --help
 ```
 
-或者在 `packages/cli` 目录下：
+或者在 `apps/cli` 目录下：
 
 ```bash
 node lib/bin.js --help
@@ -72,11 +72,11 @@ node lib/bin.js --help
 
 所有命令均支持以下全局选项：
 
-| 选项 | 说明 |
-|------|------|
-| `--json` | 以结构化 JSON 格式输出，适合程序解析和 AI Agent 调用 |
-| `-V, --version` | 显示版本号 |
-| `-h, --help` | 显示帮助信息 |
+| 选项            | 说明                                                 |
+| --------------- | ---------------------------------------------------- |
+| `--json`        | 以结构化 JSON 格式输出，适合程序解析和 AI Agent 调用 |
+| `-V, --version` | 显示版本号                                           |
+| `-h, --help`    | 显示帮助信息                                         |
 
 ### `--json` 模式说明
 
@@ -120,18 +120,18 @@ lar resolve <url>
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `url` | 是 | 直播间 URL |
+| 参数  | 必填 | 说明       |
+| ----- | ---- | ---------- |
+| `url` | 是   | 直播间 URL |
 
 **支持的 URL 格式**：
 
-| 平台 | URL 格式 |
-|------|----------|
+| 平台     | URL 格式                              |
+| -------- | ------------------------------------- |
 | Bilibili | `https://live.bilibili.com/<room_id>` |
-| DouYu | `https://www.douyu.com/<room_id>` |
-| HuYa | `https://www.huya.com/<room_id>` |
-| DouYin | `https://live.douyin.com/<room_id>` |
+| DouYu    | `https://www.douyu.com/<room_id>`     |
+| HuYa     | `https://www.huya.com/<room_id>`      |
+| DouYin   | `https://live.douyin.com/<room_id>`   |
 
 **示例**：
 
@@ -243,17 +243,17 @@ lar add <url> [options]
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `url` | 是 | 直播间 URL |
+| 参数  | 必填 | 说明       |
+| ----- | ---- | ---------- |
+| `url` | 是   | 直播间 URL |
 
 **选项**：
 
-| 选项 | 说明 | 默认值 |
-|------|------|--------|
-| `-r, --remarks <remarks>` | 录制器备注名称 | 自动使用主播名称 |
-| `--no-auto-check` | 禁用自动直播状态检测 | 默认启用 |
-| `-q, --quality <quality>` | 画质选择 | `highest` |
+| 选项                      | 说明                 | 默认值           |
+| ------------------------- | -------------------- | ---------------- |
+| `-r, --remarks <remarks>` | 录制器备注名称       | 自动使用主播名称 |
+| `--no-auto-check`         | 禁用自动直播状态检测 | 默认启用         |
+| `-q, --quality <quality>` | 画质选择             | `highest`        |
 
 **画质可选值**：`lowest`, `low`, `medium`, `high`, `highest`
 
@@ -307,9 +307,9 @@ lar rm <id>
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `id` | 是 | 录制器 ID（通过 `lar list` 查看） |
+| 参数 | 必填 | 说明                              |
+| ---- | ---- | --------------------------------- |
+| `id` | 是   | 录制器 ID（通过 `lar list` 查看） |
 
 **示例**：
 
@@ -350,9 +350,9 @@ lar status [id]
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `id` | 否 | 录制器 ID。省略则显示全部 |
+| 参数 | 必填 | 说明                      |
+| ---- | ---- | ------------------------- |
+| `id` | 否   | 录制器 ID。省略则显示全部 |
 
 **示例**：
 
@@ -437,9 +437,9 @@ lar start <id>
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `id` | 是 | 录制器 ID |
+| 参数 | 必填 | 说明      |
+| ---- | ---- | --------- |
+| `id` | 是   | 录制器 ID |
 
 **示例**：
 
@@ -501,9 +501,9 @@ lar stop <id>
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `id` | 是 | 录制器 ID |
+| 参数 | 必填 | 说明      |
+| ---- | ---- | --------- |
+| `id` | 是   | 录制器 ID |
 
 **示例**：
 
@@ -546,9 +546,9 @@ lar check [id]
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `id` | 否 | 录制器 ID。省略则检查所有启用了自动检测的录制器 |
+| 参数 | 必填 | 说明                                            |
+| ---- | ---- | ----------------------------------------------- |
+| `id` | 否   | 录制器 ID。省略则检查所有启用了自动检测的录制器 |
 
 **示例**：
 
@@ -643,37 +643,51 @@ lar watch --json
 **WatchStarted** — 守护模式启动：
 
 ```json
-{"event":"WatchStarted","timestamp":1707984000000,"data":{"totalRecorders":8,"activeRecorders":5}}
+{ "event": "WatchStarted", "timestamp": 1707984000000, "data": { "totalRecorders": 8, "activeRecorders": 5 } }
 ```
 
 **RecordStart** — 录制开始：
 
 ```json
-{"event":"RecordStart","timestamp":1707984001000,"data":{"recorderId":"1","channelId":"12345","remarks":"主播A","recordId":"uuid","savePath":"/path/to/file.mp4"}}
+{
+  "event": "RecordStart",
+  "timestamp": 1707984001000,
+  "data": {
+    "recorderId": "1",
+    "channelId": "12345",
+    "remarks": "主播A",
+    "recordId": "uuid",
+    "savePath": "/path/to/file.mp4"
+  }
+}
 ```
 
 **RecordStop** — 录制停止：
 
 ```json
-{"event":"RecordStop","timestamp":1707984500000,"data":{"recorderId":"1","channelId":"12345","remarks":"主播A","recordId":"uuid","reason":"stream ended"}}
+{
+  "event": "RecordStop",
+  "timestamp": 1707984500000,
+  "data": { "recorderId": "1", "channelId": "12345", "remarks": "主播A", "recordId": "uuid", "reason": "stream ended" }
+}
 ```
 
 **RecorderUpdated** — 录制器属性更新：
 
 ```json
-{"event":"RecorderUpdated","timestamp":1707984002000,"data":{"recorderId":"1","updatedKeys":["state"]}}
+{ "event": "RecorderUpdated", "timestamp": 1707984002000, "data": { "recorderId": "1", "updatedKeys": ["state"] } }
 ```
 
 **WatchStopping** — 正在停止：
 
 ```json
-{"event":"WatchStopping","timestamp":1707985000000}
+{ "event": "WatchStopping", "timestamp": 1707985000000 }
 ```
 
 **WatchStopped** — 已停止：
 
 ```json
-{"event":"WatchStopped","timestamp":1707985001000}
+{ "event": "WatchStopped", "timestamp": 1707985001000 }
 ```
 
 ---
@@ -690,26 +704,26 @@ lar config [key] [value] [options]
 
 **参数**：
 
-| 参数 | 必填 | 说明 |
-|------|------|------|
-| `key` | 否 | 配置项名称。省略则显示所有配置 |
-| `value` | 否 | 新值。省略则只读取 |
+| 参数    | 必填 | 说明                           |
+| ------- | ---- | ------------------------------ |
+| `key`   | 否   | 配置项名称。省略则显示所有配置 |
+| `value` | 否   | 新值。省略则只读取             |
 
 **选项**：
 
-| 选项 | 说明 |
-|------|------|
+| 选项      | 说明                 |
+| --------- | -------------------- |
 | `--reset` | 重置所有配置为默认值 |
 
 **可配置项**：
 
-| 配置项 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `savePathRule` | string | `<数据目录>/{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4` | 录制文件保存路径模板 |
-| `autoRemoveSystemReservedChars` | boolean | `true` | 自动移除系统保留字符 |
-| `autoCheckLiveStatusAndRecord` | boolean | `true` | 自动检查直播状态并录制 |
-| `autoCheckInterval` | number | `1000` | 自动检查间隔（毫秒） |
-| `ffmpegOutputArgs` | string | FFmpeg 默认参数 | FFmpeg 输出参数 |
+| 配置项                          | 类型    | 默认值                                                                               | 说明                   |
+| ------------------------------- | ------- | ------------------------------------------------------------------------------------ | ---------------------- |
+| `savePathRule`                  | string  | `<数据目录>/{platform}/{owner}/{year}-{month}-{date} {hour}-{min}-{sec} {title}.mp4` | 录制文件保存路径模板   |
+| `autoRemoveSystemReservedChars` | boolean | `true`                                                                               | 自动移除系统保留字符   |
+| `autoCheckLiveStatusAndRecord`  | boolean | `true`                                                                               | 自动检查直播状态并录制 |
+| `autoCheckInterval`             | number  | `1000`                                                                               | 自动检查间隔（毫秒）   |
+| `ffmpegOutputArgs`              | string  | FFmpeg 默认参数                                                                      | FFmpeg 输出参数        |
 
 **路径模板可用变量**：`{platform}`, `{owner}`, `{title}`, `{year}`, `{month}`, `{date}`, `{hour}`, `{min}`, `{sec}`
 
@@ -794,11 +808,11 @@ lar records [options]
 
 **选项**：
 
-| 选项 | 说明 | 默认值 |
-|------|------|--------|
+| 选项                 | 说明             | 默认值         |
+| -------------------- | ---------------- | -------------- |
 | `--recorder-id <id>` | 按录制器 ID 过滤 | 无（显示全部） |
-| `--limit <count>` | 限制返回条数 | `50` |
-| `--offset <start>` | 跳过前 N 条 | `0` |
+| `--limit <count>`    | 限制返回条数     | `50`           |
+| `--offset <start>`   | 跳过前 N 条      | `0`            |
 
 **示例**：
 
@@ -866,19 +880,19 @@ CLI、HTTP Server 和 Electron 客户端共享同一数据目录，通过 `env-p
 
 ### 各平台路径
 
-| 平台 | 配置目录 | 数据目录 |
-|------|----------|----------|
-| **Windows** | `%APPDATA%/live-auto-record` | `%APPDATA%/live-auto-record` |
-| **Linux** | `~/.config/live-auto-record` | `~/.local/share/live-auto-record` |
-| **macOS** | `~/Library/Preferences/live-auto-record` | `~/Library/Application Support/live-auto-record` |
+| 平台        | 配置目录                                 | 数据目录                                         |
+| ----------- | ---------------------------------------- | ------------------------------------------------ |
+| **Windows** | `%APPDATA%/live-auto-record`             | `%APPDATA%/live-auto-record`                     |
+| **Linux**   | `~/.config/live-auto-record`             | `~/.local/share/live-auto-record`                |
+| **macOS**   | `~/Library/Preferences/live-auto-record` | `~/Library/Application Support/live-auto-record` |
 
 ### 关键文件
 
-| 文件 | 路径 | 说明 |
-|------|------|------|
-| 数据库 | `<数据目录>/data.json` | 存储录制器列表和录制历史（lowdb JSON） |
-| Manager 配置 | `<配置目录>/manager.json` | Manager 运行参数 |
-| 录制文件 | 由 `savePathRule` 决定 | 默认保存在 `<数据目录>/{platform}/{owner}/` 下 |
+| 文件         | 路径                      | 说明                                           |
+| ------------ | ------------------------- | ---------------------------------------------- |
+| 数据库       | `<数据目录>/data.json`    | 存储录制器列表和录制历史（lowdb JSON）         |
+| Manager 配置 | `<配置目录>/manager.json` | Manager 运行参数                               |
+| 录制文件     | 由 `savePathRule` 决定    | 默认保存在 `<数据目录>/{platform}/{owner}/` 下 |
 
 ### 默认保存路径模板
 
@@ -892,25 +906,25 @@ CLI、HTTP Server 和 Electron 客户端共享同一数据目录，通过 `env-p
 
 ### 退出码
 
-| 退出码 | 含义 |
-|--------|------|
-| `0` | 成功 |
-| `1` | 错误（参数错误、资源未找到、网络错误等） |
+| 退出码 | 含义                                     |
+| ------ | ---------------------------------------- |
+| `0`    | 成功                                     |
+| `1`    | 错误（参数错误、资源未找到、网络错误等） |
 
 ### 常见错误及解决方案
 
-| 错误类型 | 错误信息 | 解决方案 |
-|----------|----------|----------|
-| **网络错误** | `Network error while resolving URL. Please check your internet connection.` | 检查网络连接，确认目标平台可访问 |
-| **URL 不支持** | `No provider matched the given URL: ...` | 检查 URL 格式，参考 `lar resolve --help` 查看支持的 URL 格式 |
-| **ID 不存在** | `Recorder not found (id: ...). Run "lar list" to see available IDs.` | 运行 `lar list` 确认正确的 ID |
-| **重复添加** | `Recorder already exists for this channel (id: ..., remarks: "...")` | 该频道已有录制器，无需重复添加 |
-| **已在录制** | `Recorder is already recording (id: ..., savePath: ...)` | 录制器正在录制中，如需重新录制请先 `lar stop` |
-| **未在录制** | `Recorder is not recording (id: ...). Current state: ...` | 录制器当前未在录制 |
-| **无效画质** | `Invalid quality "...". Valid values: lowest, low, medium, high, highest` | 使用正确的画质值 |
-| **无效配置键** | `Unknown config key "...". Valid keys: ...` | 使用正确的配置键名 |
-| **配置值类型错误** | `Value for "..." must be "true" or "false"` / `Value for "..." must be a number` | 按照配置项类型输入正确的值 |
-| **Server 冲突** | `HTTP server is running on port 8085. Cannot run watch mode concurrently.` | 先关闭 HTTP Server 或 Electron 客户端 |
+| 错误类型           | 错误信息                                                                         | 解决方案                                                     |
+| ------------------ | -------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **网络错误**       | `Network error while resolving URL. Please check your internet connection.`      | 检查网络连接，确认目标平台可访问                             |
+| **URL 不支持**     | `No provider matched the given URL: ...`                                         | 检查 URL 格式，参考 `lar resolve --help` 查看支持的 URL 格式 |
+| **ID 不存在**      | `Recorder not found (id: ...). Run "lar list" to see available IDs.`             | 运行 `lar list` 确认正确的 ID                                |
+| **重复添加**       | `Recorder already exists for this channel (id: ..., remarks: "...")`             | 该频道已有录制器，无需重复添加                               |
+| **已在录制**       | `Recorder is already recording (id: ..., savePath: ...)`                         | 录制器正在录制中，如需重新录制请先 `lar stop`                |
+| **未在录制**       | `Recorder is not recording (id: ...). Current state: ...`                        | 录制器当前未在录制                                           |
+| **无效画质**       | `Invalid quality "...". Valid values: lowest, low, medium, high, highest`        | 使用正确的画质值                                             |
+| **无效配置键**     | `Unknown config key "...". Valid keys: ...`                                      | 使用正确的配置键名                                           |
+| **配置值类型错误** | `Value for "..." must be "true" or "false"` / `Value for "..." must be a number` | 按照配置项类型输入正确的值                                   |
+| **Server 冲突**    | `HTTP server is running on port 8085. Cannot run watch mode concurrently.`       | 先关闭 HTTP Server 或 Electron 客户端                        |
 
 ### JSON 模式的错误输出
 
@@ -933,11 +947,11 @@ LiveAutoRecord 的数据持久化基于 JSON 文件（lowdb），**不支持多�
 
 ### 规则
 
-| 操作类型 | CLI 命令 | 与 Server 共存 | 说明 |
-|----------|----------|----------------|------|
-| **只读** | `list`, `status`, `records`, `resolve` | 安全 | 只读取文件，无写入冲突 |
-| **写入** | `add`, `remove`, `config set`, `start`, `stop`, `check` | 可能冲突 | 写入数据库或配置文件 |
-| **守护** | `watch` | 禁止 | 启动前自动检测 8085 端口，若 Server 运行则拒绝启动 |
+| 操作类型 | CLI 命令                                                                        | 与 Server 共存 | 说明                                               |
+| -------- | ------------------------------------------------------------------------------- | -------------- | -------------------------------------------------- |
+| **只读** | `list`, `status`, `records`, `resolve`, `auth list`                             | 安全           | 只读取文件，无写入冲突                             |
+| **写入** | `add`, `remove`, `config set`, `start`, `stop`, `check`, `auth set/login/clear` | 可能冲突       | 写入数据库或配置文件                               |
+| **守护** | `watch`                                                                         | 禁止           | 启动前自动检测 8085 端口，若 Server 运行则拒绝启动 |
 
 ### 检测机制
 
@@ -981,20 +995,240 @@ LiveAutoRecord 的数据持久化基于 JSON 文件（lowdb），**不支持多�
 
 ### 并发安全分类
 
-| 类型 | 命令 | 说明 |
-|------|------|------|
-| **只读** | `list`, `status`, `records`, `resolve`, `config`（无 value） | 安全，直接读文件 |
-| **写入** | `add`, `remove`, `config`（有 value）, `start`, `stop`, `check` | 与 Server 并发时可能冲突 |
-| **守护** | `watch` | 启动前自动检测 8085 端口，与 Server 互斥 |
+| 类型     | 命令                                                                                    | 说明                                     |
+| -------- | --------------------------------------------------------------------------------------- | ---------------------------------------- |
+| **只读** | `list`, `status`, `records`, `resolve`, `config`（无 value）, `auth list`               | 安全，直接读文件                         |
+| **写入** | `add`, `remove`, `config`（有 value）, `start`, `stop`, `check`, `auth set/login/clear` | 与 Server 并发时可能冲突                 |
+| **守护** | `watch`                                                                                 | 启动前自动检测 8085 端口，与 Server 互斥 |
 
 ### 关键依赖选型
 
-| 依赖 | 版本 | 选型理由 |
-|------|------|----------|
-| `commander` | ^14 | 零依赖，TypeScript 友好，ESM 支持良好 |
-| `consola` | ^3 | UnJS 出品，替代 chalk + ora，内置 spinner 和颜色 |
-| `console-table-printer` | ^2 | TypeScript 编写，ESM 友好，表格输出 |
+| 依赖                    | 版本 | 选型理由                                         |
+| ----------------------- | ---- | ------------------------------------------------ |
+| `commander`             | ^14  | 零依赖，TypeScript 友好，ESM 支持良好            |
+| `consola`               | ^3   | UnJS 出品，替代 chalk + ora，内置 spinner 和颜色 |
+| `console-table-printer` | ^2   | TypeScript 编写，ESM 友好，表格输出              |
 
 ### 未来工作
 
 - **Shell 补全**（bash/zsh/fish）：需评估 `tabtab` 或 commander 内置 completion 方案
+
+---
+
+### auth
+
+管理平台鉴权（Cookie 登录）。支持手动设置 Cookie、浏览器扫码登录、查看和清除鉴权状态。
+
+鉴权配置存储在 Provider 级别，同一平台的所有录制器共享同一份 Cookie。设置后 API 请求和 FFmpeg 下载均会携带 Cookie，用于获取原画等高画质直播流。
+
+**语法**：
+
+```
+lar auth list
+lar auth set <provider> [options]
+lar auth login <provider>
+lar auth clear <provider>
+```
+
+#### auth list
+
+列出所有 Provider 的鉴权状态。
+
+**示例**：
+
+```bash
+# 表格输出
+lar auth list
+
+# JSON 输出
+lar auth list --json
+```
+
+**普通输出**：
+
+```
+┌──────────┬──────────────┬───────────────┬──────────────┐
+│ Provider │ Auth Support │ Authenticated │ Info         │
+├──────────┼──────────────┼───────────────┼──────────────┤
+│ Bilibili │ true         │ true          │ 用户名       │
+│ DouYu    │ false        │ false         │              │
+│ HuYa     │ false        │ false         │              │
+│ DouYin   │ false        │ false         │              │
+└──────────┴──────────────┴───────────────┴──────────────┘
+```
+
+**JSON 输出 Schema**：
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "Bilibili",
+      "name": "Bilibili",
+      "hasAuth": true,
+      "isAuthenticated": true,
+      "description": "用户名"
+    }
+  ]
+}
+```
+
+#### auth set
+
+手动设置 Provider 的鉴权配置。
+
+**选项**：
+
+| 选项                | 说明          |
+| ------------------- | ------------- |
+| `--cookie <cookie>` | Cookie 字符串 |
+
+**示例**：
+
+```bash
+# 设置 B站 Cookie
+lar auth set Bilibili --cookie "SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx"
+
+# JSON 输出
+lar auth set Bilibili --cookie "SESSDATA=xxx" --json
+```
+
+**JSON 输出 Schema**：
+
+```json
+{
+  "success": true,
+  "data": {
+    "isAuthenticated": true,
+    "description": "用户名"
+  }
+}
+```
+
+#### auth login
+
+通过浏览器扫码登录（需要 Playwright）。命令会打开一个 Chromium 浏览器窗口，导航到平台的登录页面，用户完成登录后自动提取 Cookie 并保存。
+
+**前置依赖**：
+
+```bash
+pnpm add playwright
+npx playwright install chromium
+```
+
+**示例**：
+
+```bash
+# 浏览器登录 B站
+lar auth login Bilibili
+```
+
+登录流程：
+
+1. 打开 Chromium 浏览器（非无头模式）
+2. 导航到 `https://passport.bilibili.com/login`
+3. 用户扫码或输入账号密码登录
+4. 程序每秒检查 Cookie，发现 `SESSDATA` 后自动提取并保存
+5. 浏览器自动关闭，显示登录结果
+6. 超时时间为 5 分钟
+
+**JSON 输出 Schema**：
+
+```json
+{
+  "success": true,
+  "data": {
+    "isAuthenticated": true,
+    "description": "用户名"
+  }
+}
+```
+
+**错误场景**：
+
+- Provider 不存在：提示可用的 Provider 列表
+- Provider 不支持浏览器登录：提示不支持
+- Playwright 未安装：提示安装命令
+- 登录超时（5 分钟）：提示超时
+- 用户关闭浏览器窗口：提示窗口已关闭
+
+#### auth clear
+
+清除指定 Provider 的鉴权配置。
+
+**示例**：
+
+```bash
+# 清除 B站鉴权
+lar auth clear Bilibili
+
+# JSON 输出
+lar auth clear Bilibili --json
+```
+
+**JSON 输出 Schema**：
+
+```json
+{
+  "success": true,
+  "data": null
+}
+```
+
+#### 鉴权配置持久化
+
+鉴权配置保存在 `manager.json` 的 `providerAuthConfigs` 字段中。应用重启后会自动加载并注入到对应 Provider，无需重新登录。
+
+```json
+{
+  "providerAuthConfigs": {
+    "Bilibili": {
+      "cookie": "SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx; ..."
+    }
+  }
+}
+```
+
+#### 测试计划
+
+**手动 Cookie 测试**：
+
+```bash
+# 1. 设置 B站 Cookie
+node apps/cli/lib/bin.js auth set Bilibili --cookie "SESSDATA=xxx; bili_jct=xxx"
+
+# 2. 验证登录状态
+node apps/cli/lib/bin.js auth list --json
+
+# 3. 录制高画质直播流（设置画质为 highest）
+node apps/cli/lib/bin.js add https://live.bilibili.com/12345 -q highest
+node apps/cli/lib/bin.js start 1
+
+# 4. 清除鉴权
+node apps/cli/lib/bin.js auth clear Bilibili
+node apps/cli/lib/bin.js auth list --json
+```
+
+**浏览器登录测试**：
+
+```bash
+# 1. 安装 Playwright（如未安装）
+pnpm add playwright && npx playwright install chromium
+
+# 2. 浏览器登录
+node apps/cli/lib/bin.js auth login Bilibili
+
+# 3. 验证登录状态
+node apps/cli/lib/bin.js auth list --json
+```
+
+**持久化测试**：
+
+```bash
+# 1. 设置 Cookie
+node apps/cli/lib/bin.js auth set Bilibili --cookie "SESSDATA=xxx"
+
+# 2. 重新启动应用，验证鉴权仍然存在
+node apps/cli/lib/bin.js auth list --json
+```
