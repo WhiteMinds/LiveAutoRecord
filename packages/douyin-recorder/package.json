@@ -26,20 +26,20 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "axios": "^0.27.2",
-    "axios-cookiejar-support": "^4.0.3",
+    "axios": "^1.7.0",
+    "axios-cookiejar-support": "^6.0.0",
     "mitt": "^3.0.0",
-    "ramda": "^0.28.0",
-    "tough-cookie": "^4.1.2"
+    "ramda": "^0.30.0",
+    "tough-cookie": "^5.0.0"
   },
   "devDependencies": {
     "@autorecord/manager": "workspace:^",
-    "@types/lodash": "^4.14.190",
+    "@types/lodash": "^4.17.0",
     "@types/node": "*",
-    "@types/ramda": "^0.28.16",
-    "@types/tough-cookie": "^4.0.2",
+    "@types/ramda": "^0.30.0",
+    "@types/tough-cookie": "^4.0.5",
     "prettier": "^3.2.5",
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   },
   "peerDependencies": {
     "@autorecord/manager": "*"

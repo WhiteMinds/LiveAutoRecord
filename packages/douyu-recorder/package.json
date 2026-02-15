@@ -26,26 +26,25 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "axios": "^0.27.2",
-    "cheerio": "^1.0.0-rc.12",
+    "axios": "^1.7.0",
+    "cheerio": "^1.0.0",
     "crypto-js": "^4.1.1",
     "mitt": "^3.0.0",
-    "query-string": "^7.1.1",
-    "ramda": "^0.28.0",
-    "uuid": "^8.3.2",
+    "ramda": "^0.30.0",
+    "uuid": "^11.0.0",
     "vm2": "^3.9.10",
-    "ws": "^8.9.0"
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "@autorecord/manager": "workspace:^",
-    "@types/crypto-js": "^4.1.1",
-    "@types/lodash": "^4.14.190",
+    "@types/crypto-js": "^4.2.2",
+    "@types/lodash": "^4.17.0",
     "@types/node": "*",
-    "@types/ramda": "^0.28.15",
-    "@types/uuid": "^8.3.4",
-    "@types/ws": "^8.5.3",
+    "@types/ramda": "^0.30.0",
+    "@types/uuid": "^10.0.0",
+    "@types/ws": "^8.18.0",
     "prettier": "^3.0.1",
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   },
   "peerDependencies": {
     "@autorecord/manager": "*"

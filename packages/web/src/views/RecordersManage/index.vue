@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div class="h-screen overflow-auto" :class="{ hidden: currentRouteParentIsRecordersManage }">
-      <div class="sticky left-0 top-0 p-4 shadow flex bg-[#F0F0F0] z-[1]">
+      <div class="sticky left-0 top-0 p-4 shadow-sm flex bg-[#F0F0F0] z-[1]">
         <div class="flex flex-auto gap-4">
           <v-select
             :label="$t('recorders.sort')"

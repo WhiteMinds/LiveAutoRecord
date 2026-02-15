@@ -24,6 +24,6 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "devDependencies": {
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   }
 }

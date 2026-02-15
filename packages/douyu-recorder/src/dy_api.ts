@@ -1,7 +1,6 @@
 import { v4 as uuid4 } from 'uuid'
 import MD5 from 'crypto-js/md5.js'
 import { VM } from 'vm2'
-import * as queryString from 'query-string'
 import { requester } from './requester'
 
 /**
@@ -34,7 +33,7 @@ export async function getLiveInfo(opts: {
   const did = uuid4().replace(/-/g, '')
   const time = Math.ceil(Date.now() / 1000)
   // TODO: 这里类型处理的有点问题，先用 as 顶着
-  const signed = queryString.parse(sign(opts.channelId, did, time)) as Record<string, string>
+  const signed = Object.fromEntries(new URLSearchParams(sign(opts.channelId, did, time)))
 
   // TODO: 以后可以试试换成 https://open.douyu.com/source/api/9 里提供的公开接口，
   // 不过公开接口可能会存在最高码率的限制。

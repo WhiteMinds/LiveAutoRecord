@@ -24,9 +24,9 @@
   "dependencies": {
     "@autorecord/manager": "workspace:^",
     "@autorecord/shared": "workspace:^",
-    "env-paths": "^2.0.0"
+    "env-paths": "^3.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   }
 }

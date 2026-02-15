@@ -26,19 +26,19 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "axios": "^0.27.2",
-    "cheerio": "^1.0.0-rc.12",
+    "axios": "^1.7.0",
+    "cheerio": "^1.0.0",
     "huya-danmu-fix": "^2.0.4",
     "mitt": "^3.0.0",
-    "ramda": "^0.28.0"
+    "ramda": "^0.30.0"
   },
   "devDependencies": {
     "@autorecord/manager": "workspace:^",
-    "@types/lodash": "^4.14.190",
+    "@types/lodash": "^4.17.0",
     "@types/node": "*",
-    "@types/ramda": "^0.28.16",
+    "@types/ramda": "^0.30.0",
     "prettier": "^3.2.5",
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   },
   "peerDependencies": {
     "@autorecord/manager": "*"

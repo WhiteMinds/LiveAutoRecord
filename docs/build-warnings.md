@@ -29,42 +29,13 @@ CJS 消费者不会意外启动独立 HTTP 服务。
 - 方案 B：用 tsup 的 `banner` 或 esbuild `define` 在 CJS 构建中替换 `import.meta.url` 为 `undefined`，抑制警告
 - 方案 C：不处理，警告无害
 
-## 2. `DEP0060` DeprecationWarning: `util._extend` is deprecated
+## ~~2. `DEP0060` DeprecationWarning: `util._extend` is deprecated~~
 
-**来源**：某个第三方依赖内部（通过 `concurrently` 或其传递依赖）
+**状态**：已解决（2026-02-15，concurrently 升级到 ^9.0.0）
 
-**警告内容**：
-```
-(node:125408) [DEP0060] DeprecationWarning: The `util._extend` API is deprecated.
-Please use Object.assign() instead.
-```
+## ~~3. Browserslist: caniuse-lite is outdated~~
 
-**原因**：Node.js 已废弃 `util._extend()`，某个依赖仍在使用。可通过 `node --trace-deprecation` 定位具体调用栈。
-
-**影响**：无。仅为废弃提示，功能不受影响。
-
-**消除方案**：
-- 运行 `node --trace-deprecation` 定位具体依赖，升级该依赖到修复版本
-- 如果来自 `concurrently`，尝试升级 `concurrently`（当前 ^7.4.0）
-
-## 3. Browserslist: caniuse-lite is outdated
-
-**来源**：Vite renderer 构建（通过 `@babel/preset-env` 或 `autoprefixer` 等）
-
-**警告内容**：
-```
-Browserslist: caniuse-lite is outdated. Please run:
-  npx update-browserslist-db@latest
-```
-
-**原因**：`caniuse-lite` 数据库过旧，浏览器兼容性判断可能不够准确。
-
-**影响**：极低。Electron 内嵌 Chromium，renderer 目标浏览器固定。
-
-**消除方案**：
-```bash
-npx update-browserslist-db@latest
-```
+**状态**：已解决（2026-02-15，移除 autoprefixer，Tailwind CSS 4 使用 `@tailwindcss/vite` 插件替代 PostCSS 链）
 
 ## 4. Morgan deprecated default format
 

@@ -26,24 +26,23 @@
   "author": "WhiteMind",
   "license": "LGPL",
   "dependencies": {
-    "@types/fluent-ffmpeg": "^2.1.20",
-    "date-fns": "^2.29.3",
+    "@types/fluent-ffmpeg": "^2.1.26",
+    "date-fns": "^4.1.0",
     "ffmpeg-static": "^5.0.2",
     "fluent-ffmpeg": "^2.1.2",
     "lodash": "^4.17.21",
     "mitt": "^3.0.0",
-    "ramda": "^0.28.0",
+    "ramda": "^0.30.0",
     "string-argv": "^0.3.1",
     "string-template": "^1.0.0",
-    "uuid": "^9.0.0"
+    "uuid": "^11.0.0"
   },
   "devDependencies": {
-    "@types/ffmpeg-static": "^3.0.1",
-    "@types/lodash": "^4.14.185",
-    "@types/ramda": "^0.28.15",
-    "@types/string-template": "^1.0.2",
-    "@types/uuid": "^8.3.4",
-    "typescript": "^5.7.0"
+    "@types/lodash": "^4.17.0",
+    "@types/ramda": "^0.30.0",
+    "@types/string-template": "^1.0.6",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.8.0"
   },
   "peerDependencies": {
     "@types/lodash": "^4.14.185"

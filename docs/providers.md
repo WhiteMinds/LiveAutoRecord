@@ -684,7 +684,7 @@ setFFMPEGOutputArgs(args) {
   "devDependencies": {
     "@autorecord/manager": "workspace:^",
     "@types/node": "*",
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   },
   "peerDependencies": {
     "@autorecord/manager": "*"

@@ -59,10 +59,10 @@
   "dependencies": {
     "@autorecord/http-server": "workspace:^",
     "@autorecord/shared": "workspace:^",
-    "concurrently": "^7.4.0",
-    "env-paths": "^2.0.0",
+    "concurrently": "^9.0.0",
+    "env-paths": "^3.0.0",
     "ffmpeg-static": "^5.0.2",
-    "winston": "^3.8.2"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "electron": "^40.0.0",

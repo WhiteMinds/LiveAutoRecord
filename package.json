@@ -6,14 +6,13 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^22.0.0",
     "lerna": "^5.6.2",
     "prettier": "^3.0.0",
     "tsup": "^8.0.0"
   },
   "packageManager": "yarn@3.2.3",
   "resolutions": {
-    "winston@^3.8.2": "patch:winston@npm%3A3.8.2#./.yarn/patches/winston-npm-3.8.2-2035e9cac4.patch",
     "mitt": "3.0.1"
   }
 }

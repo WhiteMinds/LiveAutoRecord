@@ -32,11 +32,11 @@
     "@autorecord/huya-recorder": "workspace:^",
     "@autorecord/manager": "workspace:^",
     "@autorecord/shared": "workspace:^",
-    "commander": "^14.0.0",
-    "consola": "^3.4.0",
+    "commander": "^14.0.3",
+    "consola": "^3.4.2",
     "console-table-printer": "^2.12.1"
   },
   "devDependencies": {
-    "typescript": "^5.7.0"
+    "typescript": "^5.8.0"
   }
 }

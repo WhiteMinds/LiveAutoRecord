@@ -544,13 +544,14 @@ Electron 的 Main 进程通过 `startServer()` 在 `localhost:8085` 启动完整
 
 | 层级 | 技术 |
 |------|------|
-| 运行时 | Node.js + TypeScript |
+| 运行时 | Node.js + TypeScript 5.8+ |
 | 构建 | tsup (ESM + CJS 双输出) |
 | 桌面 | Electron 40 + electron-vite 5 |
-| 后端 | Express + lowdb + SSE |
-| 前端 | Vue 3 + Vite 7 + Vuetify + Tailwind + Pinia + vue-i18n |
+| 后端 | Express 5 + lowdb + SSE |
+| 前端 | Vue 3.5 + Vite 7 + Vuetify 3.11 + Tailwind CSS 4 + Pinia 3 + vue-i18n 11 |
 | CLI | commander 14 + consola 3 + console-table-printer |
 | 录制 | fluent-ffmpeg + ffmpeg-static |
+| HTTP | axios 1.x |
 | 事件 | mitt (轻量级 EventEmitter) |
 | 持久化 | JSON 文件 (Steno 原子写入) |
 | Monorepo | Yarn 3 Workspaces + Lerna |
