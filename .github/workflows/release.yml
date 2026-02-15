@@ -33,3 +33,22 @@ jobs:
           cache: pnpm
       - run: pnpm install
       - run: pnpm app:build -p=always
+
+  release-notes:
+    name: Update release notes
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract changelog and update release
+        run: |
+          VERSION=$(node -p "require('./apps/electron/package.json').version")
+          # 从 CHANGELOG.md 提取当前版本的内容（两个 ## 之间的部分）
+          NOTES=$(awk "/^## ${VERSION}$/{ found=1; next } /^## /{ if(found) exit } found" apps/electron/CHANGELOG.md)
+          if [ -z "$NOTES" ]; then
+            echo "No changelog entry found for version ${VERSION}, skipping"
+            exit 0
+          fi
+          gh release edit "v${VERSION}" --notes "${NOTES}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.repo_contents_token }}
