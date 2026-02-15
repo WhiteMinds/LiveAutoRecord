@@ -1,8 +1,9 @@
 /* 这是 vuetify icons 需要的样式 */
 @import '@mdi/font/css/materialdesignicons.css';
-/* tailwind 与 vuetify 的 css reset 有一些冲突，所以这里不引入 preflight */
+/* tailwind 与 vuetify 的 css reset 有一些冲突，所以这里不引入 preflight。
+   utilities 不放入 layer，否则会被无层级的 vuetify 样式覆盖（CSS 规范：unlayered > layered）。 */
 @import 'tailwindcss/theme' layer(theme);
-@import 'tailwindcss/utilities' layer(utilities);
+@import 'tailwindcss/utilities';
 
 *,
 ::before,

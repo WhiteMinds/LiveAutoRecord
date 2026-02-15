@@ -52,6 +52,10 @@ export default defineConfig(async (env) => {
         outDir: path.join(__dirname, 'dist/preload'),
         rollupOptions: {
           input: path.join(__dirname, 'src/preload.ts'),
+          output: {
+            format: 'cjs',
+            entryFileNames: '[name].js',
+          },
         },
         watch: {},
         sourcemap: true,
