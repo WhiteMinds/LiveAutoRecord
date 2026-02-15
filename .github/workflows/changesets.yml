@@ -53,7 +53,7 @@ jobs:
           else
             echo "Creating tag $TAG for Electron release"
             git tag "$TAG"
-            git push origin "$TAG"
+            git push "https://x-access-token:${PAT}@github.com/${GITHUB_REPOSITORY}.git" "$TAG"
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.repo_contents_token }}
+          PAT: ${{ secrets.repo_contents_token }}
