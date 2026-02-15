@@ -1,6 +1,6 @@
 {
   "name": "@autorecord/douyu-recorder",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "LAR douyu recorder implemention",
   "type": "module",
   "main": "./lib/index.cjs",
