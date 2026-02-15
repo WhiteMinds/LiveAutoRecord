@@ -11,6 +11,25 @@ const requester = axios.create({
   proxy: false,
 })
 
+// 模块级 cookie 存储，所有 B站 API 请求共享
+let authCookie: string | undefined
+
+export function setAuthCookie(cookie: string | undefined) {
+  authCookie = cookie
+}
+
+export function getAuthCookie(): string | undefined {
+  return authCookie
+}
+
+// 给 requester 添加请求拦截器，自动注入 Cookie
+requester.interceptors.request.use((config) => {
+  if (authCookie) {
+    config.headers.Cookie = authCookie
+  }
+  return config
+})
+
 interface BilibiliResp<T = unknown> {
   code: number
   message: string
@@ -217,4 +236,20 @@ export interface SourceProfile {
   host: string
   extra: string
   stream_ttl: number
+}
+
+/** 验证登录状态 */
+export async function getNavInfo(): Promise<{
+  isLogin: boolean
+  uname?: string
+  mid?: number
+}> {
+  const res = await requester.get<
+    BilibiliResp<{
+      isLogin: boolean
+      uname: string
+      mid: number
+    }>
+  >('https://api.bilibili.com/x/web-interface/nav')
+  return res.data.data
 }

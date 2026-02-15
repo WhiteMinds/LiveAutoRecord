@@ -15,6 +15,7 @@ import {
   GiveGift,
 } from '@autorecord/manager'
 import { getInfo, getStream } from './stream'
+import { setAuthCookie, getAuthCookie, getNavInfo } from './bilibili_api'
 import { assertStringType, ensureFolderExist, replaceExtName, singleton } from './utils'
 import { startListen, MsgHandler } from 'blive-message-listener'
 
@@ -166,13 +167,18 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
 
   const isInvalidStream = createInvalidStreamChecker()
   const timeoutChecker = createTimeoutChecker(() => onEnd('ffmpeg timeout'), 10e3)
+  const cookie = getAuthCookie()
+  const headersValue = cookie
+    ? `Referer: https://live.bilibili.com/\r\nCookie: ${cookie}`
+    : 'Referer: https://live.bilibili.com/'
+
   const command = createFFMPEGBuilder()
     .input(stream.url)
     .addInputOptions(
       '-user_agent',
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0',
       '-headers',
-      'Referer: https://live.bilibili.com/',
+      headersValue,
     )
     .outputOptions(ffmpegOutputOptions)
     .output(recordSavePath)
@@ -330,5 +336,50 @@ export const provider: RecorderProvider<{}> = {
 
   setFFMPEGOutputArgs(args) {
     ffmpegOutputOptions.splice(0, ffmpegOutputOptions.length, ...args)
+  },
+
+  authFields: [
+    {
+      key: 'cookie',
+      label: 'Cookie',
+      type: 'textarea',
+      required: false,
+      placeholder: 'SESSDATA=xxx; bili_jct=xxx; DedeUserID=xxx; ...',
+      description: '从浏览器获取 B站登录 Cookie，用于获取原画等高画质直播流',
+    },
+  ],
+
+  authFlow: {
+    loginURL: 'https://passport.bilibili.com/login',
+    checkLoginResult({ cookies }) {
+      const sessdata = cookies.find((c) => c.name === 'SESSDATA' && c.domain.includes('bilibili.com'))
+      if (!sessdata) return { success: false }
+
+      const cookieString = cookies
+        .filter((c) => c.domain.includes('.bilibili.com'))
+        .map((c) => `${c.name}=${c.value}`)
+        .join('; ')
+      return { success: true, authConfig: { cookie: cookieString } }
+    },
+    timeout: 300_000,
+  },
+
+  setAuth(config) {
+    setAuthCookie(config.cookie || undefined)
+  },
+
+  async checkAuth() {
+    const cookie = getAuthCookie()
+    if (!cookie) {
+      return { isAuthenticated: false }
+    }
+    try {
+      const nav = await getNavInfo()
+      return nav.isLogin
+        ? { isAuthenticated: true, description: nav.uname }
+        : { isAuthenticated: false, description: 'Cookie 已失效' }
+    } catch {
+      return { isAuthenticated: false, description: '验证失败' }
+    }
   },
 }

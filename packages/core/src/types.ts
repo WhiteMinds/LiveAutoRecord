@@ -33,6 +33,8 @@ export interface ManagerConfig {
   autoCheckLiveStatusAndRecord: boolean
   autoCheckInterval: number
   ffmpegOutputArgs: string
+  /** 各 Provider 的鉴权配置，key 为 provider.id */
+  providerAuthConfigs?: Record<string, Record<string, string>>
 }
 
 export const managerConfigKeys: (keyof ManagerConfig)[] = [
@@ -41,4 +43,5 @@ export const managerConfigKeys: (keyof ManagerConfig)[] = [
   'autoCheckLiveStatusAndRecord',
   'autoCheckInterval',
   'ffmpegOutputArgs',
+  'providerAuthConfigs',
 ]

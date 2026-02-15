@@ -8,6 +8,36 @@ import { RecorderCreateOpts, Recorder, SerializedRecorder, RecordHandle, DebugLo
 import { AnyObject, UnknownObject } from './utils'
 import { parseArgsStringToArgv } from 'string-argv'
 
+/** 鉴权字段声明 - Provider 声明它需要哪些鉴权配置 */
+export interface ProviderAuthField {
+  key: string
+  label: string
+  type: 'text' | 'password' | 'textarea'
+  required?: boolean
+  placeholder?: string
+  description?: string
+}
+
+/** 鉴权验证结果 */
+export interface ProviderAuthStatus {
+  isAuthenticated: boolean
+  /** 人类可读的描述，如 "已登录为: 用户名" */
+  description?: string
+}
+
+/** 浏览器自动登录流程声明 */
+export interface ProviderAuthFlow {
+  /** 登录页面 URL */
+  loginURL: string
+  /** 检查登录结果：传入当前 URL 和 cookies，返回是否成功 + 提取的鉴权配置 */
+  checkLoginResult: (data: {
+    url: string
+    cookies: { name: string; value: string; domain: string; path: string }[]
+  }) => { success: boolean; authConfig?: Record<string, string> }
+  /** 超时时间（ms），默认 5 分钟 */
+  timeout?: number
+}
+
 export interface RecorderProvider<E extends AnyObject> {
   // Provider 的唯一 id，最好只由英文 + 数字组成
   // TODO: 可以加个检查 id 合法性的逻辑
@@ -31,6 +61,15 @@ export interface RecorderProvider<E extends AnyObject> {
   fromJSON: <T extends SerializedRecorder<E>>(this: RecorderProvider<E>, json: T) => Recorder<E>
 
   setFFMPEGOutputArgs: (this: RecorderProvider<E>, args: string[]) => void
+
+  /** 鉴权字段声明（不需要鉴权的 Provider 不设置即可） */
+  authFields?: ProviderAuthField[]
+  /** 浏览器自动登录流程声明 */
+  authFlow?: ProviderAuthFlow
+  /** 设置鉴权配置（从持久化存储加载、或用户输入后调用） */
+  setAuth?: (this: RecorderProvider<E>, config: Record<string, string>) => void
+  /** 验证当前鉴权状态 */
+  checkAuth?: (this: RecorderProvider<E>) => Promise<ProviderAuthStatus>
 }
 
 const configurableProps = [
