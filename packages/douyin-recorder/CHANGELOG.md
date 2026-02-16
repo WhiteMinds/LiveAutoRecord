@@ -1,5 +1,11 @@
 # @autorecord/douyin-recorder
 
+## 1.4.0
+
+### Minor Changes
+
+- [`3310c80`](https://github.com/WhiteMinds/LiveAutoRecord/commit/3310c80438d6d6051fbc13c3295e1b2afa32d5bb) Thanks [@WhiteMinds](https://github.com/WhiteMinds)! - 新增抖音平台检查频率限制，同一平台的多个直播间在自动检查时会强制保持至少 1 秒的间隔，避免因请求过于密集而被抖音封禁 IP。
+
 ## 1.3.0
 
 ### Minor Changes
