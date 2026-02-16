@@ -70,6 +70,13 @@ export interface RecorderProvider<E extends AnyObject> {
   setAuth?: (this: RecorderProvider<E>, config: Record<string, string>) => void
   /** 验证当前鉴权状态 */
   checkAuth?: (this: RecorderProvider<E>) => Promise<ProviderAuthStatus>
+
+  /**
+   * 同一 Provider 下多个录制器检查直播状态时的最小间隔（ms）。
+   * 当并发线程连续检查同一平台的多个房间时，如果与上次检查的间隔不足此值，
+   * 则会延迟剩余时间后再执行检查，避免因请求过于密集而触发平台反爬。
+   */
+  minCheckIntervalMs?: number
 }
 
 const configurableProps = [
@@ -147,9 +154,27 @@ export function createRecorderManager<
     // 这样可以防止一些意外调用 checkLiveStatusAndRecord 时出现重复录制。
     const needCheckRecorders = recorders.filter((r) => !r.disableAutoCheck)
 
+    // 记录每个 provider 的下一次可用检查时间，用于在并发线程间强制最小检查间隔，
+    // 防止同一平台的多个房间被过于密集地检查而触发反爬。
+    const providerNextAvailableTime = new Map<string, number>()
+
     const checkOnce = async () => {
       const recorder = needCheckRecorders.shift()
       if (recorder == null) return
+
+      const providerId = recorder.toJSON().providerId
+      const provider = manager.providers.find((p) => p.id === providerId)
+
+      if (provider?.minCheckIntervalMs != null && provider.minCheckIntervalMs > 0) {
+        const now = Date.now()
+        const nextAvailable = providerNextAvailableTime.get(providerId) ?? 0
+        const waitTime = Math.max(0, nextAvailable - now)
+        // 立即预占下一个时间槽，防止其他线程在等待期间取到相同的时间
+        providerNextAvailableTime.set(providerId, now + waitTime + provider.minCheckIntervalMs)
+        if (waitTime > 0) {
+          await new Promise((resolve) => setTimeout(resolve, waitTime))
+        }
+      }
 
       await recorder.checkLiveStatusAndRecord({
         getSavePath(data) {

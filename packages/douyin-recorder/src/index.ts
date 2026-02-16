@@ -267,6 +267,8 @@ export const provider: RecorderProvider<{}> = {
   name: '抖音',
   siteURL: 'https://live.douyin.com/',
 
+  minCheckIntervalMs: 1000,
+
   matchURL(channelURL) {
     // TODO: 暂时不支持 v.douyin.com
     return /https?:\/\/live\.douyin\.com\//.test(channelURL)
