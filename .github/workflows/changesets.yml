@@ -16,6 +16,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # 使用 PAT 以确保后续 tag push 能触发 release workflow
+          # （默认 GITHUB_TOKEN 创建的事件不会触发其他 workflow）
+          token: ${{ secrets.repo_contents_token }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
@@ -53,7 +56,5 @@ jobs:
           else
             echo "Creating tag $TAG for Electron release"
             git tag "$TAG"
-            git push "https://x-access-token:${PAT}@github.com/${GITHUB_REPOSITORY}.git" "$TAG"
+            git push origin "$TAG"
           fi
-        env:
-          PAT: ${{ secrets.repo_contents_token }}

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - v4.*
+      - 'v[0-9]*'
 
 concurrency:
   group: electron-release-${{ github.ref }}
