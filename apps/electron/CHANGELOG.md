@@ -1,5 +1,11 @@
 # @autorecord/electron
 
+## 4.10.0
+
+### Minor Changes
+
+- [`4d5be40`](https://github.com/WhiteMinds/LiveAutoRecord/commit/4d5be40596f797889d2ddca344f464bb30123e1c) Thanks [@WhiteMinds](https://github.com/WhiteMinds)! - feat: 抖音录制器支持带 Cookie 录制，可通过浏览器登录或手动设置 Cookie 获取更高画质直播流
+
 ## 4.9.0
 
 ### Minor Changes
