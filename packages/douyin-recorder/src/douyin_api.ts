@@ -15,6 +15,26 @@ const requester = wrapper(
   }),
 )
 
+// 用户鉴权 cookie 管理（登录后的 cookie，用于获取更高画质等）
+let authCookie: string | undefined
+
+export function setAuthCookie(cookie: string | undefined) {
+  authCookie = cookie
+}
+
+export function getAuthCookie(): string | undefined {
+  return authCookie
+}
+
+// 将用户鉴权 cookie 注入到请求中（追加到 cookie jar 自动管理的 ttwid 等 cookie 之后）
+requester.interceptors.request.use((config) => {
+  if (authCookie) {
+    const existing = config.headers.Cookie
+    config.headers.Cookie = existing ? `${existing}; ${authCookie}` : authCookie
+  }
+  return config
+})
+
 export async function getRoomInfo(
   webRoomId: string,
   retryOnSpecialCode = true,

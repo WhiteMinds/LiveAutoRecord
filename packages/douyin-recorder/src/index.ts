@@ -15,6 +15,7 @@ import {
   GiveGift,
 } from '@autorecord/manager'
 import { getInfo, getStream } from './stream'
+import { getAuthCookie, setAuthCookie } from './douyin_api'
 import { assertStringType, ensureFolderExist, replaceExtName, singleton } from './utils'
 
 function createRecorder(opts: RecorderCreateOpts): Recorder {
@@ -115,10 +116,17 @@ const checkLiveStatusAndRecord: Recorder['checkLiveStatusAndRecord'] = async fun
 
   const isInvalidStream = createInvalidStreamChecker()
   const timeoutChecker = createTimeoutChecker(() => onEnd('ffmpeg timeout'), 10e3)
+  const cookie = getAuthCookie()
+  const headersValue = cookie
+    ? `Referer: https://live.douyin.com/\r\nCookie: ${cookie}`
+    : 'Referer: https://live.douyin.com/'
+
   const command = createFFMPEGBuilder(stream.url)
     .inputOptions(
       '-user_agent',
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+      '-headers',
+      headersValue,
       /**
        * ffmpeg 在处理抖音提供的某些直播间的流时，它会在 avformat_find_stream_info 阶段花费过多时间，这会让录制的过程推迟很久，从而触发超时。
        * 这里通过降低 avformat_find_stream_info 所需要的字节数量（默认为 5000000）来解决这个问题。
@@ -287,5 +295,44 @@ export const provider: RecorderProvider<{}> = {
 
   setFFMPEGOutputArgs(args) {
     ffmpegOutputOptions.splice(0, ffmpegOutputOptions.length, ...args)
+  },
+
+  authFields: [
+    {
+      key: 'cookie',
+      label: 'Cookie',
+      type: 'textarea',
+      required: false,
+      placeholder: 'sessionid_ss=xxx; ttwid=xxx; ...',
+      description: '从浏览器获取抖音登录 Cookie，用于获取更高画质直播流或解决访问限制',
+    },
+  ],
+
+  authFlow: {
+    loginURL: 'https://live.douyin.com/',
+    checkLoginResult({ cookies }) {
+      const douyinCookies = cookies.filter((c) => c.domain === '.douyin.com' || c.domain === 'live.douyin.com')
+      const hasSession = douyinCookies.some((c) => c.name === 'sessionid_ss')
+      if (!hasSession) return { success: false }
+
+      const cookieString = douyinCookies.map((c) => `${c.name}=${c.value}`).join('; ')
+      return { success: true, authConfig: { cookie: cookieString } }
+    },
+    timeout: 300_000,
+  },
+
+  setAuth(config) {
+    setAuthCookie(config.cookie || undefined)
+  },
+
+  async checkAuth() {
+    const cookie = getAuthCookie()
+    if (!cookie) return { isAuthenticated: false }
+
+    // 检查 cookie 中是否包含关键的登录标识
+    const hasSession = /sessionid_ss=/.test(cookie)
+    if (!hasSession) return { isAuthenticated: false, description: 'Cookie 中缺少 sessionid_ss' }
+
+    return { isAuthenticated: true, description: '已设置登录 Cookie' }
   },
 }
