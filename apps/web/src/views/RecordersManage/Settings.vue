@@ -365,11 +365,14 @@ onMounted(async () => {
 
   // 加载 Provider 鉴权信息
   providers.value = await LARServerService.getProviders()
+  // 先同步初始化所有 inputs，避免后续 await 让出控制权时模板访问到未初始化的对象
   for (const provider of providersWithAuth.value) {
     providerAuthInputs[provider.id] = {}
     for (const field of provider.authFields!) {
       providerAuthInputs[provider.id][field.key] = ''
     }
+  }
+  for (const provider of providersWithAuth.value) {
     try {
       providerAuthStatuses[provider.id] = await LARServerService.getProviderAuth({ id: provider.id })
     } catch {
