@@ -60,7 +60,7 @@
     "winston": "catalog:"
   },
   "devDependencies": {
-    "electron": "^40.0.0",
+    "electron": "^40.8.3",
     "electron-builder": "^26.7.0",
     "electron-vite": "^5.0.0"
   }
