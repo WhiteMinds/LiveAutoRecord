@@ -32,7 +32,7 @@
     "mitt": "catalog:",
     "ramda": "catalog:",
     "uuid": "catalog:",
-    "vm2": "^3.9.10",
+    "vm2": "^3.11.3",
     "ws": "^8.19.0"
   },
   "devDependencies": {
